@@ -12,28 +12,35 @@ import java.util.Date;
 @Entity(name = "user")
 public class User implements Serializable {
 
+    //用户Id
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    //用户微信openid
     @Column
     @NotNull
-    private String open_id;
+    private String openid;
 
+    //用户名
     @Column
     private String userName;
 
+    //电话号码
     @Column(length = 11, unique = true)
     @NotNull
     private Integer phoneNumber;
 
+    //用户头像url
     @Column
-    private String headPortrait;
+    private String avatar;
 
+    //学校
     @Column
     @NotNull
     private String school;
 
+    //性别
     @Enumerated(EnumType.STRING)
     @NotNull
     private Gender gender;
@@ -45,23 +52,11 @@ public class User implements Serializable {
     private Date updateTime;
 
     /**
-     * 身份证号
-     */
-    @Column(length = 18, unique = true)
-    @NotNull
-    private String idNumber;
-
-    @Column
-    private String email;
-
-    @Column(length = 50)
-    private String password;
-
-    /**
      * 常用地址
      */
     @Column
-    private String normalAddress;
+    private Integer defaultAddressId;
+
     /**
      * 用户级别
      */
@@ -70,16 +65,9 @@ public class User implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Role role;
 
-
+    //师傅Id
     @Column
     private Integer masterId;
-
-    /**
-     * 是否使用过优惠券
-     */
-    @Column
-    private Boolean isUsedDiscountCoupon;
-
 
     /**
      * 余额
@@ -115,22 +103,6 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getIdNumber() {
-        return idNumber;
-    }
-
-    public void setIdNumber(String idNumber) {
-        this.idNumber = idNumber;
-    }
-
-    public String getNormalAddress() {
-        return normalAddress;
-    }
-
-    public void setNormalAddress(String normalAddress) {
-        this.normalAddress = normalAddress;
-    }
-
     public Role getRole() {
         return role;
     }
@@ -143,36 +115,12 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getOpen_id() {
-        return open_id;
+    public String getOpenid() {
+        return openid;
     }
 
-    public void setOpen_id(String open_id) {
-        this.open_id = open_id;
-    }
-
-    public boolean isUsedDiscountCoupon() {
-        return isUsedDiscountCoupon;
-    }
-
-    public void setUsedDiscountCoupon(boolean usedDiscountCoupon) {
-        isUsedDiscountCoupon = usedDiscountCoupon;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setOpenid(String openid) {
+        this.openid = openid;
     }
 
     public Integer getBalance() {
@@ -195,12 +143,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getHeadPortrait() {
-        return headPortrait;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setHeadPortrait(String headPortrait) {
-        this.headPortrait = headPortrait;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getSchool() {
@@ -249,11 +197,11 @@ public class User implements Serializable {
         this.masterId = masterId;
     }
 
-    public Boolean getUsedDiscountCoupon() {
-        return isUsedDiscountCoupon;
+    public Integer getDefaultAddressId() {
+        return defaultAddressId;
     }
 
-    public void setUsedDiscountCoupon(Boolean usedDiscountCoupon) {
-        isUsedDiscountCoupon = usedDiscountCoupon;
+    public void setDefaultAddressId(Integer defaultAddressId) {
+        this.defaultAddressId = defaultAddressId;
     }
 }

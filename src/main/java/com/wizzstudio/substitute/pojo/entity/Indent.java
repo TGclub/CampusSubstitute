@@ -6,86 +6,87 @@ import com.wizzstudio.substitute.enums.IndentState;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
 public class Indent implements Serializable {
 
+    //订单id
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
+    //送货人id
     @Column
-    private Integer performer;
+    private Integer performerId;
 
+    //收货人id
     @Column
     @NotNull
-    private Integer publisher;
+    private Integer publisherId;
 
     @Column
     @NotNull
     private Boolean isCompusShoppingHelp;
 
+    //性别
     @NotNull
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
+    //物品名称
     @Column
     private String goodName;
-    /**
-     * 任务内容
-     */
 
+    //任务内容
     @Column
     @NotNull
     private String content;
 
+    //商户名
     @Column
     private String shopName;
 
+    //物品金额
     @Column
     private Float goodPrice;
 
-
+    //快递公司名
     @Column
     private String expressName;
 
+    //附加要求
     @Column
     private String appendRequest;
 
+    //创建时间
     @Column
     @NotNull
     private Date createTime;
 
+    //最近更新时间
     @Column
     private Date updateTime;
-    /**
-     * 取货地址
-     */
+
+    //取货地址
     @Column
     @NotNull
     private String takeGoodAddress;
 
-    /**
-     *
-     */
+    //送达地点
     @Column
     private String shippingAddress;
 
-    /**
-     * 取货码
-     */
+    //取货码
     @Column
     private String pickupCode;
 
-    /**
-     * 订单额
-     */
+    //订单额
     @Column
     @NotNull
     private String price;
 
+    //订单状态
     @Enumerated(EnumType.STRING)
     private IndentState state;
 
@@ -102,12 +103,12 @@ public class Indent implements Serializable {
         this.id = id;
     }
 
-    public Integer getPerformer() {
-        return performer;
+    public Integer getPerformerId() {
+        return performerId;
     }
 
-    public void setPerformer(Integer performer) {
-        this.performer = performer;
+    public void setPerformerId(Integer performerId) {
+        this.performerId = performerId;
     }
 
 
@@ -128,12 +129,12 @@ public class Indent implements Serializable {
         this.price = price;
     }
 
-    public Integer getPublisher() {
-        return publisher;
+    public Integer getPublisherId() {
+        return publisherId;
     }
 
-    public void setPublisher(Integer publisher) {
-        this.publisher = publisher;
+    public void setPublisherId(Integer publisherId) {
+        this.publisherId = publisherId;
     }
 
     public String getTakeGoodAddress() {
