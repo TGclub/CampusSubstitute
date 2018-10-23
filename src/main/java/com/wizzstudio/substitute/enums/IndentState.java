@@ -10,6 +10,10 @@ public enum IndentState {
      */
     PERFORMING,
     /**
+     * 货物已送达
+     */
+    ARRIVED,
+    /**
      *订单完成
      */
     COMPLETED

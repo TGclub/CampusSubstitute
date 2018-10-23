@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity(name = "user")
+
 public class User implements Serializable {
 
     //用户Id
@@ -51,11 +52,6 @@ public class User implements Serializable {
     @Column
     private Date updateTime;
 
-    /**
-     * 常用地址
-     */
-    @Column
-    private Integer defaultAddressId;
 
     /**
      * 用户级别
@@ -197,11 +193,4 @@ public class User implements Serializable {
         this.masterId = masterId;
     }
 
-    public Integer getDefaultAddressId() {
-        return defaultAddressId;
-    }
-
-    public void setDefaultAddressId(Integer defaultAddressId) {
-        this.defaultAddressId = defaultAddressId;
-    }
 }
