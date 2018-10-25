@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
+//订单
 @Entity
 public class Indent implements Serializable {
 
