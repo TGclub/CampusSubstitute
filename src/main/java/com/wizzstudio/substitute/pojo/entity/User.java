@@ -13,7 +13,7 @@ import java.util.Date;
 
 @Entity(name = "user")
 @Data
-@NamedQuery(name = "getAllApprentice", query = "select id, userName, phone, avatar, school, gender from user u where" +
+@NamedQuery(name = "getAllApprentice", query = "select u from user u where" +
         " u.masterId =: account")
 public class User implements Serializable {
 
