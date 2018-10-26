@@ -1,4 +1,4 @@
-package com.wizzstudio.substitute.pojo.entity;
+package com.wizzstudio.substitute.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wizzstudio.substitute.enums.Gender;

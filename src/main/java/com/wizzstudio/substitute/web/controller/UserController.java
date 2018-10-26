@@ -9,8 +9,7 @@ import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.dto.WxInfo;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.enums.Role;
-import com.wizzstudio.substitute.pojo.entity.User;
-import com.wizzstudio.substitute.service.UserService;
+import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.util.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -19,9 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
-import javax.xml.transform.Result;
 import java.util.List;
 
 @RestController

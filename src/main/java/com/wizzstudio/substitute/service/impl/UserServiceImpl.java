@@ -2,13 +2,11 @@ package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.dto.ApprenticeBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
-import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.enums.Gender;
-import com.wizzstudio.substitute.pojo.entity.User;
+import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.service.BaseService;
 import com.wizzstudio.substitute.service.UserService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 

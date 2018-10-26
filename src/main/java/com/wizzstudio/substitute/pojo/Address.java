@@ -1,14 +1,13 @@
-package com.wizzstudio.substitute.pojo.entity;
+package com.wizzstudio.substitute.pojo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 public class Address implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     /**
@@ -21,7 +20,7 @@ public class Address implements Serializable {
      *常用收货地址对应的用户
      */
     @Column
-    private Integer userId;
+    private String userId;
 
     public Address() {
     }
@@ -42,11 +41,11 @@ public class Address implements Serializable {
         this.address = address;
     }
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 }

@@ -1,4 +1,4 @@
-package com.wizzstudio.substitute.pojo.entity;
+package com.wizzstudio.substitute.pojo;
 
 import com.wizzstudio.substitute.enums.Gender;
 import com.wizzstudio.substitute.enums.IndentState;
@@ -6,6 +6,7 @@ import com.wizzstudio.substitute.enums.IndentState;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 //订单
@@ -19,13 +20,14 @@ public class Indent implements Serializable {
 
     //送货人id
     @Column
-    private Integer performerId;
+    private String performerId;
 
     //收货人id
     @Column
     @NotNull
-    private Integer publisherId;
+    private String publisherId;
 
+    //todo 是否为帮我购（不确定是否可以用boolean）
     @Column
     @NotNull
     private Boolean isCompusShoppingHelp;
@@ -33,11 +35,7 @@ public class Indent implements Serializable {
     //性别
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    private Gender gender;
-
-    //物品名称
-    @Column
-    private String goodName;
+    private Gender requireGender;
 
     //任务内容
     @Column
@@ -50,7 +48,7 @@ public class Indent implements Serializable {
 
     //物品金额
     @Column
-    private Float goodPrice;
+    private BigDecimal goodPrice;
 
     //快递公司名
     @Column
@@ -59,15 +57,6 @@ public class Indent implements Serializable {
     //附加要求
     @Column
     private String appendRequest;
-
-    //创建时间
-    @Column
-    @NotNull
-    private Date createTime;
-
-    //最近更新时间
-    @Column
-    private Date updateTime;
 
     //取货地址
     @Column
@@ -91,6 +80,14 @@ public class Indent implements Serializable {
     @Enumerated(EnumType.STRING)
     private IndentState state;
 
+    //创建时间
+    @Column(updatable = false,insertable = false)
+    @NotNull
+    private Date createTime;
+
+    //最近更新时间
+    @Column(updatable = false,insertable = false)
+    private Date updateTime;
 
 
     public Indent() {
@@ -104,11 +101,11 @@ public class Indent implements Serializable {
         this.id = id;
     }
 
-    public Integer getPerformerId() {
+    public String getPerformerId() {
         return performerId;
     }
 
-    public void setPerformerId(Integer performerId) {
+    public void setPerformerId(String performerId) {
         this.performerId = performerId;
     }
 
@@ -130,11 +127,11 @@ public class Indent implements Serializable {
         this.price = price;
     }
 
-    public Integer getPublisherId() {
+    public String getPublisherId() {
         return publisherId;
     }
 
-    public void setPublisherId(Integer publisherId) {
+    public void setPublisherId(String publisherId) {
         this.publisherId = publisherId;
     }
 
@@ -162,14 +159,6 @@ public class Indent implements Serializable {
         isCompusShoppingHelp = compusShoppingHelp;
     }
 
-    public String getGoodName() {
-        return goodName;
-    }
-
-    public void setGoodName(String goodName) {
-        this.goodName = goodName;
-    }
-
     public String getShopName() {
         return shopName;
     }
@@ -178,11 +167,11 @@ public class Indent implements Serializable {
         this.shopName = shopName;
     }
 
-    public Float getGoodPrice() {
+    public BigDecimal getGoodPrice() {
         return goodPrice;
     }
 
-    public void setGoodPrice(Float goodPrice) {
+    public void setGoodPrice(BigDecimal goodPrice) {
         this.goodPrice = goodPrice;
     }
 
@@ -220,12 +209,12 @@ public class Indent implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Gender getGender() {
-        return gender;
+    public Gender getRequireGender() {
+        return requireGender;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void setRequireGender(Gender requireGender) {
+        this.requireGender = requireGender;
     }
 
     public String getShippingAddress() {

@@ -2,8 +2,7 @@ package com.wizzstudio.substitute.service;
 
 import com.wizzstudio.substitute.dto.ApprenticeBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
-import com.wizzstudio.substitute.dto.ResultDTO;
-import com.wizzstudio.substitute.pojo.entity.User;
+import com.wizzstudio.substitute.pojo.User;
 
 import java.util.List;
 
