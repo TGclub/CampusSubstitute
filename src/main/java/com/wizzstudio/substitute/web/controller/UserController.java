@@ -12,6 +12,7 @@ import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.pojo.entity.User;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.KeyUtil;
+import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,9 +26,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController extends BaseController{
-
-
 
     @Autowired
     private WxMaService wxService;
@@ -41,14 +41,21 @@ public class UserController extends BaseController{
             User user = userService.findUserByOpenId(sessionResult.getOpenid());
             if (user == null) {
                 WxMaUserInfo wxUserInfo = wxService.getUserService().getUserInfo(sessionResult.getSessionKey(), loginData.getEncryptedData(), loginData.getIv());
+                String userId = KeyUtil.getUserUniqueKey();
+                while (userService.findUserById(userId) != null) {
+                    userId = KeyUtil.getUserUniqueKey();
+                }
                 user = User.newBuilder()
-                        .setId(KeyUtil.getUserUniqueKey())
+                        .setId(userId)
                         .setUserName(wxUserInfo.getNickName())
                         .setOpenid(wxUserInfo.getOpenId())
                         .setAvatar(wxUserInfo.getAvatarUrl())
                         .setRole(Role.ROLE_USER)
                         //.setGender(wxUserInfo.getGender())
                         .build();
+
+                userService.addNewUser(user);
+                log.info("Add a new account " + userId + " for " + user.getOpenid());
             }
             return new ResponseEntity<ResultDTO<User>>(new ResultDTO<User>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, user), HttpStatus.OK);
         } catch (WxErrorException e) {
@@ -60,6 +67,7 @@ public class UserController extends BaseController{
     public @ResponseBody
     ResponseEntity getUseInfo(@PathVariable String openid) {
         User user = userService.findUserByOpenId(openid);
+
         if (user != null) {
             return new ResponseEntity<ResultDTO>(new ResultDTO<User>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, user), HttpStatus.OK);
         } else {
@@ -78,9 +86,10 @@ public class UserController extends BaseController{
         }
     }
 
-    @RequestMapping(value = "/apprentices/userId", method = RequestMethod.GET)
+    @RequestMapping(value = "/apprentices/{userId}", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity getAllApprenticesInfo(@PathVariable String userId) {
-        return new ResponseEntity<ResultDTO<List<ApprenticeBasicInfo>>>(new ResultDTO<List<ApprenticeBasicInfo>>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY,userService.getApprenticeInfo(userId)), HttpStatus.OK);
+        return new ResponseEntity<ResultDTO<List<ApprenticeBasicInfo>>>(new ResultDTO<List<ApprenticeBasicInfo>>
+                (Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY,userService.getApprenticeInfo(userId)), HttpStatus.OK);
     }
 
 }

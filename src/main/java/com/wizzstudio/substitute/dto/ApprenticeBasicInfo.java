@@ -6,6 +6,8 @@ import java.io.Serializable;
 
 public class ApprenticeBasicInfo implements Serializable {
 
+    private static final long serialVersionUID = -179070031366192478L;
+
     private String id;
 
     private String userName;
