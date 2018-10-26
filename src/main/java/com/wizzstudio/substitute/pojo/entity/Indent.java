@@ -15,7 +15,7 @@ public class Indent implements Serializable {
     //订单id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Integer id;
 
     //送货人id
     @Column
@@ -96,11 +96,11 @@ public class Indent implements Serializable {
     public Indent() {
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -216,7 +216,7 @@ public class Indent implements Serializable {
     }
 
     @PreUpdate
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime() {
         this.updateTime = updateTime;
     }
 
