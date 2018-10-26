@@ -13,6 +13,8 @@ import java.util.Date;
 
 @Entity(name = "user")
 @Data
+@NamedQuery(name = "getAllApprentice", query = "select id, userName, phone, avatar, school, gender from user u where" +
+        " u.masterId =: account")
 public class User implements Serializable {
 
     //用户Id,由26位大小写字母+10位数组随机生成
@@ -24,7 +26,7 @@ public class User implements Serializable {
     private String openid;
 
     //师傅Id
-    private Integer masterId;
+    private String masterId;
 
     //用户昵称，微信名
     @NotNull
@@ -77,4 +79,149 @@ public class User implements Serializable {
     @Column(updatable = false,insertable = false)
     private Date updateTime;
 
+    public User() {
+    }
+
+    private User(Builder builder) {
+        setId(builder.id);
+        setOpenid(builder.openid);
+        setMasterId(builder.masterId);
+        setUserName(builder.userName);
+        setTrueName(builder.trueName);
+        setPhone(builder.phone);
+        setAvatar(builder.avatar);
+        setSchool(builder.school);
+        setGender(builder.gender);
+        setRole(builder.role);
+        setBalance(builder.balance);
+        setAllIncome(builder.allIncome);
+        setMasterIncome(builder.masterIncome);
+        setCreateTime(builder.createTime);
+        setUpdateTime(builder.updateTime);
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static Builder newBuilder(User copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.openid = copy.getOpenid();
+        builder.masterId = copy.getMasterId();
+        builder.userName = copy.getUserName();
+        builder.trueName = copy.getTrueName();
+        builder.phone = copy.getPhone();
+        builder.avatar = copy.getAvatar();
+        builder.school = copy.getSchool();
+        builder.gender = copy.getGender();
+        builder.role = copy.getRole();
+        builder.balance = copy.getBalance();
+        builder.allIncome = copy.getAllIncome();
+        builder.masterIncome = copy.getMasterIncome();
+        builder.createTime = copy.getCreateTime();
+        builder.updateTime = copy.getUpdateTime();
+        return builder;
+    }
+
+
+    public static final class Builder {
+        private String id;
+        private @NotNull String openid;
+        private String masterId;
+        private @NotNull String userName;
+        private String trueName;
+        private Long phone;
+        private @NotNull String avatar;
+        private String school;
+        private @NotNull Gender gender;
+        private @NotNull Role role;
+        private @NotNull BigDecimal balance;
+        private @NotNull BigDecimal allIncome;
+        private BigDecimal masterIncome;
+        private Date createTime;
+        private Date updateTime;
+
+        private Builder() {
+        }
+
+        public Builder setId(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setOpenid(@NotNull String openid) {
+            this.openid = openid;
+            return this;
+        }
+
+        public Builder setMasterId(String masterId) {
+            this.masterId = masterId;
+            return this;
+        }
+
+        public Builder setUserName(@NotNull String userName) {
+            this.userName = userName;
+            return this;
+        }
+
+        public Builder setTrueName(String trueName) {
+            this.trueName = trueName;
+            return this;
+        }
+
+        public Builder setPhone(Long phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        public Builder setAvatar(@NotNull String avatar) {
+            this.avatar = avatar;
+            return this;
+        }
+
+        public Builder setSchool(String school) {
+            this.school = school;
+            return this;
+        }
+
+        public Builder setGender(@NotNull Gender gender) {
+            this.gender = gender;
+            return this;
+        }
+
+        public Builder setRole(@NotNull Role role) {
+            this.role = role;
+            return this;
+        }
+
+        public Builder setBalance(@NotNull BigDecimal balance) {
+            this.balance = balance;
+            return this;
+        }
+
+        public Builder setAllIncome(@NotNull BigDecimal allIncome) {
+            this.allIncome = allIncome;
+            return this;
+        }
+
+        public Builder setMasterIncome(BigDecimal masterIncome) {
+            this.masterIncome = masterIncome;
+            return this;
+        }
+
+        public Builder setCreateTime(Date createTime) {
+            this.createTime = createTime;
+            return this;
+        }
+
+        public Builder setUpdateTime(Date updateTime) {
+            this.updateTime = updateTime;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+    }
 }

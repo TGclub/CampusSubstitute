@@ -1,4 +1,4 @@
-package com.wizz.hospitalSell.config;
+package com.wizzstudio.substitute.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -11,7 +11,7 @@ public class ModifyUserInfoDTO implements Serializable {
     private static final long serialVersionUID = -6191983979387003051L;
     private String userName;
     private String trueName;
-    private Integer phoneNumber;
+    private Long phoneNumber;
     private String school;
     private Gender gender;
 
@@ -37,11 +37,11 @@ public class ModifyUserInfoDTO implements Serializable {
         this.trueName = trueName;
     }
 
-    public Integer getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

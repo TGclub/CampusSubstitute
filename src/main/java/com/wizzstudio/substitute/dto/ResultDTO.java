@@ -1,7 +1,11 @@
 package com.wizzstudio.substitute.dto;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
+
+@Data
 public class ResultDTO<T> implements Serializable {
 
     private static final long serialVersionUID = -276259361015856308L;
@@ -18,27 +22,9 @@ public class ResultDTO<T> implements Serializable {
     public ResultDTO() {
     }
 
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
+    public ResultDTO(Integer code, String msg, T data) {
         this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
         this.msg = msg;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
         this.data = data;
     }
 }
