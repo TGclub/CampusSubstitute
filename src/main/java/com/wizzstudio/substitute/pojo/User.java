@@ -32,18 +32,9 @@ public class User implements Serializable {
     @NotNull
     private String userName;
 
-    //用户真实姓名
-    private String trueName;
-
-    //电话号码
-    private Long phone;
-
     //用户头像url
     @NotNull
     private String avatar;
-
-    //学校
-    private String school;
 
     //用户性别，男：”MALE”,女：”FAMALE”,未知：”NO_LIMITED”
     @Enumerated(EnumType.STRING)
@@ -57,6 +48,15 @@ public class User implements Serializable {
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Role role;
+
+    //用户真实姓名
+    private String trueName;
+
+    //电话号码
+    private Long phone;
+
+    //学校Id
+    private Integer schoolId;
 
     /**
      * 余额
@@ -90,7 +90,7 @@ public class User implements Serializable {
         setTrueName(builder.trueName);
         setPhone(builder.phone);
         setAvatar(builder.avatar);
-        setSchool(builder.school);
+        setSchoolId(builder.schoolId);
         setGender(builder.gender);
         setRole(builder.role);
         setBalance(builder.balance);
@@ -113,7 +113,7 @@ public class User implements Serializable {
         builder.trueName = copy.getTrueName();
         builder.phone = copy.getPhone();
         builder.avatar = copy.getAvatar();
-        builder.school = copy.getSchool();
+        builder.schoolId = copy.getSchoolId();
         builder.gender = copy.getGender();
         builder.role = copy.getRole();
         builder.balance = copy.getBalance();
@@ -133,7 +133,7 @@ public class User implements Serializable {
         private String trueName;
         private Long phone;
         private @NotNull String avatar;
-        private String school;
+        private Integer schoolId;
         private @NotNull Gender gender;
         private @NotNull Role role;
         private @NotNull BigDecimal balance;
@@ -180,8 +180,8 @@ public class User implements Serializable {
             return this;
         }
 
-        public Builder setSchool(String school) {
-            this.school = school;
+        public Builder setSchool(Integer schoolId) {
+            this.schoolId = schoolId;
             return this;
         }
 
