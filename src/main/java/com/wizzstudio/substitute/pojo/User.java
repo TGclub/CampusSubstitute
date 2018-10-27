@@ -45,7 +45,7 @@ public class User implements Serializable {
     private String avatar;
 
     //学校
-    private String school;
+    private Integer schoolId;
 
     //用户性别，男：”MALE”,女：”FAMALE”,未知：”NO_LIMITED”
     @Enumerated(EnumType.STRING)
@@ -92,7 +92,7 @@ public class User implements Serializable {
         setTrueName(builder.trueName);
         setPhone(builder.phone);
         setAvatar(builder.avatar);
-        setSchool(builder.school);
+        setSchoolId(builder.school);
         setGender(builder.gender);
         setRole(builder.role);
         setBalance(builder.balance);
@@ -115,7 +115,7 @@ public class User implements Serializable {
         builder.trueName = copy.getTrueName();
         builder.phone = copy.getPhone();
         builder.avatar = copy.getAvatar();
-        builder.school = copy.getSchool();
+        builder.school = copy.getSchoolId();
         builder.gender = copy.getGender();
         builder.role = copy.getRole();
         builder.balance = copy.getBalance();
@@ -135,7 +135,7 @@ public class User implements Serializable {
         private String trueName;
         private Long phone;
         private @NotNull String avatar;
-        private String school;
+        private Integer school;
         private @NotNull Gender gender;
         private @NotNull Role role;
         private @NotNull BigDecimal balance;
@@ -182,7 +182,7 @@ public class User implements Serializable {
             return this;
         }
 
-        public Builder setSchool(String school) {
+        public Builder setSchool(Integer school) {
             this.school = school;
             return this;
         }

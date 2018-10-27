@@ -31,12 +31,12 @@ public class UserServiceImpl extends BaseService implements UserService {
     public User modifyUserInfo(String id, ModifyUserInfoDTO newInfo) {
         User user = findUserById(id);
         Gender gender = newInfo.getGender();
-        String school = newInfo.getSchool();
+        Integer school = newInfo.getSchool();
         Long phoneNumber = newInfo.getPhoneNumber();
         String trueName = newInfo.getTrueName();
         String userName = newInfo.getUserName();
         if (gender != null) user.setGender(gender);
-        if (school != null) user.setSchool(school);
+        if (school != null) user.setSchoolId(school);
         if (phoneNumber != null) user.setPhone(phoneNumber);
         if (trueName != null) user.setTrueName(trueName);
         if (userName != null) user.setUserName(userName);
@@ -101,7 +101,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public User findUserById(String id) {
-        return userDao.getOne(id);
+        return userDao.findUserById(id);
     }
 
 

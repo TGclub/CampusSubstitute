@@ -12,7 +12,7 @@ public class ModifyUserInfoDTO implements Serializable {
     private String userName;
     private String trueName;
     private Long phoneNumber;
-    private String school;
+    private Integer school;
     private Gender gender;
 
 
@@ -45,11 +45,11 @@ public class ModifyUserInfoDTO implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getSchool() {
+    public Integer getSchool() {
         return school;
     }
 
-    public void setSchool(String school) {
+    public void setSchool(Integer school) {
         this.school = school;
     }
 
