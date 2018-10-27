@@ -14,8 +14,10 @@ import java.util.Date;
 @Entity(name = "user")
 @Data
 @NamedQuery(name = "getAllApprentice", query = "select u from user u where" +
-        " u.masterId =: account")
+        " u.masterId = :account")
 public class User implements Serializable {
+
+    private static final long serialVersionUID = 3537218534766243734L;
 
     //用户Id,由26位大小写字母+10位数组随机生成
     @Id
@@ -32,9 +34,18 @@ public class User implements Serializable {
     @NotNull
     private String userName;
 
+    //用户真实姓名
+    private String trueName;
+
+    //电话号码
+    private Long phone;
+
     //用户头像url
     @NotNull
     private String avatar;
+
+    //学校
+    private Integer schoolId;
 
     //用户性别，男：”MALE”,女：”FAMALE”,未知：”NO_LIMITED”
     @Enumerated(EnumType.STRING)
@@ -48,15 +59,6 @@ public class User implements Serializable {
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Role role;
-
-    //用户真实姓名
-    private String trueName;
-
-    //电话号码
-    private Long phone;
-
-    //学校Id
-    private Integer schoolId;
 
     /**
      * 余额
@@ -90,7 +92,7 @@ public class User implements Serializable {
         setTrueName(builder.trueName);
         setPhone(builder.phone);
         setAvatar(builder.avatar);
-        setSchoolId(builder.schoolId);
+        setSchoolId(builder.school);
         setGender(builder.gender);
         setRole(builder.role);
         setBalance(builder.balance);
@@ -113,7 +115,7 @@ public class User implements Serializable {
         builder.trueName = copy.getTrueName();
         builder.phone = copy.getPhone();
         builder.avatar = copy.getAvatar();
-        builder.schoolId = copy.getSchoolId();
+        builder.school = copy.getSchoolId();
         builder.gender = copy.getGender();
         builder.role = copy.getRole();
         builder.balance = copy.getBalance();
@@ -133,7 +135,7 @@ public class User implements Serializable {
         private String trueName;
         private Long phone;
         private @NotNull String avatar;
-        private Integer schoolId;
+        private Integer school;
         private @NotNull Gender gender;
         private @NotNull Role role;
         private @NotNull BigDecimal balance;
@@ -180,8 +182,8 @@ public class User implements Serializable {
             return this;
         }
 
-        public Builder setSchool(Integer schoolId) {
-            this.schoolId = schoolId;
+        public Builder setSchool(Integer school) {
+            this.school = school;
             return this;
         }
 

@@ -25,6 +25,11 @@ public class Address implements Serializable {
     public Address() {
     }
 
+    public Address(String address, String userId) {
+        this.address = address;
+        this.userId = userId;
+    }
+
     public Integer getId() {
         return id;
     }
