@@ -4,7 +4,7 @@ import com.wizzstudio.substitute.enums.Gender;
 
 import java.io.Serializable;
 
-public class ApprenticeBasicInfo implements Serializable {
+public class UserBasicInfo implements Serializable {
 
     private static final long serialVersionUID = -179070031366192478L;
 
@@ -12,25 +12,28 @@ public class ApprenticeBasicInfo implements Serializable {
 
     private String userName;
 
+    private Long phone;
+
     private String avatar;
 
     private String school;
 
     private Gender gender;
 
-    public ApprenticeBasicInfo() {
+    public UserBasicInfo() {
     }
 
 
-    public ApprenticeBasicInfo(String id, String userName, String avatar, String school, Gender gender) {
+    public UserBasicInfo(String id, String userName, Long phone, String avatar, String school, Gender gender) {
         this.id = id;
         this.userName = userName;
+        this.phone = phone;
         this.avatar = avatar;
         this.school = school;
         this.gender = gender;
     }
 
-    private ApprenticeBasicInfo(Builder builder) {
+    private UserBasicInfo(Builder builder) {
         setId(builder.id);
         setUserName(builder.userName);
         setAvatar(builder.avatar);
@@ -42,7 +45,7 @@ public class ApprenticeBasicInfo implements Serializable {
         return new Builder();
     }
 
-    public static Builder newBuilder(ApprenticeBasicInfo copy) {
+    public static Builder newBuilder(UserBasicInfo copy) {
         Builder builder = new Builder();
         builder.id = copy.getId();
         builder.userName = copy.getUserName();
@@ -92,6 +95,13 @@ public class ApprenticeBasicInfo implements Serializable {
         this.gender = gender;
     }
 
+    public Long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Long phone) {
+        this.phone = phone;
+    }
 
     public static final class Builder {
         private String id;
@@ -128,8 +138,8 @@ public class ApprenticeBasicInfo implements Serializable {
             return this;
         }
 
-        public ApprenticeBasicInfo build() {
-            return new ApprenticeBasicInfo(this);
+        public UserBasicInfo build() {
+            return new UserBasicInfo(this);
         }
     }
 }

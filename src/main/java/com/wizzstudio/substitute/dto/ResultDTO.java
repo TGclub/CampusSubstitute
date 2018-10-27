@@ -27,4 +27,6 @@ public class ResultDTO<T> implements Serializable {
         this.msg = msg;
         this.data = data;
     }
+
+
 }
