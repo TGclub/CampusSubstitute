@@ -4,7 +4,7 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.wizzstudio.substitute.constants.Constants;
-import com.wizzstudio.substitute.dto.ApprenticeBasicInfo;
+import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.dto.WxInfo;
 import com.wizzstudio.substitute.dto.ResultDTO;
@@ -19,16 +19,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 @Slf4j
-public class UserController extends BaseController{
+public class UserController extends BaseController {
 
     @Autowired
     private WxMaService wxService;
 
+    /**
+     * 用户注册
+     * @param loginData
+     * @return
+     */
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public @ResponseBody
@@ -60,6 +66,11 @@ public class UserController extends BaseController{
         }
     }
 
+    /**
+     * 用户基本信息获取
+     * @param openid
+     * @return
+     */
     @RequestMapping(value = "/{openid}", method = RequestMethod.GET)
     public @ResponseBody
     ResponseEntity getUseInfo(@PathVariable String openid) {
@@ -72,6 +83,12 @@ public class UserController extends BaseController{
         }
     }
 
+    /**
+     * 修改用户信息
+     * @param userId
+     * @param modifyUserInfoDTO
+     * @return
+     */
     @RequestMapping(value = "/info/{userId}", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity modifyUserInfo(@PathVariable String userId, @RequestBody ModifyUserInfoDTO modifyUserInfoDTO) {
@@ -83,10 +100,50 @@ public class UserController extends BaseController{
         }
     }
 
+    /**
+     * 获取徒弟信息
+     * @param userId
+     * @return
+     */
     @RequestMapping(value = "/apprentices/{userId}", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity getAllApprenticesInfo(@PathVariable String userId) {
-        return new ResponseEntity<ResultDTO<List<ApprenticeBasicInfo>>>(new ResultDTO<List<ApprenticeBasicInfo>>
-                (Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY,userService.getApprenticeInfo(userId)), HttpStatus.OK);
+    public @ResponseBody
+    ResponseEntity getAllApprenticesInfo(@PathVariable String userId) {
+        return new ResponseEntity<ResultDTO<List<UserBasicInfo>>>(new ResultDTO<List<UserBasicInfo>>
+                (Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, userService
+                        .getBasicInfo(new ArrayList<UserBasicInfo>(), userId)), HttpStatus.OK);
+    }
+
+    /**
+     * 获取师傅信息
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/master/{userId}", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity getMasterInfo(@PathVariable String userId) {
+
+        return new ResponseEntity<ResultDTO>(
+                new ResultDTO<UserBasicInfo>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, userService.getBasicInfo
+                        (new UserBasicInfo(), userId)), HttpStatus.OK);
+    }
+
+    /**
+     * 添加师傅
+     * @param userId
+     * @param masterId
+     * @return
+     */
+    @RequestMapping(value = "/master/{userId}/{masterId}", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity addMaster(@PathVariable String userId, @PathVariable String masterId) {
+        ResultDTO resultDTO = new ResultDTO();
+        if (userService.addReferrer(userId, masterId)) {
+            resultDTO.setCode(Constants.REQUEST_SUCCEED);
+            resultDTO.setMsg(Constants.QUERY_SUCCESSFULLY);
+        } else {
+            resultDTO.setCode(Constants.SYSTEM_BUSY);
+            resultDTO.setMsg(Constants.QUERY_FAILED);
+        }
+        return new ResponseEntity<ResultDTO>(resultDTO, HttpStatus.OK);
     }
 
 }

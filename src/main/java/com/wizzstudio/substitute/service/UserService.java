@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.service;
 
-import com.wizzstudio.substitute.dto.ApprenticeBasicInfo;
+import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.pojo.User;
 
@@ -42,11 +42,13 @@ public interface UserService {
     /**
      * 获取用户所有徒弟的基本信息
      * @param userId 徒弟id
+     * @param type 指定返回类型
      * @return 用户的基本信息
      */
-    List<ApprenticeBasicInfo> getApprenticeInfo(String userId);
+    <T>T getBasicInfo(T type, String userId);
 
     User findUserByOpenId(String openid);
 
     User findUserById(String id);
+
 }

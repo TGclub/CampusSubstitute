@@ -14,8 +14,10 @@ import java.util.Date;
 @Entity(name = "user")
 @Data
 @NamedQuery(name = "getAllApprentice", query = "select u from user u where" +
-        " u.masterId =: account")
+        " u.masterId = :account")
 public class User implements Serializable {
+
+    private static final long serialVersionUID = 3537218534766243734L;
 
     //用户Id,由26位大小写字母+10位数组随机生成
     @Id

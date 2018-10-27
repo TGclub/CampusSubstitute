@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.service.impl;
 
-import com.wizzstudio.substitute.dto.ApprenticeBasicInfo;
+import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.enums.Gender;
 import com.wizzstudio.substitute.pojo.User;
@@ -45,9 +45,9 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public boolean addReferrer(String userId, String masterId) {
-        User master = userDao.getOne(masterId);
-        User user = userDao.getOne(userId);
-        if (master != null) {
+        User master = findUserById(masterId);
+        User user = findUserById(userId);
+        if (master != null && user != null) {
             user.setMasterId(masterId);
             return true;
         } else {
@@ -55,18 +55,42 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
     }
 
+    /**
+     * 获取徒弟或师傅的基本信息
+     * @param returnType 传入一个实例指定返回类型，list作为徒弟处理，UserBasicInfo作为师傅处理
+     * @param userId 徒弟id
+     * @return 返回一个list或者UserBasicInfo
+     */
     @Override
-    public List<ApprenticeBasicInfo> getApprenticeInfo(String userId) {
-        Query query = entityManager.createNamedQuery
-                ("getAllApprentice", User.class).setParameter("account", userId);
-        List<User> apprentices = (List<User>) query.getResultList();
-        List<ApprenticeBasicInfo> basicInfos = new ArrayList<>();
-        apprentices.forEach(x -> {
-            ApprenticeBasicInfo basicInfo = new ApprenticeBasicInfo();
-            BeanUtils.copyProperties(apprentices, basicInfo);
-            basicInfos.add(basicInfo);
-        });
-        return basicInfos;
+    @SuppressWarnings(value = "unchecked")
+    public <T> T getBasicInfo(T returnType, String userId) {
+        User user = findUserById(userId);
+        if (user == null) return null;
+        if (returnType instanceof List) {
+            Query query = entityManager.createNamedQuery
+                    ("getAllApprentice", User.class).setParameter("account", userId);
+            List<User> apprentices = (List<User>) query.getResultList();
+            List<UserBasicInfo> basicInfos = new ArrayList<>();
+            apprentices.forEach(x -> {
+                UserBasicInfo basicInfo = new UserBasicInfo();
+                BeanUtils.copyProperties(apprentices, basicInfo);
+                basicInfos.add(basicInfo);
+            });
+            return (T)basicInfos;
+        } else if (returnType instanceof UserBasicInfo) {
+            String masterId = user.getMasterId();
+            if (masterId != null) {
+                User master = findUserById(masterId);
+                UserBasicInfo basicInfo = new UserBasicInfo();
+                BeanUtils.copyProperties(master, basicInfo);
+                return (T) basicInfo;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+
 
     }
 
@@ -79,4 +103,6 @@ public class UserServiceImpl extends BaseService implements UserService {
     public User findUserById(String id) {
         return userDao.getOne(id);
     }
+
+
 }
