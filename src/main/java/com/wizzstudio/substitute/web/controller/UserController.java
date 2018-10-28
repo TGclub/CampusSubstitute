@@ -9,6 +9,8 @@ import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.dto.WxInfo;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.enums.Role;
+import com.wizzstudio.substitute.pojo.Address;
+import com.wizzstudio.substitute.pojo.School;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.util.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -144,6 +146,26 @@ public class UserController extends BaseController {
             resultDTO.setMsg(Constants.QUERY_FAILED);
         }
         return new ResponseEntity<ResultDTO>(resultDTO, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/address/{userId}", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity addAddress(@PathVariable String userId, @RequestBody String address) {
+        addressService.addUsualAddress(userId, address);
+        return new ResponseEntity<ResultDTO>
+                (new ResultDTO<>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, null), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/school", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity getSchool(String key) {
+        List<School> schools = addressService.getSchoolInFuzzyMatching(key);
+        return new ResponseEntity<ResultDTO>(new ResultDTO<List<School>>
+                (Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, schools), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/addresses/{userId}", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity getAllAddress(@PathVariable String userId) {
+        List<Address> addresses = addressService.getUsualAddress(userId);
+        return new ResponseEntity<ResultDTO>(new ResultDTO<List<Address>>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, addresses) ,HttpStatus.OK);
     }
 
 }

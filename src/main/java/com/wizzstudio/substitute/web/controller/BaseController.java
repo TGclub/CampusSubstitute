@@ -2,6 +2,8 @@ package com.wizzstudio.substitute.web.controller;
 
 import com.wizzstudio.substitute.constants.Constants;
 import com.wizzstudio.substitute.dto.ResultDTO;
+import com.wizzstudio.substitute.service.AddressService;
+import com.wizzstudio.substitute.service.IndentService;
 import com.wizzstudio.substitute.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,13 @@ public class BaseController {
 
     @Autowired
     protected UserService userService;
+
+    @Autowired
+    protected IndentService indentService;
+    @Autowired
+    protected AddressService addressService;
+
+
 
     @Autowired
     public BaseController(HttpServletRequest request, UserService userService) {
