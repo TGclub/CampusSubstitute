@@ -1,7 +1,9 @@
 package com.wizzstudio.substitute.pojo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.enums.Gender;
 import com.wizzstudio.substitute.enums.IndentState;
+import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -83,10 +85,12 @@ public class Indent implements Serializable {
     //创建时间
     @Column(updatable = false,insertable = false)
     @NotNull
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 
     //最近更新时间
     @Column(updatable = false,insertable = false)
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
 
 

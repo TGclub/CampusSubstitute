@@ -18,10 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class BaseController {
 
-    protected HttpServletRequest request;
+    HttpServletRequest request;
 
     @Autowired
-    protected UserService userService;
+    UserService userService;
 
     @Autowired
     protected IndentService indentService;

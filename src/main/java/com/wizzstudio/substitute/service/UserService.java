@@ -10,7 +10,6 @@ import java.util.List;
  * 定义了用户相关的基本方法
  */
 public interface UserService {
-
     /**
      *
      * @param user 用户信息

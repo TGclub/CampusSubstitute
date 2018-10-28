@@ -1,5 +1,9 @@
 package com.wizzstudio.substitute.util;
 
+import com.wizzstudio.substitute.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.Random;
 
 /**
@@ -9,10 +13,9 @@ import java.util.Random;
 public class KeyUtil {
 
     /**
-     * 生成用户唯一主键，六位数字+字母的随机字符串
-     * synchronized关键字，防止多线程冲突
+     * 生成六位(数字+大小写字母)的随机字符串
      */
-    public static synchronized String getUserUniqueKey() {
+    public static String getRandomKey() {
         final char[] words = {'A','a','B','b','C','c','D','d','E','e','F','f','G','g','H','h','I','i','J','j','K','k','L','l','M','m','N','n','O','o','P','p','Q','q','R','r','S','s','T','t','U','u','V','v','W','w','X','x','Y','y','Z','z','0','1','2','3','4','5','6','7','8','9'};
         Random random = new Random();
         //生成一个六位数字+字母的随机字符串
@@ -22,4 +25,5 @@ public class KeyUtil {
         }
         return key.toString();
     }
+
 }

@@ -8,11 +8,13 @@ import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.dto.WxInfo;
 import com.wizzstudio.substitute.dto.ResultDTO;
+import com.wizzstudio.substitute.enums.Gender;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.pojo.Address;
 import com.wizzstudio.substitute.pojo.School;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.util.KeyUtil;
+import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,29 +40,35 @@ public class UserController extends BaseController {
      * @return
      */
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public @ResponseBody
-    ResponseEntity login(@NotNull @RequestBody WxInfo loginData) {
+    @PostMapping("/login")
+    public ResponseEntity login(@NotNull @RequestBody WxInfo loginData) {
         try {
             WxMaJscode2SessionResult sessionResult = wxService.getUserService().getSessionInfo(loginData.getCode());
             User user = userService.findUserByOpenId(sessionResult.getOpenid());
             if (user == null) {
                 WxMaUserInfo wxUserInfo = wxService.getUserService().getUserInfo(sessionResult.getSessionKey(), loginData.getEncryptedData(), loginData.getIv());
-                String userId = KeyUtil.getUserUniqueKey();
-                while (userService.findUserById(userId) != null) {
-                    userId = KeyUtil.getUserUniqueKey();
-                }
                 user = User.newBuilder()
-                        .setId(userId)
                         .setUserName(wxUserInfo.getNickName())
                         .setOpenid(wxUserInfo.getOpenId())
                         .setAvatar(wxUserInfo.getAvatarUrl())
                         .setRole(Role.ROLE_USER)
-                        //.setGender(wxUserInfo.getGender())
                         .build();
-
+                switch (Integer.valueOf(wxUserInfo.getGender())){
+                    //性别 0：未知、1：男、2：女
+                    case 0:
+                        user.setGender(Gender.NO_LIMITED);
+                        break;
+                    case 1:
+                        user.setGender(Gender.MALE);
+                        break;
+                    case 2:
+                        user.setGender(Gender.FAMALE);
+                        break;
+                    default:
+                        return ResultUtil.error("用户信息有误");
+                }
                 userService.addNewUser(user);
-                log.info("Add a new account " + userId + " for " + user.getOpenid());
+                log.info("Add a new account for " + user.getOpenid());
             }
             return new ResponseEntity<ResultDTO<User>>(new ResultDTO<User>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, user), HttpStatus.OK);
         } catch (WxErrorException e) {

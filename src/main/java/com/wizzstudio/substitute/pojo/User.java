@@ -1,8 +1,10 @@
 package com.wizzstudio.substitute.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.enums.Gender;
 import com.wizzstudio.substitute.enums.Role;
+import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -76,9 +78,11 @@ public class User implements Serializable {
     private BigDecimal masterIncome;
 
     @Column(insertable = false,updatable = false)
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 
     @Column(updatable = false,insertable = false)
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
 
     public User() {

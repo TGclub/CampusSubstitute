@@ -40,7 +40,7 @@ public class UserServiceImplTest {
     public void addNewUser() {
         User user = User.newBuilder()
                 .setGender(Gender.MALE)
-                .setId(KeyUtil.getUserUniqueKey())
+                .setId(KeyUtil.getRandomKey())
                 .setOpenid(UUID.randomUUID().toString())
                 .setAvatar("TEST")
                 .setAllIncome(new BigDecimal(0))
