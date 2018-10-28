@@ -11,9 +11,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Entity(name = "user")
+@Entity
 @Data
-@NamedQuery(name = "getAllApprentice", query = "select u from user u where" +
+@NamedQuery(name = "getAllApprentice", query = "select u from User u where" +
         " u.masterId = :account")
 public class User implements Serializable {
 

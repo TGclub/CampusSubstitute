@@ -11,4 +11,5 @@ public class Constants {
     public static final String QUERY_SUCCESSFULLY = "请求成功";
     public static final String QUERY_FAILED = "请求失败";
     public static final String TOKEN = "token";
+    public static final String INVALID_MESSAGE = "信息有误";
 }
