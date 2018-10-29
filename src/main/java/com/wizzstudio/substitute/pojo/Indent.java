@@ -18,7 +18,7 @@ public class Indent implements Serializable {
     //订单id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer indentId;
 
     //送货人id
     @Column
@@ -57,8 +57,7 @@ public class Indent implements Serializable {
     private String expressName;
 
     //附加要求
-    @Column
-    private String appendRequest;
+
 
     //取货地址
     @Column
@@ -97,12 +96,56 @@ public class Indent implements Serializable {
     public Indent() {
     }
 
-    public Integer getId() {
-        return id;
+    private Indent(Builder builder) {
+        setId(builder.id);
+        setPerformerId(builder.performerId);
+        setPublisherId(builder.publisherId);
+        isCompusShoppingHelp = builder.isCompusShoppingHelp;
+        setRequireGender(builder.requireGender);
+        setContent(builder.content);
+        setShopName(builder.shopName);
+        setGoodPrice(builder.goodPrice);
+        setExpressName(builder.expressName);
+        setTakeGoodAddress(builder.takeGoodAddress);
+        setShippingAddress(builder.shippingAddress);
+        setPickupCode(builder.pickupCode);
+        setPrice(builder.price);
+        setState(builder.state);
+        createTime = builder.createTime;
+        updateTime = builder.updateTime;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public static Builder newBuilder(Indent copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.performerId = copy.getPerformerId();
+        builder.publisherId = copy.getPublisherId();
+        builder.isCompusShoppingHelp = copy.getIsCompusShoppingHelp();
+        builder.requireGender = copy.getRequireGender();
+        builder.content = copy.getContent();
+        builder.shopName = copy.getShopName();
+        builder.goodPrice = copy.getGoodPrice();
+        builder.expressName = copy.getExpressName();
+        builder.takeGoodAddress = copy.getTakeGoodAddress();
+        builder.shippingAddress = copy.getShippingAddress();
+        builder.pickupCode = copy.getPickupCode();
+        builder.price = copy.getPrice();
+        builder.state = copy.getState();
+        builder.createTime = copy.getCreateTime();
+        builder.updateTime = copy.getUpdateTime();
+        return builder;
+    }
+
+    public Integer getId() {
+        return indentId;
+    }
+
+    public void setId(Integer indentId) {
+        this.indentId = indentId;
     }
 
     public String getPerformerId() {
@@ -155,7 +198,7 @@ public class Indent implements Serializable {
         this.state = state;
     }
 
-    public Boolean getCompusShoppingHelp() {
+    public Boolean getIsCompusShoppingHelp() {
         return isCompusShoppingHelp;
     }
 
@@ -187,13 +230,6 @@ public class Indent implements Serializable {
         this.expressName = expressName;
     }
 
-    public String getAppendRequest() {
-        return appendRequest;
-    }
-
-    public void setAppendRequest(String appendRequest) {
-        this.appendRequest = appendRequest;
-    }
 
     public Date getCreateTime() {
         return createTime;
@@ -235,5 +271,118 @@ public class Indent implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+
+    public static final class Builder {
+        private Integer id;
+        private String performerId;
+        private @NotNull String publisherId;
+        private @NotNull Boolean isCompusShoppingHelp;
+        private @NotNull Gender requireGender;
+        private @NotNull String content;
+        private String shopName;
+        private BigDecimal goodPrice;
+        private String expressName;
+        private String appendRequest;
+        private @NotNull String takeGoodAddress;
+        private String shippingAddress;
+        private String pickupCode;
+        private @NotNull String price;
+        private IndentState state;
+        private @NotNull Date createTime;
+        private Date updateTime;
+
+        private Builder() {
+        }
+
+        public Builder setId(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setPerformerId(String performerId) {
+            this.performerId = performerId;
+            return this;
+        }
+
+        public Builder setPublisherId(@NotNull String publisherId) {
+            this.publisherId = publisherId;
+            return this;
+        }
+
+        public Builder setIsCompusShoppingHelp(@NotNull Boolean isCompusShoppingHelp) {
+            this.isCompusShoppingHelp = isCompusShoppingHelp;
+            return this;
+        }
+
+        public Builder setRequireGender(@NotNull Gender requireGender) {
+            this.requireGender = requireGender;
+            return this;
+        }
+
+        public Builder setContent(@NotNull String content) {
+            this.content = content;
+            return this;
+        }
+
+        public Builder setShopName(String shopName) {
+            this.shopName = shopName;
+            return this;
+        }
+
+        public Builder setGoodPrice(BigDecimal goodPrice) {
+            this.goodPrice = goodPrice;
+            return this;
+        }
+
+        public Builder setExpressName(String expressName) {
+            this.expressName = expressName;
+            return this;
+        }
+
+        public Builder setAppendRequest(String appendRequest) {
+            this.appendRequest = appendRequest;
+            return this;
+        }
+
+        public Builder setTakeGoodAddress(@NotNull String takeGoodAddress) {
+            this.takeGoodAddress = takeGoodAddress;
+            return this;
+        }
+
+        public Builder setShippingAddress(String shippingAddress) {
+            this.shippingAddress = shippingAddress;
+            return this;
+        }
+
+        public Builder setPickupCode(String pickupCode) {
+            this.pickupCode = pickupCode;
+            return this;
+        }
+
+        public Builder setPrice(@NotNull String price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder setState(IndentState state) {
+            this.state = state;
+            return this;
+        }
+
+        public Builder setCreateTime(@NotNull Date createTime) {
+            this.createTime = createTime;
+            return this;
+        }
+
+        public Builder setUpdateTime(Date updateTime) {
+            this.updateTime = updateTime;
+            return this;
+        }
+
+        public Indent build() {
+            return new Indent(this);
+        }
     }
 }

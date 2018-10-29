@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -36,8 +33,16 @@ public class IndentController extends BaseController {
         }
         Indent newIndent = new Indent();
         BeanUtils.copyProperties(indentDTO, newIndent);
+        newIndent.setPublisherId(publisherId);
         indentService.publishedNewIndent(newIndent);
         return new ResponseEntity<ResultDTO>(new ResultDTO<>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, null), HttpStatus.OK);
     }
+
+    /*
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public ResponseEntity getIndentList(@RequestParam(defaultValue = "0") Integer sort, @RequestParam(required = true) String key) {
+
+
+    }*/
 
 }

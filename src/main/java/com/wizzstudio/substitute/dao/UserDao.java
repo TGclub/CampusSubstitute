@@ -13,7 +13,7 @@ public interface UserDao extends JpaRepository<User, String> {
     User findByOpenid(String id);
     User findUserById(String id);
 
-    @Query (value = "select user from  User user where user.masterId like :masterId")
+    @Query (value = "select user from  User user where user.masterId = :masterId")
     List<User> findByMasterId(@Param("masterId") String masterId);
 
 

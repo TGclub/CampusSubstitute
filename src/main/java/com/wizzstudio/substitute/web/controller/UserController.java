@@ -78,13 +78,13 @@ public class UserController extends BaseController {
 
     /**
      * 用户基本信息获取
-     * @param openid
+     * @param userId
      * @return
      */
-    @RequestMapping(value = "/{openid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity getUseInfo(@PathVariable String openid) {
-        User user = userService.findUserByOpenId(openid);
+    ResponseEntity getUseInfo(@PathVariable String userId) {
+        User user = userService.findUserById(userId);
 
         if (user != null) {
             return new ResponseEntity<ResultDTO>(new ResultDTO<User>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, user), HttpStatus.OK);
