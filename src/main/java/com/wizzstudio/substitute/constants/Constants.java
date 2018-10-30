@@ -12,4 +12,8 @@ public class Constants {
     public static final String QUERY_FAILED = "请求失败";
     public static final String TOKEN = "token";
     public static final String INVALID_MESSAGE = "信息有误";
+
+    public static final Integer TOKEN_EXPIRED = 7200;
+
+    public static final Integer REMEMEMBER_ME = 864000;
 }

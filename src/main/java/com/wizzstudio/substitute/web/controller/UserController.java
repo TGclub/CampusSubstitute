@@ -13,6 +13,7 @@ import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.pojo.Address;
 import com.wizzstudio.substitute.pojo.School;
 import com.wizzstudio.substitute.pojo.User;
+import com.wizzstudio.substitute.util.CookieUtil;
 import com.wizzstudio.substitute.util.KeyUtil;
 import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,10 @@ import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,52 +32,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @Slf4j
+@Secured({"ROLE_USER"})
 public class UserController extends BaseController {
 
-    @Autowired
-    private WxMaService wxService;
 
-    /**
-     * 用户注册
-     * @param loginData
-     * @return
-     */
-
-    @PostMapping("/login")
-    public ResponseEntity login(@NotNull @RequestBody WxInfo loginData) {
-        try {
-            WxMaJscode2SessionResult sessionResult = wxService.getUserService().getSessionInfo(loginData.getCode());
-            User user = userService.findUserByOpenId(sessionResult.getOpenid());
-            if (user == null) {
-                WxMaUserInfo wxUserInfo = wxService.getUserService().getUserInfo(sessionResult.getSessionKey(), loginData.getEncryptedData(), loginData.getIv());
-                user = User.newBuilder()
-                        .setUserName(wxUserInfo.getNickName())
-                        .setOpenid(wxUserInfo.getOpenId())
-                        .setAvatar(wxUserInfo.getAvatarUrl())
-                        .setRole(Role.ROLE_USER)
-                        .build();
-                switch (Integer.valueOf(wxUserInfo.getGender())){
-                    //性别 0：未知、1：男、2：女
-                    case 0:
-                        user.setGender(Gender.NO_LIMITED);
-                        break;
-                    case 1:
-                        user.setGender(Gender.MALE);
-                        break;
-                    case 2:
-                        user.setGender(Gender.FAMALE);
-                        break;
-                    default:
-                        return ResultUtil.error("用户信息有误");
-                }
-                userService.addNewUser(user);
-                log.info("Add a new account for " + user.getOpenid());
-            }
-            return new ResponseEntity<ResultDTO<User>>(new ResultDTO<User>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, user), HttpStatus.OK);
-        } catch (WxErrorException e) {
-            return new ResponseEntity<ResultDTO<User>>(new ResultDTO<User>(Constants.SYSTEM_BUSY, "Failed", null), HttpStatus.BAD_REQUEST);
-        }
-    }
 
     /**
      * 用户基本信息获取
@@ -175,5 +136,25 @@ public class UserController extends BaseController {
         List<Address> addresses = addressService.getUsualAddress(userId);
         return new ResponseEntity<ResultDTO>(new ResultDTO<List<Address>>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, addresses) ,HttpStatus.OK);
     }
+
+/*
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public @ResponseBody String test() {
+        return "Hello world";
+    }
+
+    @Secured({"ROLE_ADMIN_1"})
+    @RequestMapping(value = "/test1", method = RequestMethod.GET)
+    public @ResponseBody String test1() {
+        return "Hello world";
+    }
+
+    @Secured({"ROLE_USER"})
+    @RequestMapping(value = "/test2", method = RequestMethod.GET)
+    public @ResponseBody String test2() {
+        return "Hello world";
+    }
+*/
+
 
 }

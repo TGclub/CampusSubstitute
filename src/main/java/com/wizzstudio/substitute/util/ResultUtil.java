@@ -21,6 +21,9 @@ public class ResultUtil<T> {
     public static ResponseEntity error(Integer code, String msg) {
         return new ResponseEntity<>(new ResultDTO<>(code, msg, null),HttpStatus.BAD_REQUEST);
     }
+    public static ResponseEntity error(Integer code, String msg, HttpStatus status) {
+        return new ResponseEntity<>(new ResultDTO<>(code, msg, null),status);
+    }
 
     public static ResponseEntity error(String msg) {
         return error(-1, msg);
