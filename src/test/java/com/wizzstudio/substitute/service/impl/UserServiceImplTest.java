@@ -48,7 +48,6 @@ public class UserServiceImplTest {
                 .setMasterIncome(new BigDecimal(0))
                 .setUserName("TEST")
                 .setPhone(new Random().nextLong())
-                .setRole(Role.ROLE_USER)
                 .build();
         userDao.save(user);
     }
@@ -70,7 +69,7 @@ public class UserServiceImplTest {
         String id = "EETEE";
         ModifyUserInfoDTO newInfo = new ModifyUserInfoDTO();
         User user = userDao.getOne(id);
-        user.setGender(Gender.FAMALE);
+        user.setGender(Gender.FEMALE);
         user.setSchoolId(333);
         Gender gender = newInfo.getGender();
         Integer school = newInfo.getSchool();

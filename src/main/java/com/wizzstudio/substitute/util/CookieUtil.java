@@ -14,6 +14,7 @@ public class CookieUtil {
 
     /**
      * 设置cookie值
+     * expire：过期时间，单位：秒
      */
     public static void setCookie(HttpServletResponse response, String key, String value, Integer expire) {
         Cookie cookie = new Cookie(key, value);

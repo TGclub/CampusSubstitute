@@ -39,7 +39,7 @@ public class Indent implements Serializable {
     @Enumerated(EnumType.STRING)
     private IndentTypeEnum indentType;
 
-    //订单要求性别，男：”MALE”,女：”FAMALE”,不限：”NO_LIMITED”
+    //订单要求性别，男：”MALE”,女：”FEMALE”,不限：”NO_LIMITED”
     @NotNull
     @Enumerated(value = EnumType.STRING)
     private Gender requireGender;

@@ -53,7 +53,7 @@ public class IndentController extends BaseController {
     }
 
     /**
-     * to be continued
+     * todo to be continued
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -62,7 +62,7 @@ public class IndentController extends BaseController {
     }
 
     @RequestMapping(value = "/detail/{indentId}/{userId}")
-    public ResponseEntity getIndentInfo(@PathVariable Integer indentId, String userId){
+    public ResponseEntity getIndentInfo(@PathVariable Integer indentId, @PathVariable String userId){
         return ResultUtil.success(indentService.getSpecificIndentInfo(indentId));
     }
 

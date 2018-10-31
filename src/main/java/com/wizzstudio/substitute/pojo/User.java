@@ -3,7 +3,6 @@ package com.wizzstudio.substitute.pojo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.enums.Gender;
-import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
 import lombok.Data;
 
@@ -49,18 +48,10 @@ public class User implements Serializable {
     //学校
     private Integer schoolId;
 
-    //用户性别，男：”MALE”,女：”FAMALE”,未知：”NO_LIMITED”
+    //用户性别，男：”MALE”,女：”FEMALE”,未知：”NO_LIMITED”
     @Enumerated(EnumType.STRING)
     @NotNull
     private Gender gender;
-
-    /**
-     * 用户级别: 普通用户：”ROLE_USER”,一级管理员:”ROLE_ADMIN_1” ,二级管理员:”ROLE_ADMIN_2”
-     */
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Role role;
 
     /**
      * 余额
@@ -98,7 +89,6 @@ public class User implements Serializable {
         setAvatar(builder.avatar);
         setSchoolId(builder.school);
         setGender(builder.gender);
-        setRole(builder.role);
         setBalance(builder.balance);
         setAllIncome(builder.allIncome);
         setMasterIncome(builder.masterIncome);
@@ -121,7 +111,6 @@ public class User implements Serializable {
         builder.avatar = copy.getAvatar();
         builder.school = copy.getSchoolId();
         builder.gender = copy.getGender();
-        builder.role = copy.getRole();
         builder.balance = copy.getBalance();
         builder.allIncome = copy.getAllIncome();
         builder.masterIncome = copy.getMasterIncome();
@@ -141,7 +130,6 @@ public class User implements Serializable {
         private @NotNull String avatar;
         private Integer school;
         private @NotNull Gender gender;
-        private @NotNull Role role;
         private @NotNull BigDecimal balance;
         private @NotNull BigDecimal allIncome;
         private BigDecimal masterIncome;
@@ -193,11 +181,6 @@ public class User implements Serializable {
 
         public Builder setGender(@NotNull Gender gender) {
             this.gender = gender;
-            return this;
-        }
-
-        public Builder setRole(@NotNull Role role) {
-            this.role = role;
             return this;
         }
 

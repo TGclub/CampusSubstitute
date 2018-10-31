@@ -4,10 +4,8 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.wizzstudio.substitute.constants.Constants;
-import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.dto.WxInfo;
 import com.wizzstudio.substitute.enums.Gender;
-import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.util.CookieUtil;
 import com.wizzstudio.substitute.util.KeyUtil;
@@ -15,7 +13,6 @@ import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +32,6 @@ public class LoginController extends BaseController{
      * @param loginData
      * @return
      */
-
     @PostMapping("/user/login")
     public ResponseEntity login(@NotNull @RequestBody WxInfo loginData, HttpServletResponse response) {
         try {
@@ -48,7 +44,6 @@ public class LoginController extends BaseController{
                         .setUserName(wxUserInfo.getNickName())
                         .setOpenid(wxUserInfo.getOpenId())
                         .setAvatar(wxUserInfo.getAvatarUrl())
-                        .setRole(Role.ROLE_USER)
                         .build();
                 switch (Integer.valueOf(wxUserInfo.getGender())){
                     //性别 0：未知、1：男、2：女
@@ -59,7 +54,7 @@ public class LoginController extends BaseController{
                         user.setGender(Gender.MALE);
                         break;
                     case 2:
-                        user.setGender(Gender.FAMALE);
+                        user.setGender(Gender.FEMALE);
                         break;
                     default:
                         return ResultUtil.error("用户信息有误");
@@ -70,16 +65,10 @@ public class LoginController extends BaseController{
                 CookieUtil.setCookie(response, Constants.TOKEN, cookie, Constants.TOKEN_EXPIRED);
                 log.info("Add a new account for " + user.getOpenid());
             }
-            return new ResponseEntity<ResultDTO<User>>(new ResultDTO<User>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, user), HttpStatus.OK);
+            return ResultUtil.success(user);
         } catch (WxErrorException e) {
-            return new ResponseEntity<ResultDTO<User>>(new ResultDTO<User>(Constants.SYSTEM_BUSY, "Failed", null), HttpStatus.BAD_REQUEST);
+            return ResultUtil.error();
         }
     }
-/*
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public @ResponseBody String test() {
-        return "Hello world";
-    }
-*/
 
 }

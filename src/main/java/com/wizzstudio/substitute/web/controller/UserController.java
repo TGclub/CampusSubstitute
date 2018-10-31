@@ -32,9 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @Slf4j
-@Secured({"ROLE_USER"})
 public class UserController extends BaseController {
-
 
 
     /**
@@ -136,25 +134,5 @@ public class UserController extends BaseController {
         List<Address> addresses = addressService.getUsualAddress(userId);
         return new ResponseEntity<ResultDTO>(new ResultDTO<List<Address>>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY, addresses) ,HttpStatus.OK);
     }
-
-/*
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public @ResponseBody String test() {
-        return "Hello world";
-    }
-
-    @Secured({"ROLE_ADMIN_1"})
-    @RequestMapping(value = "/test1", method = RequestMethod.GET)
-    public @ResponseBody String test1() {
-        return "Hello world";
-    }
-
-    @Secured({"ROLE_USER"})
-    @RequestMapping(value = "/test2", method = RequestMethod.GET)
-    public @ResponseBody String test2() {
-        return "Hello world";
-    }
-*/
-
 
 }

@@ -4,7 +4,7 @@ public enum Gender {
     //男
     MALE,
     //女
-    FAMALE,
+    FEMALE,
     //不限
     NO_LIMITED
 }

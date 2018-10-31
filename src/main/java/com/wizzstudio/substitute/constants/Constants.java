@@ -15,5 +15,6 @@ public class Constants {
 
     public static final Integer TOKEN_EXPIRED = 7200;
 
+    // 864000 = 60*60*24*10 （10天）
     public static final Integer REMEMEMBER_ME = 864000;
 }
