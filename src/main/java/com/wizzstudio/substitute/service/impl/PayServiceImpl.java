@@ -9,7 +9,7 @@ import com.wizzstudio.substitute.form.PayForm;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.service.PayService;
 import com.wizzstudio.substitute.service.UserService;
-import com.wizzstudio.substitute.util.KeyUtil;
+import com.wizzstudio.substitute.util.RandomUtil;
 import com.wizzstudio.substitute.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +84,7 @@ public class PayServiceImpl implements PayService {
         WxPayInfo wxPayInfo = new WxPayInfo();
         wxPayInfo.setAppid(weChatAccountConfig.getAppid());
         wxPayInfo.setMch_id(weChatAccountConfig.getMchId());
-        wxPayInfo.setNonce_str(KeyUtil.getRandomString(32));
+        wxPayInfo.setNonce_str(RandomUtil.getRandomString(32));
         //todo 商品大致描述
         wxPayInfo.setBody("JSAPI支付测试");
         //todo 生成订单交易号,是否需要把订单交易号改为String，防止被遍历

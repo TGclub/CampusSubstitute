@@ -8,7 +8,7 @@ import com.wizzstudio.substitute.dto.WxInfo;
 import com.wizzstudio.substitute.enums.Gender;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.util.CookieUtil;
-import com.wizzstudio.substitute.util.KeyUtil;
+import com.wizzstudio.substitute.util.RandomUtil;
 import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -40,7 +40,7 @@ public class LoginController extends BaseController{
             if (user == null) {
                 WxMaUserInfo wxUserInfo = wxService.getUserService().getUserInfo(sessionResult.getSessionKey(), loginData.getEncryptedData(), loginData.getIv());
                 user = User.newBuilder()
-                        .setId(KeyUtil.getRandomKey())
+                        .setId(RandomUtil.getSixRandom())
                         .setUserName(wxUserInfo.getNickName())
                         .setOpenid(wxUserInfo.getOpenId())
                         .setAvatar(wxUserInfo.getAvatarUrl())
