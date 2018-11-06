@@ -16,7 +16,6 @@ import static org.junit.Assert.*;
 @SpringBootTest
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-
 public class UserDaoTest {
 
     @Autowired

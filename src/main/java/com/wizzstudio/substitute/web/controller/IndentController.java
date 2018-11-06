@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.web.controller;
 
-import com.wizzstudio.substitute.constants.Constants;
+import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.IndentDTO;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.exception.InvalidMessageException;
@@ -38,7 +38,7 @@ public class IndentController extends BaseController {
         BeanUtils.copyProperties(indentDTO, newIndent);
         newIndent.setPublisherId(publisherId);
         indentService.publishedNewIndent(newIndent);
-        return new ResponseEntity<ResultDTO>(new ResultDTO<>(Constants.REQUEST_SUCCEED, Constants.QUERY_SUCCESSFULLY,
+        return new ResponseEntity<ResultDTO>(new ResultDTO<>(Constant.REQUEST_SUCCEED, Constant.QUERY_SUCCESSFULLY,
                 null), HttpStatus.OK);
     }
 
