@@ -4,9 +4,8 @@ import com.wizzstudio.substitute.dao.UserDao;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.enums.Gender;
-import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.pojo.User;
-import com.wizzstudio.substitute.util.KeyUtil;
+import com.wizzstudio.substitute.util.RandomUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class UserServiceImplTest {
     public void addNewUser() {
         User user = User.newBuilder()
                 .setGender(Gender.MALE)
-                .setId(KeyUtil.getRandomKey())
+                .setId(RandomUtil.getSixRandom())
                 .setOpenid(UUID.randomUUID().toString())
                 .setAvatar("TEST")
                 .setAllIncome(new BigDecimal(0))

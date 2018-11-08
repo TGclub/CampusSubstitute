@@ -3,12 +3,12 @@ package com.wizzstudio.substitute.web.controller;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import com.wizzstudio.substitute.constants.Constants;
+import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.WxInfo;
 import com.wizzstudio.substitute.enums.Gender;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.util.CookieUtil;
-import com.wizzstudio.substitute.util.KeyUtil;
+import com.wizzstudio.substitute.util.RandomUtil;
 import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -40,7 +40,7 @@ public class LoginController extends BaseController{
             if (user == null) {
                 WxMaUserInfo wxUserInfo = wxService.getUserService().getUserInfo(sessionResult.getSessionKey(), loginData.getEncryptedData(), loginData.getIv());
                 user = User.newBuilder()
-                        .setId(KeyUtil.getRandomKey())
+                        .setId(RandomUtil.getSixRandom())
                         .setUserName(wxUserInfo.getNickName())
                         .setOpenid(wxUserInfo.getOpenId())
                         .setAvatar(wxUserInfo.getAvatarUrl())
@@ -62,7 +62,7 @@ public class LoginController extends BaseController{
                 userService.addNewUser(user);
                 String cookie = CookieUtil.tokenGenerate();
                 redisUtil.storeNewCookie(cookie, user.getId());
-                CookieUtil.setCookie(response, Constants.TOKEN, cookie, Constants.TOKEN_EXPIRED);
+                CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
                 log.info("Add a new account for " + user.getOpenid());
             }
             return ResultUtil.success(user);

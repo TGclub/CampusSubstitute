@@ -26,6 +26,21 @@ public class WeChatAccountConfig {
     private String secret;
 
     /**
+     * 微信支付分配的商户号
+     */
+    private String mchId;
+
+    /**
+     * 商户平台设置的密钥key
+     */
+    private String mchKey;
+
+    /**
+     * 微信支付异步通知地址
+     */
+    private String notifyUrl;
+
+    /**
      * 小程序令牌
      */
     private String token;

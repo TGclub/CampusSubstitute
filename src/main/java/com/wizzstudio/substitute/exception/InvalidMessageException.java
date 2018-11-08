@@ -1,10 +1,10 @@
 package com.wizzstudio.substitute.exception;
 
-import com.wizzstudio.substitute.constants.Constants;
+import com.wizzstudio.substitute.constants.Constant;
 
 public class InvalidMessageException extends RuntimeException {
     public InvalidMessageException() {
-        super(Constants.INVALID_MESSAGE);
+        super(Constant.INVALID_MESSAGE);
     }
 
     public InvalidMessageException(String message) {

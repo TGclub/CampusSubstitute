@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.web.controller;
 
-import com.wizzstudio.substitute.constants.Constants;
+import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.service.AddressService;
 import com.wizzstudio.substitute.service.IndentService;
@@ -50,8 +50,8 @@ public class BaseController {
     public ResponseEntity handleException(Exception e) {
         log.error(e.getMessage());
         if (e instanceof AccessDeniedException)
-            return ResultUtil.error(Constants.SYSTEM_BUSY, e.getMessage(), HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<ResultDTO>(new ResultDTO<>(Constants.SYSTEM_BUSY, e.getMessage(), null), HttpStatus.OK);
+            return ResultUtil.error(Constant.SYSTEM_BUSY, e.getMessage(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<ResultDTO>(new ResultDTO<>(Constant.SYSTEM_BUSY, e.getMessage(), null), HttpStatus.OK);
     }
 
 }

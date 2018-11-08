@@ -7,7 +7,7 @@ import com.wizzstudio.substitute.enums.Gender;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.service.BaseService;
 import com.wizzstudio.substitute.service.UserService;
-import com.wizzstudio.substitute.util.KeyUtil;
+import com.wizzstudio.substitute.util.RandomUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,9 +27,9 @@ public class UserServiceImpl extends BaseService implements UserService {
      * 获取一个未被使用过的用户Id
      */
     public String getUserUniqueKey(){
-        String userId = KeyUtil.getRandomKey();
+        String userId = RandomUtil.getSixRandom();
         while (findUserById(userId) != null) {
-            userId = KeyUtil.getRandomKey();
+            userId = RandomUtil.getSixRandom();
         }
         return userId;
     }
