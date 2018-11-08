@@ -67,6 +67,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         User user = findUserById(userId);
         if (master != null && user != null) {
             user.setMasterId(masterId);
+            userDao.save(user);
             return true;
         } else {
             return false;

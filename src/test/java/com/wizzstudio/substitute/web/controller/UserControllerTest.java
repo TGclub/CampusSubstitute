@@ -1,6 +1,7 @@
 package com.wizzstudio.substitute.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wizzstudio.substitute.ControllerTestUtil;
 import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
@@ -33,9 +34,22 @@ class UserControllerTest {
     @Autowired
     private UserController userController;
 
+    /**
+     * 此处和showdoc中有两点不一致，一是school此处返回为schoolId
+     *                          二是 phoneNumber 此处返回为phone 其余一致
+     */
     @Test
     @Rollback(false)
     void getUseInfo() {
+
+        ControllerTestUtil.sendGetRequest("/user/rEEFEE");
+    }
+
+    /**
+     * 测试通过
+     */
+    @Test
+    void modifyUserInfo() {
         ModifyUserInfoDTO basicInfo = new ModifyUserInfoDTO();
         basicInfo.setTrueName("TEST");
         basicInfo.setGender(Gender.MALE);
@@ -50,14 +64,11 @@ class UserControllerTest {
         try {
             Response response = client.newCall(request).execute();
             System.out.println(response.message());
+            System.out.println(response.body().string());
             System.out.println(response.code());
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    void modifyUserInfo() {
     }
 
     @Test
@@ -68,8 +79,12 @@ class UserControllerTest {
     void getMasterInfo() {
     }
 
+    /**
+     * 测试通过
+     */
     @Test
     void addMaster() {
+        ControllerTestUtil.sendPostRequest(JSON_TYPE, null, "/user/master/rEEFEE/EEETEE");
     }
 
     @Test

@@ -90,7 +90,6 @@ public class UserController extends BaseController {
      */
     @PostMapping(value = "/master/{userId}/{masterId}")
     public ResponseEntity addMaster(@PathVariable String userId, @PathVariable String masterId) {
-        ResultDTO resultDTO = new ResultDTO();
         if (userService.addReferrer(userId, masterId)) {
             return ResultUtil.success();
         } else {

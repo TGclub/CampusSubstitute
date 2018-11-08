@@ -50,7 +50,7 @@ public class BaseController {
         log.error(e.getMessage());
       //  if (e instanceof AccessDeniedException)
        //     return ResultUtil.error(Constant.SYSTEM_BUSY_CODE, e.getMessage(), HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<ResultDTO>(new ResultDTO<>(Constant.SYSTEM_BUSY_CODE, e.getMessage(), null), HttpStatus.OK);
+        return new ResponseEntity<ResultDTO>(new ResultDTO<>(Constant.SYSTEM_BUSY_CODE, e.getMessage(), null), HttpStatus.BAD_REQUEST);
     }
 
 }
