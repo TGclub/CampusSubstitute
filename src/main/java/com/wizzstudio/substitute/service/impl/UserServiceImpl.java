@@ -89,13 +89,13 @@ public class UserServiceImpl extends BaseService implements UserService {
             Query query = entityManager.createNamedQuery
                     ("getAllApprentice", User.class).setParameter("account", userId);
             List<User> apprentices = (List<User>) query.getResultList();
-            List<UserBasicInfo> basicInfos = new ArrayList<>();
+            List<UserBasicInfo> basicInfoList = new ArrayList<>();
             apprentices.forEach(x -> {
                 UserBasicInfo basicInfo = new UserBasicInfo();
-                BeanUtils.copyProperties(apprentices, basicInfo);
-                basicInfos.add(basicInfo);
+                BeanUtils.copyProperties(x, basicInfo);
+                basicInfoList.add(basicInfo);
             });
-            return (T)basicInfos;
+            return (T)basicInfoList;
         } else if (returnType instanceof UserBasicInfo) {
             String masterId = user.getMasterId();
             if (masterId != null) {

@@ -16,6 +16,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,7 +38,7 @@ class UserControllerTest {
 
     /**
      * 此处和showdoc中有两点不一致，一是school此处返回为schoolId
-     *                          二是 phoneNumber 此处返回为phone 其余一致
+     * 二是 phoneNumber 此处返回为phone 其余一致
      */
     @Test
     @Rollback(false)
@@ -45,9 +47,6 @@ class UserControllerTest {
         ControllerTestUtil.sendGetRequest("/user/rEEFEE");
     }
 
-    /**
-     * 测试通过
-     */
     @Test
     void modifyUserInfo() {
         ModifyUserInfoDTO basicInfo = new ModifyUserInfoDTO();
@@ -71,12 +70,16 @@ class UserControllerTest {
         }
     }
 
+
+
     @Test
     void getAllApprenticesInfo() {
+        ControllerTestUtil.sendGetRequest("/user/apprentices/EEETEE");
     }
 
     @Test
     void getMasterInfo() {
+        ControllerTestUtil.sendGetRequest("/user/master/rEEFEE");
     }
 
     /**
@@ -87,9 +90,15 @@ class UserControllerTest {
         ControllerTestUtil.sendPostRequest(JSON_TYPE, null, "/user/master/rEEFEE/EEETEE");
     }
 
+    /**
+     * 测试通过
+     */
     @Test
     void addAddress() {
+        String address= "xd";
+        ControllerTestUtil.sendPostRequest(JSON_TYPE, address, "/user/address/EEETEE");
     }
+
 
     @Test
     void getSchool() {
@@ -97,5 +106,6 @@ class UserControllerTest {
 
     @Test
     void getAllAddress() {
+        ControllerTestUtil.sendGetRequest("/user/addresses/EEETEE");
     }
 }
