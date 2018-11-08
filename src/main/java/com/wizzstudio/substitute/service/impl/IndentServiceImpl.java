@@ -5,7 +5,6 @@ import com.wizzstudio.substitute.pojo.Indent;
 import com.wizzstudio.substitute.service.IndentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,7 +30,7 @@ public class IndentServiceImpl implements IndentService {
 
     @Override
     public List<Indent> getUserPublishedIndent(String userId) {
-        return indentDao.findByPublisherId(userId);
+        return indentDao.findByPublisherOpenid(userId);
 
     }
 

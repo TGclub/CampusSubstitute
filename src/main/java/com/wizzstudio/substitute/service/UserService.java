@@ -28,7 +28,7 @@ public interface UserService {
      * 更新用户信息
      * @param newInfo 可更新的用户信息
      */
-    User modifyUserInfo(String id, ModifyUserInfoDTO newInfo);
+    void modifyUserInfo(String id, ModifyUserInfoDTO newInfo);
 
     /**
      *添加推荐人

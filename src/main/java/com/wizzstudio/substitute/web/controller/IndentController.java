@@ -28,7 +28,7 @@ public class IndentController extends BaseController {
      * @param indentDTO
      * @return
      */
-    @RequestMapping(value = "/{publisherId}", method = RequestMethod.POST)
+    @PostMapping(value = "/{publisherId}")
     public ResponseEntity publishNewIndent(@PathVariable String publisherId, @RequestBody @Valid IndentDTO indentDTO,
                                            BindingResult result) {
         if (result.hasErrors()) {
@@ -36,18 +36,17 @@ public class IndentController extends BaseController {
         }
         Indent newIndent = new Indent();
         BeanUtils.copyProperties(indentDTO, newIndent);
-        newIndent.setPublisherId(publisherId);
+        newIndent.setPublisherOpenid(publisherId);
         indentService.publishedNewIndent(newIndent);
-        return new ResponseEntity<ResultDTO>(new ResultDTO<>(Constant.REQUEST_SUCCEED, Constant.QUERY_SUCCESSFULLY,
-                null), HttpStatus.OK);
+        return ResultUtil.success();
     }
 
-    @RequestMapping(value = "publisher/{userId}", method = RequestMethod.GET)
+    @GetMapping(value = "publisher/{userId}")
     public ResponseEntity getUserPublishedIndents(@PathVariable String userId) {
         return ResultUtil.success(indentService.getUserPublishedIndent(userId));
     }
 
-    @RequestMapping(value = "performer/{userId}", method = RequestMethod.GET)
+    @GetMapping(value = "performer/{userId}")
     public ResponseEntity getUserPerformerIndents(@PathVariable String userId){
         return ResultUtil.success(indentService.getUserPerformedIndent(userId));
     }
@@ -56,7 +55,7 @@ public class IndentController extends BaseController {
      * todo to be continued
      * @return
      */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public ResponseEntity getIndentsList() {
         return null;
     }

@@ -28,7 +28,7 @@ public class Indent implements Serializable {
 
     //收货人id
     @NotNull
-    private String publisherId;
+    private String publisherOpenid;
 
     //联系人电话,不能用publisherId查，因为可能不同
     @NotNull

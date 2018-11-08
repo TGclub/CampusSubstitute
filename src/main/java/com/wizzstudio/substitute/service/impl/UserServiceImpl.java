@@ -45,7 +45,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public User modifyUserInfo(String id, ModifyUserInfoDTO newInfo) {
+    public void modifyUserInfo(String id, ModifyUserInfoDTO newInfo) {
         User user = findUserById(id);
         Gender gender = newInfo.getGender();
         Integer school = newInfo.getSchool();
@@ -57,7 +57,8 @@ public class UserServiceImpl extends BaseService implements UserService {
         if (phoneNumber != null) user.setPhone(phoneNumber);
         if (trueName != null) user.setTrueName(trueName);
         if (userName != null) user.setUserName(userName);
-        return entityManager.merge(user);
+        userDao.save(user);
+
     }
 
     @Override

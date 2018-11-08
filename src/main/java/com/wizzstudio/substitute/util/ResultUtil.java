@@ -23,6 +23,7 @@ public class ResultUtil<T> {
         return success(0, msg, data);
     }
 
+
     public static ResponseEntity success() {
         return success(null);
     }
