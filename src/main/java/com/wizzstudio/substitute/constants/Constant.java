@@ -1,8 +1,8 @@
 package com.wizzstudio.substitute.constants;
 
 public interface Constant {
-    int SYSTEM_BUSY = -1;
-    int REQUEST_SUCCEED = 0;
+    int SYSTEM_BUSY_CODE = -1;
+    int REQUEST_SUCCEED_CODE = 0;
     int INVALID_TOKEN = 40001;
     int INVALID_CERTIFICATE_TYPE = 40002;
     int INVALID_USER_ID = 40003;
@@ -17,6 +17,10 @@ public interface Constant {
 
     // 864000 = 60*60*24*10 （10天）
     Integer REMEMEMBER_ME = 864000;
+
+    String TEST_HOST = "http://127.0.0.1";
+
+    int TEST_PORT = 8001;
 
     interface WxPay{
         //微信支付统一下单时间格式

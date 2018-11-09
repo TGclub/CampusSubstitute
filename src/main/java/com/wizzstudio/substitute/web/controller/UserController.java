@@ -7,6 +7,7 @@ import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.pojo.Address;
 import com.wizzstudio.substitute.pojo.School;
 import com.wizzstudio.substitute.pojo.User;
+import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,102 +24,103 @@ public class UserController extends BaseController {
 
     /**
      * 用户基本信息获取
+     *
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity getUseInfo(@PathVariable String userId) {
+    @GetMapping(value = "/{userId}")
+    public ResponseEntity getUseInfo(@PathVariable String userId) {
         User user = userService.findUserById(userId);
 
         if (user != null) {
-            return new ResponseEntity<ResultDTO>(new ResultDTO<User>(Constant.REQUEST_SUCCEED, Constant.QUERY_SUCCESSFULLY, user), HttpStatus.OK);
+            return ResultUtil.success(user);
         } else {
-            return new ResponseEntity<ResultDTO>(new ResultDTO<User>(Constant.SYSTEM_BUSY, Constant.QUERY_FAILED, null), HttpStatus.BAD_REQUEST);
+            return ResultUtil.error();
         }
     }
 
     /**
      * 修改用户信息
+     *
      * @param userId
      * @param modifyUserInfoDTO
      * @return
      */
-    @RequestMapping(value = "/info/{userId}", method = RequestMethod.POST)
-    public @ResponseBody
-    ResponseEntity modifyUserInfo(@PathVariable String userId, @RequestBody ModifyUserInfoDTO modifyUserInfoDTO) {
+    @PostMapping(value = "/info/{userId}")
+    public ResponseEntity modifyUserInfo(@PathVariable String userId, @RequestBody ModifyUserInfoDTO modifyUserInfoDTO) {
 
-        if (userService.modifyUserInfo(userId, modifyUserInfoDTO) != null) {
-            return new ResponseEntity<ResultDTO>(new ResultDTO<User>(Constant.REQUEST_SUCCEED, Constant.QUERY_SUCCESSFULLY, null), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<ResultDTO>(new ResultDTO<User>(Constant.SYSTEM_BUSY, Constant.QUERY_FAILED, null), HttpStatus.BAD_REQUEST);
-        }
+        userService.modifyUserInfo(userId, modifyUserInfoDTO);
+        return ResultUtil.success();
+
+
     }
 
     /**
      * 获取徒弟信息
+     *
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/apprentices/{userId}", method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity getAllApprenticesInfo(@PathVariable String userId) {
-        return new ResponseEntity<ResultDTO<List<UserBasicInfo>>>(new ResultDTO<List<UserBasicInfo>>
-                (Constant.REQUEST_SUCCEED, Constant.QUERY_SUCCESSFULLY, userService
-                        .getBasicInfo(new ArrayList<UserBasicInfo>(), userId)), HttpStatus.OK);
+    @GetMapping(value = "/apprentices/{userId}")
+    public ResponseEntity getAllApprenticesInfo(@PathVariable String userId) {
+        List<UserBasicInfo> usersInfo = userService
+                .getBasicInfo(new ArrayList<UserBasicInfo>(), userId);
+        return ResultUtil.success(usersInfo);
     }
 
     /**
      * 获取师傅信息
+     *
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/master/{userId}", method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity getMasterInfo(@PathVariable String userId) {
-
-        return new ResponseEntity<ResultDTO>(
-                new ResultDTO<UserBasicInfo>(Constant.REQUEST_SUCCEED, Constant.QUERY_SUCCESSFULLY, userService.getBasicInfo
-                        (new UserBasicInfo(), userId)), HttpStatus.OK);
+    @GetMapping(value = "/master/{userId}")
+    public ResponseEntity getMasterInfo(@PathVariable String userId) {
+        UserBasicInfo basicInfo = userService.getBasicInfo
+                (new UserBasicInfo(), userId);
+        return ResultUtil.success(basicInfo);
     }
 
     /**
      * 添加师傅
+     *
      * @param userId
      * @param masterId
      * @return
      */
-    @RequestMapping(value = "/master/{userId}/{masterId}", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity addMaster(@PathVariable String userId, @PathVariable String masterId) {
-        ResultDTO resultDTO = new ResultDTO();
+    @PostMapping(value = "/master/{userId}/{masterId}")
+    public ResponseEntity addMaster(@PathVariable String userId, @PathVariable String masterId) {
         if (userService.addReferrer(userId, masterId)) {
-            resultDTO.setCode(Constant.REQUEST_SUCCEED);
-            resultDTO.setMsg(Constant.QUERY_SUCCESSFULLY);
+            return ResultUtil.success();
         } else {
-            resultDTO.setCode(Constant.SYSTEM_BUSY);
-            resultDTO.setMsg(Constant.QUERY_FAILED);
+            return ResultUtil.error();
         }
-        return new ResponseEntity<ResultDTO>(resultDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/address/{userId}", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity addAddress(@PathVariable String userId, @RequestBody String address) {
+    @PostMapping(value = "/address/{userId}")
+    public ResponseEntity addAddress(@PathVariable String userId, @RequestBody String address) {
         addressService.addUsualAddress(userId, address);
-        return new ResponseEntity<ResultDTO>
-                (new ResultDTO<>(Constant.REQUEST_SUCCEED, Constant.QUERY_SUCCESSFULLY, null), HttpStatus.OK);
+        return ResultUtil.success();
     }
 
-    @RequestMapping(value = "/school", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity getSchool(String key) {
+    @GetMapping(value = "/school")
+    public ResponseEntity getSchool(String key) {
         List<School> schools = addressService.getSchoolInFuzzyMatching(key);
-        return new ResponseEntity<ResultDTO>(new ResultDTO<List<School>>
-                (Constant.REQUEST_SUCCEED, Constant.QUERY_SUCCESSFULLY, schools), HttpStatus.OK);
+        return ResultUtil.success(schools);
     }
 
-    @RequestMapping(value = "/addresses/{userId}", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity getAllAddress(@PathVariable String userId) {
+    /**
+     * 获取所有常用地址列表
+     *
+     * @param userId
+     * @return
+     */
+
+    @GetMapping(value = "/addresses/{userId}")
+    public ResponseEntity getAllAddress(@PathVariable String userId) {
         List<Address> addresses = addressService.getUsualAddress(userId);
-        return new ResponseEntity<ResultDTO>(new ResultDTO<List<Address>>(Constant.REQUEST_SUCCEED, Constant.QUERY_SUCCESSFULLY, addresses) ,HttpStatus.OK);
+
+        return ResultUtil.success(addresses);
     }
 
 }

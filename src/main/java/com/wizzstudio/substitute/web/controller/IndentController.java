@@ -99,22 +99,20 @@ public class IndentController{
         return ResultUtil.success(indentService);
     }
 
-    @RequestMapping(value = "publisher/{userId}", method = RequestMethod.GET)
+    @GetMapping(value = "publisher/{userId}")
     public ResponseEntity getUserPublishedIndents(@PathVariable String userId) {
         return ResultUtil.success(indentService.getUserPublishedIndent(userId));
     }
 
-
-    @RequestMapping(value = "performer/{userId}", method = RequestMethod.GET)
+    @GetMapping(value = "performer/{userId}")
     public ResponseEntity getUserPerformerIndents(@PathVariable String userId){
         return ResultUtil.success(indentService.getUserPerformedIndent(userId));
     }
 
     /**
      * todo to be continued
-     * @return
      */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public ResponseEntity getIndentsList() {
         return null;
     }

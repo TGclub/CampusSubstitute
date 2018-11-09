@@ -53,7 +53,18 @@
             <scope>test</scope>
         </dependency>
 
+<<<<<<< HEAD
         <!--@ConfigurationProperties注解读取配置文件需要-->
+=======
+        <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.47</version>
+        </dependency>
+
+
+>>>>>>> b2059f26293e8a6c448a5ea18d488c8b5989b977
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -70,6 +81,22 @@
             <artifactId>mysql-connector-java</artifactId>
             <!--<scope>runtime</scope>-->
         </dependency>
+<<<<<<< HEAD
+=======
+
+        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.11.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+>>>>>>> b2059f26293e8a6c448a5ea18d488c8b5989b977
 
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
@@ -115,11 +142,25 @@
             <version>1.1.9</version>
         </dependency>
 
+<<<<<<< HEAD
         <!--@Transactional注解需要，这里很迷，以前的项目都不需要该依赖，可能是版本兼容问题-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.9.7</version>
+=======
+        <!--
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+-->
+        <!--@ConfigurationProperties注解读取配置文件需要-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+>>>>>>> b2059f26293e8a6c448a5ea18d488c8b5989b977
         </dependency>
     </dependencies>
 
