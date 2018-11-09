@@ -14,10 +14,12 @@ import org.springframework.stereotype.Service;
 
 
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional(rollbackOn = Exception.class)
 public class UserServiceImpl extends BaseService implements UserService {
 
     @Autowired

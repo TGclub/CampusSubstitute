@@ -26,7 +26,7 @@ public class IndentServiceImpl implements IndentService {
     @Autowired
     PayService payService;
 
-    private IndentWxPrePayDto createIndentWxPrePayDto(Indent indent,String clientIp){
+    private IndentWxPrePayDto createIndentWxPrePayDto(Indent indent, String clientIp) {
         int totalFee = indent.getIndentPrice().multiply(new BigDecimal(100)).intValue();
         return IndentWxPrePayDto.builder().indentId(indent.getIndentId().toString())
                 .openid(indent.getPublisherOpenid())
@@ -46,7 +46,7 @@ public class IndentServiceImpl implements IndentService {
         //将订单保存到数据库中
         indent = indentDao.save(indent);
         //调用预支付接口，并返回给前端支付参数
-        payService.prePay(createIndentWxPrePayDto(indent,clientIp));
+        payService.prePay(createIndentWxPrePayDto(indent, clientIp));
     }
 
     @Override
@@ -76,4 +76,20 @@ public class IndentServiceImpl implements IndentService {
         Indent indent = indentDao.findByIndentId(indentId);
         indent.setIndentPrice(indent.getIndentPrice().add(new BigDecimal(1)));
     }
+
+    @Override
+    public List<Indent> getAllIndent() {
+        return indentDao.findAllByIndentState(IndentStateEnum.WAIT_FOR_PERFORMER);
+    }
+
+    @Override
+    public List<Indent> getIndentByPrice() {
+        return indentDao.findAllByIndentStateOrderByIndentPriceDesc(IndentStateEnum.WAIT_FOR_PERFORMER);
+    }
+
+    @Override
+    public List<Indent> getIndentByCreateTime() {
+        return indentDao.findAllByIndentStateOrderByCreateTimeDesc(IndentStateEnum.WAIT_FOR_PERFORMER);
+    }
+
 }

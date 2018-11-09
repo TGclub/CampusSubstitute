@@ -5,7 +5,7 @@ import com.wizzstudio.substitute.ControllerTestUtil;
 import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
-import com.wizzstudio.substitute.enums.Gender;
+import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.util.RandomUtil;
 import okhttp3.*;
 import org.junit.jupiter.api.Test;
@@ -51,7 +51,7 @@ class UserControllerTest {
     void modifyUserInfo() {
         ModifyUserInfoDTO basicInfo = new ModifyUserInfoDTO();
         basicInfo.setTrueName("TEST");
-        basicInfo.setGender(Gender.MALE);
+        basicInfo.setGender(GenderEnum.MALE);
         basicInfo.setPhoneNumber(12345L);
         basicInfo.setSchool(1);
         basicInfo.setUserName("TEST");

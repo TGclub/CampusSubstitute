@@ -45,4 +45,10 @@ public interface IndentService {
      * @return
      */
     Page<Indent> getIndentInFuzzyMatching(Integer type, String shippingAddress, Integer start);
+
+    List<Indent> getIndentByCreateTime();
+
+    List<Indent> getAllIndent();
+
+    List<Indent> getIndentByPrice();
 }

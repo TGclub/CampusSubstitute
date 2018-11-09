@@ -1,9 +1,13 @@
 package com.wizzstudio.substitute.util;
 
+import com.wizzstudio.substitute.constants.Constant;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * cookie工具类
@@ -26,15 +30,12 @@ public class CookieUtil {
     /**
      * 获取key为name的cookie
      */
-    public static Cookie getCookie(HttpServletRequest request, String name) {
+    public static Cookie getCookie(HttpServletRequest request) {
+
         Cookie[] cookies = request.getCookies();
         if (cookies == null) return null;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals(name)) {
-                return cookie;
-            }
-        }
-        return null;
+        return Arrays.stream(cookies).filter(c -> c.getName().equals(Constant.TOKEN)).collect(Collectors.toList()).get(0);
+
     }
 
     /**
