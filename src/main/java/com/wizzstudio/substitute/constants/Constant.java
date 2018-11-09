@@ -21,7 +21,11 @@ public interface Constant {
     interface WxPay{
         //微信支付统一下单时间格式
         String TIME_FORMAT = "yyyyMMddHHmmss";
-        //微信小程序支付类型
+        //微信小程序交易类型
         String TRADE_TYPE = "JSAPI";
+        //微信支付交易大致描述
+        String PAY_BODY = "校园速递支付";
+        //微信预支付下单接口URL
+        String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     }
 }

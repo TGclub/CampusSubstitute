@@ -17,8 +17,8 @@ public class Address implements Serializable {
     private String address;
 
     /**
-     *常用收货地址对应的用户
-     */
+     *常用收货地址对应的用户Id
+     **/
     @Column
     private String userId;
 

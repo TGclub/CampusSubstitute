@@ -15,6 +15,6 @@ public class PayForm {
     @NotBlank(message = "用户openid不能为空")
     private String userOpenid;
     //订单Id
-    @NotNull
+    @NotNull(message = "订单Id不能为空")
     private Integer indentId;
 }

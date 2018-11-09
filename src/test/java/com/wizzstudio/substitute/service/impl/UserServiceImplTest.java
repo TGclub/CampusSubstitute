@@ -3,7 +3,7 @@ package com.wizzstudio.substitute.service.impl;
 import com.wizzstudio.substitute.dao.UserDao;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
-import com.wizzstudio.substitute.enums.Gender;
+import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.util.RandomUtil;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class UserServiceImplTest {
     @Test
     public void addNewUser() {
         User user = User.newBuilder()
-                .setGender(Gender.MALE)
+                .setGender(GenderEnum.MALE)
                 .setId(RandomUtil.getSixRandom())
                 .setOpenid(UUID.randomUUID().toString())
                 .setAvatar("TEST")
@@ -68,9 +68,9 @@ public class UserServiceImplTest {
         String id = "EETEE";
         ModifyUserInfoDTO newInfo = new ModifyUserInfoDTO();
         User user = userDao.getOne(id);
-        user.setGender(Gender.FEMALE);
+        user.setGender(GenderEnum.FEMALE);
         user.setSchoolId(333);
-        Gender gender = newInfo.getGender();
+        GenderEnum gender = newInfo.getGender();
         Integer school = newInfo.getSchool();
         Long phoneNumber = newInfo.getPhoneNumber();
         String trueName = newInfo.getTrueName();

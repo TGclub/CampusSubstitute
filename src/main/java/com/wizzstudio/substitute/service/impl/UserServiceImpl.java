@@ -3,7 +3,7 @@ package com.wizzstudio.substitute.service.impl;
 import com.wizzstudio.substitute.dao.UserDao;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
-import com.wizzstudio.substitute.enums.Gender;
+import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.service.BaseService;
 import com.wizzstudio.substitute.service.UserService;
@@ -47,7 +47,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public User modifyUserInfo(String id, ModifyUserInfoDTO newInfo) {
         User user = findUserById(id);
-        Gender gender = newInfo.getGender();
+        GenderEnum gender = newInfo.getGender();
         Integer school = newInfo.getSchool();
         Long phoneNumber = newInfo.getPhoneNumber();
         String trueName = newInfo.getTrueName();

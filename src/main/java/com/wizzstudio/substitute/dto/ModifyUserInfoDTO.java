@@ -1,7 +1,6 @@
 package com.wizzstudio.substitute.dto;
 
-import com.wizzstudio.substitute.enums.Gender;
-import lombok.Data;
+import com.wizzstudio.substitute.enums.GenderEnum;
 
 import java.io.Serializable;
 
@@ -13,7 +12,7 @@ public class ModifyUserInfoDTO implements Serializable {
     private String trueName;
     private Long phoneNumber;
     private Integer school;
-    private Gender gender;
+    private GenderEnum gender;
 
 
     public ModifyUserInfoDTO() {
@@ -53,11 +52,11 @@ public class ModifyUserInfoDTO implements Serializable {
         this.school = school;
     }
 
-    public Gender getGender() {
+    public GenderEnum getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(GenderEnum gender) {
         this.gender = gender;
     }
 }

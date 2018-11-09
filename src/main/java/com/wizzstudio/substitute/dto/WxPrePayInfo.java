@@ -1,6 +1,9 @@
 package com.wizzstudio.substitute.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -10,7 +13,11 @@ import java.io.Serializable;
  * Created By Cx On 2018/11/6 19:16
  */
 @Data
-public class WxPayInfo implements Serializable {
+@Builder
+@AllArgsConstructor
+public class WxPrePayInfo implements Serializable {
+
+    private static final long serialVersionUID = -7187359421292513037L;
 
     //必填，微信分配的小程序ID
     private String appid;
@@ -65,4 +72,7 @@ public class WxPayInfo implements Serializable {
     private String product_id;
     //非必填，指定支付方式，当等于no_credit时可限制用户不能使用信用卡支付
     private String limit_pay;
+
+    public WxPrePayInfo(){}
+
 }

@@ -1,8 +1,7 @@
 package com.wizzstudio.substitute.pojo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.wizzstudio.substitute.enums.Gender;
+import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
 import lombok.Data;
 
@@ -51,7 +50,7 @@ public class User implements Serializable {
     //用户性别，男：”MALE”,女：”FEMALE”,未知：”NO_LIMITED”
     @Enumerated(EnumType.STRING)
     @NotNull
-    private Gender gender;
+    private GenderEnum gender;
 
     /**
      * 余额
@@ -129,7 +128,7 @@ public class User implements Serializable {
         private Long phone;
         private @NotNull String avatar;
         private Integer school;
-        private @NotNull Gender gender;
+        private @NotNull GenderEnum gender;
         private @NotNull BigDecimal balance;
         private @NotNull BigDecimal allIncome;
         private BigDecimal masterIncome;
@@ -179,7 +178,7 @@ public class User implements Serializable {
             return this;
         }
 
-        public Builder setGender(@NotNull Gender gender) {
+        public Builder setGender(@NotNull GenderEnum gender) {
             this.gender = gender;
             return this;
         }

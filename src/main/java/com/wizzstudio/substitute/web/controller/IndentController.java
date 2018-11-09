@@ -1,51 +1,109 @@
 package com.wizzstudio.substitute.web.controller;
 
-import com.wizzstudio.substitute.constants.Constant;
-import com.wizzstudio.substitute.dto.IndentDTO;
-import com.wizzstudio.substitute.dto.ResultDTO;
-import com.wizzstudio.substitute.exception.InvalidMessageException;
+import com.wizzstudio.substitute.enums.GenderEnum;
+import com.wizzstudio.substitute.enums.IndentTypeEnum;
+import com.wizzstudio.substitute.enums.ResultEnum;
+import com.wizzstudio.substitute.exception.SubstituteException;
+import com.wizzstudio.substitute.form.IndentCreateForm;
 import com.wizzstudio.substitute.pojo.Indent;
+import com.wizzstudio.substitute.service.IndentService;
+import com.wizzstudio.substitute.util.CommonUtil;
 import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/indent")
-public class IndentController extends BaseController {
+public class IndentController{
+
+    @Autowired
+    IndentService indentService;
 
     /**
-     * 发布帮我购、递接口
-     *
-     * @param publisherId
-     * @param indentDTO
-     * @return
+     * 验证订单 非必填参数 是否合法
      */
-    @RequestMapping(value = "/{publisherId}", method = RequestMethod.POST)
-    public ResponseEntity publishNewIndent(@PathVariable String publisherId, @RequestBody @Valid IndentDTO indentDTO,
-                                           BindingResult result) {
-        if (result.hasErrors()) {
-            throw new InvalidMessageException();
+    private void checkIndentCreateForm(IndentCreateForm indentCreateForm){
+        List<Object> checkObjs = new ArrayList<>();
+        if (CommonUtil.getEnum(indentCreateForm.getRequireGender(), GenderEnum.class) == null){
+            //性别类型不匹配
+            log.error("[发布订单]性别类型不正确，requireGender={}", indentCreateForm.getRequireGender());
+            throw new SubstituteException("性别类型不正确，requireGender=".concat(indentCreateForm.getRequireGender()),
+                    ResultEnum.PARAM_ERROR.getCode());
         }
+        if (CommonUtil.getEnum(indentCreateForm.getIndentType(),IndentTypeEnum.class) == null){
+            //订单类型不匹配
+            log.error("[发布订单]订单类型不正确，indentType={}", indentCreateForm.getIndentType());
+            throw new SubstituteException("订单类型不正确，indentType=".concat(indentCreateForm.getIndentType()),
+                    ResultEnum.PARAM_ERROR.getCode());
+        }
+        else if (indentCreateForm.getIndentType().equals(IndentTypeEnum.HELP_BUY.toString())){
+            //如果是帮我购,以下字段必填
+            checkObjs.add(indentCreateForm.getPublisherName());
+            checkObjs.add(indentCreateForm.getTakeGoodAddressId());
+            checkObjs.add(indentCreateForm.getGoodPrice());
+        }
+        else if (indentCreateForm.getIndentType().equals(IndentTypeEnum.HELP_SEND.toString())) {
+            //如果是帮我递,以下字段必填
+            checkObjs.add(indentCreateForm.getPublisherName());
+            checkObjs.add(indentCreateForm.getTakeGoodAddressId());
+            checkObjs.add(indentCreateForm.getShippingAddressId());
+            checkObjs.add(indentCreateForm.getCompanyName());
+            checkObjs.add(indentCreateForm.getPickupCode());
+        }
+        //如果是随意帮,所有非必填字段都可不填
+        //验证必填参数是否已填
+        for (Object obj : checkObjs){
+            if (obj == null){
+                log.error("[发布订单]必填参数为空，indentCreateForm={}", indentCreateForm);
+                throw new SubstituteException(ResultEnum.PARAM_NULL_ERROR);
+            }
+        }
+    }
+
+    /**
+     * 发布帮我购/递/随意帮接口
+     */
+    @PostMapping
+    public ResponseEntity publishNewIndent(@RequestBody @Valid IndentCreateForm indentCreateForm, HttpServletRequest request,
+                                           BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            //表单校验有误
+            log.error("[发布订单]参数不正确，indentCreateForm={}", indentCreateForm);
+            String msg = bindingResult.getFieldError() == null ? ResultEnum.PARAM_ERROR.getMsg()
+                    : bindingResult.getFieldError().getDefaultMessage();
+            throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
+        }
+        //验证参数填写是否满足要求
+        checkIndentCreateForm(indentCreateForm);
         Indent newIndent = new Indent();
-        BeanUtils.copyProperties(indentDTO, newIndent);
-        newIndent.setPublisherId(publisherId);
-        indentService.publishedNewIndent(newIndent);
-        return new ResponseEntity<ResultDTO>(new ResultDTO<>(Constant.REQUEST_SUCCEED, Constant.QUERY_SUCCESSFULLY,
-                null), HttpStatus.OK);
+        BeanUtils.copyProperties(indentCreateForm, newIndent);
+        //不用管，这里肯定非空，因为上面check过了
+        newIndent.setIndentType(CommonUtil.getEnum(indentCreateForm.getIndentType(),IndentTypeEnum.class));
+        newIndent.setRequireGender(CommonUtil.getEnum(indentCreateForm.getRequireGender(),GenderEnum.class));
+        indentService.publishedNewIndent(newIndent, CommonUtil.getClientIp(request));
+        return ResultUtil.success();
+    }
+
+    @GetMapping
+    public ResponseEntity test() {
+        return ResultUtil.success(indentService);
     }
 
     @RequestMapping(value = "publisher/{userId}", method = RequestMethod.GET)
     public ResponseEntity getUserPublishedIndents(@PathVariable String userId) {
         return ResultUtil.success(indentService.getUserPublishedIndent(userId));
     }
+
 
     @RequestMapping(value = "performer/{userId}", method = RequestMethod.GET)
     public ResponseEntity getUserPerformerIndents(@PathVariable String userId){
@@ -61,12 +119,12 @@ public class IndentController extends BaseController {
         return null;
     }
 
-    @RequestMapping(value = "/detail/{indentId}/{userId}")
+    @GetMapping(value = "/detail/{indentId}/{userId}")
     public ResponseEntity getIndentInfo(@PathVariable Integer indentId, @PathVariable String userId){
         return ResultUtil.success(indentService.getSpecificIndentInfo(indentId));
     }
 
-    @RequestMapping(value = "/price/{indentId}/{userId}")
+    @GetMapping(value = "/price/{indentId}/{userId}")
     public ResponseEntity addIndentPrice(@PathVariable Integer indentId, @PathVariable String userId) {
         indentService.addIndentPrice(indentId);
         return ResultUtil.success();

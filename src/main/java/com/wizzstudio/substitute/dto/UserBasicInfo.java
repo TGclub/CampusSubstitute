@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.dto;
 
-import com.wizzstudio.substitute.enums.Gender;
+import com.wizzstudio.substitute.enums.GenderEnum;
 
 import java.io.Serializable;
 
@@ -18,13 +18,13 @@ public class UserBasicInfo implements Serializable {
 
     private String school;
 
-    private Gender gender;
+    private GenderEnum gender;
 
     public UserBasicInfo() {
     }
 
 
-    public UserBasicInfo(String id, String userName, Long phone, String avatar, String school, Gender gender) {
+    public UserBasicInfo(String id, String userName, Long phone, String avatar, String school, GenderEnum gender) {
         this.id = id;
         this.userName = userName;
         this.phone = phone;
@@ -87,11 +87,11 @@ public class UserBasicInfo implements Serializable {
         this.school = school;
     }
 
-    public Gender getGender() {
+    public GenderEnum getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(GenderEnum gender) {
         this.gender = gender;
     }
 
@@ -108,7 +108,7 @@ public class UserBasicInfo implements Serializable {
         private String userName;
         private String avatar;
         private String school;
-        private Gender gender;
+        private GenderEnum gender;
 
         private Builder() {
         }
@@ -133,7 +133,7 @@ public class UserBasicInfo implements Serializable {
             return this;
         }
 
-        public Builder setGender(Gender gender) {
+        public Builder setGender(GenderEnum gender) {
             this.gender = gender;
             return this;
         }

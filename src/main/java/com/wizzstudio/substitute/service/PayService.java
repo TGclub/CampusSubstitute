@@ -1,5 +1,6 @@
 package com.wizzstudio.substitute.service;
 
+import com.wizzstudio.substitute.dto.IndentWxPrePayDto;
 import com.wizzstudio.substitute.form.PayForm;
 
 /**
@@ -12,5 +13,5 @@ public interface PayService {
      * 微信统一预下单
      * 详情见：https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_1&index=1
      */
-    String prePay(PayForm payForm, String clientIP);
+    String prePay(IndentWxPrePayDto indentWxPrePayDto);
 }

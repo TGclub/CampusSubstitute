@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.enums;
 
-public enum Gender {
+public enum GenderEnum implements BaseEnum{
     //男
     MALE,
     //女

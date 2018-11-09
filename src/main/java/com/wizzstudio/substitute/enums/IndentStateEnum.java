@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.enums;
 
-public enum IndentState {
+public enum IndentStateEnum {
     /**
      * 等待接单
      */

@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.service.impl;
 
-import com.wizzstudio.substitute.dto.WxPayInfo;
+import com.wizzstudio.substitute.dto.WxPrePayInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,12 @@ public class PayServiceImplTest {
 
     @Test
     public void getSign() {
-        WxPayInfo wxPayInfo = new WxPayInfo();
-        wxPayInfo.setAppid("wxd930ea5d5a258f4f");
-        wxPayInfo.setBody("test");
-        wxPayInfo.setDevice_info("1000");
-        wxPayInfo.setMch_id("10000100");
-        wxPayInfo.setNonce_str("ibuaiVcKdpRxkhJA");
+        WxPrePayInfo wxPrePayInfo = new WxPrePayInfo();
+        wxPrePayInfo.setAppid("wxd930ea5d5a258f4f");
+        wxPrePayInfo.setBody("test");
+        wxPrePayInfo.setDevice_info("1000");
+        wxPrePayInfo.setMch_id("10000100");
+        wxPrePayInfo.setNonce_str("ibuaiVcKdpRxkhJA");
         System.out.println("hello world!");
     }
 }

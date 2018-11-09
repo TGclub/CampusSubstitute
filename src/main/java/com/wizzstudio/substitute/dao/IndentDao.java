@@ -13,6 +13,6 @@ public interface IndentDao extends JpaRepository<Indent, Integer> {
 
     Indent findByIndentId(Integer indentId);
     List<Indent> findByPerformerId(String userId);
-    List<Indent> findByPublisherId(String userId);
+    List<Indent> findByPublisherOpenid(String userId);
 
 }

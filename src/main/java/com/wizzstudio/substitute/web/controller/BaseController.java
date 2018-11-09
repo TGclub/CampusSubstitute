@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,11 +31,7 @@ public class BaseController {
     UserService userService;
 
     @Autowired
-    protected IndentService indentService;
-    @Autowired
     protected AddressService addressService;
-
-
 
     @Autowired
     public BaseController(HttpServletRequest request, UserService userService) {
@@ -50,8 +45,8 @@ public class BaseController {
     @ExceptionHandler(Exception.class)
     public @ResponseBody ResponseEntity handleException(Exception e) {
         log.error(e.getMessage());
-        if (e instanceof AccessDeniedException)
-            return ResultUtil.error(Constant.SYSTEM_BUSY, e.getMessage(), HttpStatus.UNAUTHORIZED);
+//        if (e instanceof AccessDeniedException)
+//            return ResultUtil.error(Constant.SYSTEM_BUSY, e.getMessage(), HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<ResultDTO>(new ResultDTO<>(Constant.SYSTEM_BUSY, e.getMessage(), null), HttpStatus.OK);
     }
 

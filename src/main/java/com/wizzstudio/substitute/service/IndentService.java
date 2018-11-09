@@ -10,14 +10,14 @@ public interface IndentService {
      * 创建新的订单
      * @param indent
      */
-    void publishedNewIndent(Indent indent);
+    void publishedNewIndent(Indent indent, String clientIp);
 
     /**
      * 获取用户已发布的订单
-     * @param userId
+     * @param userOpenid
      * @return
      */
-    List<Indent> getUserPublishedIndent(String userId);
+    List<Indent> getUserPublishedIndent(String userOpenid);
 
     /**
      * 获取用户接受的订单
@@ -33,6 +33,9 @@ public interface IndentService {
      */
     Indent getSpecificIndentInfo(Integer indentId);
 
+    /**
+     * 增加赏金，每次只增加一元
+     */
     void addIndentPrice(Integer indentId);
 
     /**

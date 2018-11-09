@@ -1,8 +1,8 @@
 package com.wizzstudio.substitute.pojo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.wizzstudio.substitute.enums.Gender;
-import com.wizzstudio.substitute.enums.IndentState;
+import com.wizzstudio.substitute.enums.GenderEnum;
+import com.wizzstudio.substitute.enums.IndentStateEnum;
 import com.wizzstudio.substitute.enums.IndentTypeEnum;
 import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
 import lombok.Data;
@@ -26,11 +26,11 @@ public class Indent implements Serializable {
     //送货人id
     private String performerId;
 
-    //收货人id
+    //下单用户openid
     @NotNull
-    private String publisherId;
+    private String publisherOpenid;
 
-    //联系人电话,不能用publisherId查，因为可能不同
+    //联系人电话,不能用publisherOpenid查，因为可能不同
     @NotNull
     private Long publisherPhone;
 
@@ -42,7 +42,7 @@ public class Indent implements Serializable {
     //订单要求性别，男：”MALE”,女：”FEMALE”,不限：”NO_LIMITED”
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    private Gender requireGender;
+    private GenderEnum requireGender;
 
     //任务内容
     @NotNull
@@ -70,13 +70,12 @@ public class Indent implements Serializable {
     //物品金额，仅订单类型为帮我购时非空
     private BigDecimal goodPrice;
 
-    //订单状态,待接单：WAIT_FOR_PERFORMER，执行中：PERFORMING，货物已送达：ARRIVED，已完成：COMPLETED
+    //订单状态,待支付：WAIT_PAY待接单：WAIT_FOR_PERFORMER，执行中：PERFORMING，货物已送达：ARRIVED，已完成：COMPLETED
     @Enumerated(EnumType.STRING)
-    private IndentState indentState;
+    private IndentStateEnum indentState;
 
     //创建时间
     @Column(updatable = false,insertable = false)
-    @NotNull
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 
