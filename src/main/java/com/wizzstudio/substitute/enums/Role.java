@@ -7,4 +7,5 @@ public enum  Role {
     ROLE_ADMIN_1,
     //二级管理员
     ROLE_ADMIN_2
+
 }

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -43,9 +44,9 @@ public class BaseController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleException(Exception e) {
         log.error(e.getMessage());
-      //  if (e instanceof AccessDeniedException)
-       //     return ResultUtil.error(Constant.SYSTEM_BUSY_CODE, e.getMessage(), HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<ResultDTO>(new ResultDTO<>(Constant.SYSTEM_BUSY_CODE, e.getMessage(), null), HttpStatus.BAD_REQUEST);
+        if (e instanceof AccessDeniedException)
+            return ResultUtil.error(Constant.SYSTEM_BUSY_CODE, e.getMessage(), HttpStatus.UNAUTHORIZED);
+        return ResultUtil.error();
     }
 
 }

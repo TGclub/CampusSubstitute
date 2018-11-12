@@ -2,6 +2,7 @@ package com.wizzstudio.substitute.pojo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.enums.GenderEnum;
+import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
 import lombok.Data;
 
@@ -43,6 +44,9 @@ public class User implements Serializable {
     //用户头像url
     @NotNull
     private String avatar;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     //学校
     private Integer schoolId;
@@ -115,6 +119,7 @@ public class User implements Serializable {
         builder.masterIncome = copy.getMasterIncome();
         builder.createTime = copy.getCreateTime();
         builder.updateTime = copy.getUpdateTime();
+        builder.role = copy.getRole();
         return builder;
     }
 
@@ -134,6 +139,7 @@ public class User implements Serializable {
         private BigDecimal masterIncome;
         private Date createTime;
         private Date updateTime;
+        private Role role;
 
         private Builder() {
         }
@@ -205,6 +211,15 @@ public class User implements Serializable {
 
         public Builder setUpdateTime(Date updateTime) {
             this.updateTime = updateTime;
+            return this;
+        }
+
+        public Role getRole() {
+            return role;
+        }
+
+        public Builder setRole(Role role) {
+            this.role = role;
             return this;
         }
 

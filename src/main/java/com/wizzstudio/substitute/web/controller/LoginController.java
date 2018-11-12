@@ -6,6 +6,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.wx.WxInfo;
 import com.wizzstudio.substitute.enums.GenderEnum;
+import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.util.CookieUtil;
 import com.wizzstudio.substitute.util.RandomUtil;
@@ -44,6 +45,7 @@ public class LoginController extends BaseController{
                         .setUserName(wxUserInfo.getNickName())
                         .setOpenid(wxUserInfo.getOpenId())
                         .setAvatar(wxUserInfo.getAvatarUrl())
+                        .setRole(Role.ROLE_USER)
                         .build();
                 switch (Integer.valueOf(wxUserInfo.getGender())){
                     //性别 0：未知、1：男、2：女
