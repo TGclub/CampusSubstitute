@@ -15,7 +15,6 @@ import com.wizzstudio.substitute.util.HttpUtil;
 import com.wizzstudio.substitute.util.RandomUtil;
 import com.wizzstudio.substitute.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,36 +41,20 @@ public class PayServiceImpl implements PayService {
     @Autowired
     WeChatAccountConfig weChatAccountConfig;
 
-
     /**
      * 签名算法用于计算签名值
      * 详见：https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=4_3
-     * 将PayInfo内非空参数值的参数按照参数名ASCII码从小到大排序（字典序），
+     * 按照参数名ASCII码从小到大排序（字典序），
      * 使用URL键值对的格式（即key1=value1&key2=value2…）拼接成字符串stringA。
      * 在stringA最后拼接上key得到stringSignTemp字符串，并对stringSignTemp进行MD5运算，
      * 再将得到的字符串所有字符转换为大写，得到sign值signValue。
+     * @param fieldMap 支付信息对象
+     * @return MD5签名过的字符串
      */
-    private String getSign(WxPrePayInfo wxPrePayInfo){
+    private String getMD5Sign(Map<String,String> fieldMap){
         StringBuilder sbA = new StringBuilder();
-        //getFields()获得的是公有的字段，DeclaredFields是获取所有声明的，无论权限（不包括父类）
-        Field[] fields = wxPrePayInfo.getClass().getDeclaredFields();
         //该list用于存储所有字段名，并通过ASCII码排序,最后从fieldMap中依次取出,fieldMap的key为fieldName，value为该name对应的值
-        List<String> fieldNames = new ArrayList<>();
-        Map<String,String> fieldMap = new HashMap<>();
-        try {
-            for (Field field : fields){
-                //设置对象的访问权限，保证对private的属性的访问
-                field.setAccessible(true);
-                //获取payInfo对象field字段的值,如果为空，则查看下一个
-                Object o = field.get(wxPrePayInfo);
-                if (o == null) continue;
-                fieldNames.add(field.getName());
-                fieldMap.put(field.getName(), field.get(wxPrePayInfo).toString());
-            }
-        }catch (IllegalAccessException e){
-            log.error("[微信统一下单]服务器异常");
-            throw new SubstituteException(ResultEnum.INNER_ERROR);
-        }
+        List<String> fieldNames = new ArrayList<>(fieldMap.keySet());
         //按ASCII码顺序排序
         Collections.sort(fieldNames);
         //拼接成字符串stringA
@@ -98,7 +81,6 @@ public class PayServiceImpl implements PayService {
                 .openid(indentWxPrePayDto.getOpenid())
                 .body(Constant.WxPay.PAY_BODY)
                 .total_fee(indentWxPrePayDto.getTotalFee())
-                //todo 是否需要把订单交易号改为String，防止被遍历
                 .out_trade_no(indentWxPrePayDto.getIndentId())
                 .spbill_create_ip(indentWxPrePayDto.getClientIp())
                 //todo 是否可删
@@ -119,8 +101,26 @@ public class PayServiceImpl implements PayService {
         wxPrePayInfo.setTime_start(timeStart);
         wxPrePayInfo.setTime_expire(timeExpire);
 
+        //将PayInfo内非空参数签名
+        //getFields()获得的是公有的字段，DeclaredFields是获取所有声明的，无论权限（不包括父类）
+        Field[] fields = wxPrePayInfo.getClass().getDeclaredFields();
+        //该list用于存储所有字段名，并通过ASCII码排序,最后从fieldMap中依次取出,fieldMap的key为fieldName，value为该name对应的值
+        Map<String,String> fieldMap = new HashMap<>();
+        try {
+            for (Field field : fields){
+                //设置对象的访问权限，保证对private的属性的访问
+                field.setAccessible(true);
+                //获取payInfo对象field字段的值,如果为空，则查看下一个
+                Object o = field.get(wxPrePayInfo);
+                if (o == null) continue;
+                fieldMap.put(field.getName(), field.get(wxPrePayInfo).toString());
+            }
+        }catch (IllegalAccessException e){
+            log.error("[微信统一下单]服务器异常");
+            throw new SubstituteException(ResultEnum.INNER_ERROR);
+        }
         //设置Sign
-        wxPrePayInfo.setSign(getSign(wxPrePayInfo));
+        wxPrePayInfo.setSign(getMD5Sign(fieldMap));
 
         return wxPrePayInfo;
     }
@@ -128,9 +128,10 @@ public class PayServiceImpl implements PayService {
     /**
      * 用户统一预下单
      * 详见： https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_1&index=1
+     * 返回微信小程序前端调起支付API时需要的五个参数：
      */
     @Override
-    public String prePay(IndentWxPrePayDto indentWxPrePayDto) {
+    public Map<String,String> prePay(IndentWxPrePayDto indentWxPrePayDto) {
         User user = userService.findUserByOpenId(indentWxPrePayDto.getOpenid());
         if (user == null){
             log.error("[微信统一下单]用户不存在，userId={}",indentWxPrePayDto.getOpenid());
@@ -140,38 +141,44 @@ public class PayServiceImpl implements PayService {
         WxPrePayInfo wxPrePayInfo = createPayInfo(indentWxPrePayDto);
 
 
-        //todo
+        //todo，封装参数为xml
         String xml = CommonUtil.payInfoToXML(wxPrePayInfo);
         log.info(xml);
         xml = xml.replace("__", "_").replace("<![CDATA[1]]>", "1");
         log.info(xml);
 
+        //向微信接口发送参数，获取返回值并转换为map
         Map<String, String> result;
         try {
             StringBuffer buffer = HttpUtil.httpsRequest(Constant.WxPay.UNIFIED_ORDER_URL, "POST", xml);
             log.info("统一预下单返回参数如下: \n".concat(buffer.toString()));
             result = CommonUtil.parseXml2Map(buffer.toString());
         }catch (IOException e){
-            log.error("[微信统一下单]调用微信统一下单接口失败");
+            log.error("[微信统一下单]调用微信统一下单接口失败,requestXml={}",xml);
             throw new SubstituteException(ResultEnum.INNER_ERROR);
         }catch (DocumentException e){
             log.error("[微信统一下单]微信统一下单接口获取信息转换Map失败");
             throw new SubstituteException(ResultEnum.INNER_ERROR);
         }
 
+        //判断请求是否成功,SUCCESS/FAIL,此字段是通信标识，非交易标识，交易是否成功需要查看result_code来判断
         String return_code = result.get("return_code");
-        if("SUCCESS".equals(return_code)) {
-            //如果返回成功
-            String return_msg = result.get("return_msg");
-            if(!"OK".equals(return_msg)) {
-
-                log.info("统一下单错误！");
-                return "";
-            }
-            return result.get("prepay_id");
+        //返回信息，如非OK，则为错误原因
+        String return_msg = result.get("return_msg");
+        Map<String,String> returnParam = new HashMap<>();
+        if("SUCCESS".equals(return_code) && "OK".equals(return_msg)) {
+            returnParam.put("package","prepay_id=".concat(result.get("prepay_id")));
+            returnParam.put("appId",wxPrePayInfo.getAppid());
+            returnParam.put("nonceStr",RandomUtil.getRandomString(32));
+            returnParam.put("signType","MD5");
+            returnParam.put("timeStamp",String.valueOf(new Date().getTime()));
+            returnParam.put("sign",getMD5Sign(returnParam));
         }
         else {
-            return "";
+            //如果交易失败
+            log.error("[微信统一下单]统一下单错误！,return_msg={}",return_msg);
+            throw new SubstituteException(return_msg,ResultEnum.INNER_ERROR.getCode());
         }
+        return returnParam;
     }
 }

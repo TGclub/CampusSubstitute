@@ -93,7 +93,6 @@ public class IndentController {
         return ResultUtil.success();
     }
 
-
     @GetMapping("list")
     public ResponseEntity getIndentList(@RequestParam(required = true, defaultValue = "0") Integer sort, @RequestParam(required = false) String key) {
         List<Indent> indents;

@@ -25,7 +25,7 @@ public class WxPrePayInfo implements Serializable {
     private String mch_id;
     //必填，随机字符串，长度要求在32位以内，可使用KeyUtil中的getRandomString(32)生成
     private String nonce_str;
-    //必填，通过签名算法计算得出的签名值，具体实现见 PayServiceImpl -> getSign() 方法
+    //必填，通过签名算法计算得出的签名值，具体实现见 WxPayServiceImpl -> getSign() 方法
     private String sign;
     //必填，商品简单描述（最多128个字），如：腾讯充值中心-QQ会员充值
     private String body;
