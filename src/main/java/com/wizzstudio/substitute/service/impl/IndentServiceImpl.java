@@ -5,7 +5,7 @@ import com.wizzstudio.substitute.dto.IndentWxPrePayDto;
 import com.wizzstudio.substitute.enums.IndentStateEnum;
 import com.wizzstudio.substitute.pojo.Indent;
 import com.wizzstudio.substitute.service.IndentService;
-import com.wizzstudio.substitute.service.PayService;
+import com.wizzstudio.substitute.service.WxPayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,17 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
-//todo 加上事务，在controller层调用会报错
 @Transactional(rollbackFor = Exception.class)
 public class IndentServiceImpl implements IndentService {
 
     @Autowired
     IndentDao indentDao;
     @Autowired
-    PayService payService;
+    WxPayService wxPayService;
 
     private IndentWxPrePayDto createIndentWxPrePayDto(Indent indent, String clientIp) {
         int totalFee = indent.getIndentPrice().multiply(new BigDecimal(100)).intValue();
@@ -45,8 +45,8 @@ public class IndentServiceImpl implements IndentService {
         indent.setIndentState(IndentStateEnum.WAIT_FOR_PERFORMER);
         //将订单保存到数据库中
         indent = indentDao.save(indent);
-        //调用预支付接口，并返回给前端支付参数
-        payService.prePay(createIndentWxPrePayDto(indent, clientIp));
+        //调用预支付接口，获得前端调用支付接口需要的五个参数：
+        Map<String,String> result = wxPayService.prePay(createIndentWxPrePayDto(indent, clientIp));
     }
 
     @Override

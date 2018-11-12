@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.service.impl;
 
-import com.wizzstudio.substitute.dto.WxPrePayInfo;
+import com.wizzstudio.substitute.dto.wx.WxPrePayInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,10 @@ import javax.transaction.Transactional;
 @SpringBootTest
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-public class PayServiceImplTest {
+public class WxPayServiceImplTest {
 
     @Autowired
-    PayServiceImpl payService;
+    WxPayServiceImpl payService;
 
     @Test
     public void getSign() {

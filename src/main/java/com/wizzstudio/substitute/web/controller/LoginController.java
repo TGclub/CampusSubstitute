@@ -4,7 +4,7 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.wizzstudio.substitute.constants.Constant;
-import com.wizzstudio.substitute.dto.WxInfo;
+import com.wizzstudio.substitute.dto.wx.WxInfo;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.util.CookieUtil;

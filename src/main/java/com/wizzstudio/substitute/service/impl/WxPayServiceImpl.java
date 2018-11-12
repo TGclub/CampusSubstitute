@@ -3,17 +3,16 @@ package com.wizzstudio.substitute.service.impl;
 import com.wizzstudio.substitute.config.WeChatAccountConfig;
 import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.IndentWxPrePayDto;
-import com.wizzstudio.substitute.dto.WxPrePayInfo;
+import com.wizzstudio.substitute.dto.wx.WxPayAsyncResponse;
+import com.wizzstudio.substitute.dto.wx.WxPrePayInfo;
 import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.exception.SubstituteException;
+import com.wizzstudio.substitute.pojo.Indent;
 import com.wizzstudio.substitute.pojo.User;
 import com.wizzstudio.substitute.service.IndentService;
-import com.wizzstudio.substitute.service.PayService;
+import com.wizzstudio.substitute.service.WxPayService;
 import com.wizzstudio.substitute.service.UserService;
-import com.wizzstudio.substitute.util.CommonUtil;
-import com.wizzstudio.substitute.util.HttpUtil;
-import com.wizzstudio.substitute.util.RandomUtil;
-import com.wizzstudio.substitute.util.TimeUtil;
+import com.wizzstudio.substitute.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ import java.util.*;
 @Service
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
-public class PayServiceImpl implements PayService {
+public class WxPayServiceImpl implements WxPayService {
 
     @Autowired
     UserService userService;
@@ -142,7 +141,7 @@ public class PayServiceImpl implements PayService {
 
 
         //todo，封装参数为xml
-        String xml = CommonUtil.payInfoToXML(wxPrePayInfo);
+        String xml = XmlUtil.payInfoToXML(wxPrePayInfo);
         log.info(xml);
         xml = xml.replace("__", "_").replace("<![CDATA[1]]>", "1");
         log.info(xml);
@@ -152,7 +151,7 @@ public class PayServiceImpl implements PayService {
         try {
             StringBuffer buffer = HttpUtil.httpsRequest(Constant.WxPay.UNIFIED_ORDER_URL, "POST", xml);
             log.info("统一预下单返回参数如下: \n".concat(buffer.toString()));
-            result = CommonUtil.parseXml2Map(buffer.toString());
+            result = XmlUtil.parseXml2Map(buffer.toString());
         }catch (IOException e){
             log.error("[微信统一下单]调用微信统一下单接口失败,requestXml={}",xml);
             throw new SubstituteException(ResultEnum.INNER_ERROR);
@@ -181,4 +180,63 @@ public class PayServiceImpl implements PayService {
         }
         return returnParam;
     }
+
+
+    /**
+     * 处理异步通知注意事项：
+     *  1.验证签名是否正确。防止他人模拟发送一个异步请求
+     *  2.验证支付状态是否为支付成功
+     *  3.验证支付金额是否正确
+     *  4.验证支付人（支付人 == 下单人）   按需验证，不需要可以不验证，其他都必须验证
+     *
+     */
+    @Override
+    public void notify(String notifyData) {
+        Map<String,String> notifyMap;
+        WxPayAsyncResponse asyncResponse;
+        try {
+            //xml解析为map
+            notifyMap = XmlUtil.parseXml2Map(notifyData);
+            //xml解析为对象
+            asyncResponse = (WxPayAsyncResponse) XmlUtil.parseXml2Object(notifyData, WxPayAsyncResponse.class);
+            if (asyncResponse == null) throw new Exception();
+        } catch (Exception e) {
+            log.error("【微信支付异步通知】notifyData格式有误, notifyData={}", notifyData);
+            throw new SubstituteException("【微信支付异步通知】notifyData格式有误");
+        }
+
+        //1.验证签名是否正确。防止他人模拟发送一个异步请求
+        if (!getMD5Sign(notifyMap).equals(notifyMap.get("sign"))) {
+            log.error("【微信支付异步通知】签名验证失败, response={}", notifyData);
+            throw new SubstituteException("【微信支付异步通知】签名验证失败");
+        }
+
+        //2.验证支付状态是否为支付成功
+        if(!"SUCCESS".equals(asyncResponse.getReturnCode()) || !"SUCCESS".equals(asyncResponse.getResultCode())) {
+            log.error("【微信支付异步通知】发起支付失败, returnCode 或 asyncResponse.getResultCode() != SUCCESS, returnMsg = {}"
+                    , asyncResponse.getReturnMsg());
+            throw new SubstituteException("【微信支付异步通知】发起支付失败");
+        }
+
+        //3.验证支付金额是否正确
+        log.info("[微信支付]，异步通知，asyncResponse={}",asyncResponse);
+
+        //查询订单，并判断订单是否存在，金额是否一致
+        Indent indent = indentService.getSpecificIndentInfo(Integer.valueOf(asyncResponse.getOutTradeNo()));
+        if(indent == null){
+            log.error("[微信支付]，异步通知，订单不存在,orderId={}",asyncResponse.getOutTradeNo());
+            throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
+        }
+        //todo 这样比较不知道对不对
+        if (asyncResponse.getTotalFee() == indent.getIndentPrice().movePointRight(2).intValue()){
+            log.error("[微信支付]，异步通知，订单金额不一致,orderId={},订单金额={},异步通知金额={}",asyncResponse.getOutTradeNo(),
+                    indent.getIndentPrice(),asyncResponse.getTotalFee()/100);
+            throw new SubstituteException(ResultEnum.WX_NOTIFY_MONEY_VERIFY_ERROR);
+        }
+
+        //todo 修改订单支付状态
+        //indentService.paid()
+
+    }
+
 }

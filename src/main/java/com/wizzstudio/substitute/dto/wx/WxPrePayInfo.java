@@ -1,4 +1,4 @@
-package com.wizzstudio.substitute.dto;
+package com.wizzstudio.substitute.dto.wx;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
