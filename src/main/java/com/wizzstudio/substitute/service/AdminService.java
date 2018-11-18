@@ -21,4 +21,6 @@ public interface AdminService {
     void createNewAdmin(AdminInfo admin);
 
     boolean isValidAdmin(AdminLoginDTO loginDTO);
+
+    void addNewAdmin(AdminInfo admin);
 }

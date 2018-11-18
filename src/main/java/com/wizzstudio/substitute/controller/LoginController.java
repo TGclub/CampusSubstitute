@@ -34,7 +34,8 @@ public class LoginController extends BaseController{
      * @param loginData
      * @return
      */
-    @PostMapping("login/user") public ResponseEntity login(@NotNull @RequestBody WxInfo loginData, HttpServletResponse response) {
+    @PostMapping("login/user")
+    public ResponseEntity login(@NotNull @RequestBody WxInfo loginData, HttpServletResponse response) {
         try {
             WxMaJscode2SessionResult sessionResult = wxService.getUserService().getSessionInfo(loginData.getCode());
             User user = userService.findUserByOpenId(sessionResult.getOpenid());
@@ -75,7 +76,7 @@ public class LoginController extends BaseController{
 
     @PostMapping("login/admin")
     public ResponseEntity login(@NotNull @RequestBody AdminLoginDTO loginDTO, HttpServletResponse response) {
-        if (adminService.isValidAdmin(loginDTO)){
+        if (adminService.isValidAdmin(loginDTO)) {
             String cookie = CookieUtil.tokenGenerate();
             redisUtil.storeNewCookie(cookie, loginDTO.getAdminName());
             CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);

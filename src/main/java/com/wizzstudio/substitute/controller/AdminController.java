@@ -1,12 +1,17 @@
 package com.wizzstudio.substitute.controller;
 
+import com.wizzstudio.substitute.domain.AdminInfo;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.service.AdminService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * Created by Kikyou on 18-11-12
@@ -24,10 +29,22 @@ public class AdminController {
         adminService.allocatePrivilege(id, role);
         return ResultUtil.success();
     }
-
-    @Secured("ROLE_ADMIN_2")
+/*
+    @Secured("ROLE_ADMIN_1")
     @PostMapping("/test")
     public String test() {
         return "Hello world";
+    }*/
+
+    @Secured("ROLE_ADMIN_1")
+    @PostMapping("/create")
+    public ResponseEntity createNewAdministrator(@RequestBody @Valid AdminInfo info, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return ResultUtil.error();
+        adminService.addNewAdmin(info);
+        return ResultUtil.success();
     }
+
+
+
+
 }

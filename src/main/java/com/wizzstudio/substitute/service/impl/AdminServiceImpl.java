@@ -4,9 +4,9 @@ import com.wizzstudio.substitute.dao.AdminDao;
 import com.wizzstudio.substitute.domain.AdminInfo;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
 import com.wizzstudio.substitute.enums.Role;
-import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,6 +21,8 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     private AdminDao adminDao;
 
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
     @Override
     public void allocatePrivilege(Integer id, Role role) {
         AdminInfo adminInfo = adminDao.getAdminInfoByAdminId(id);
@@ -30,6 +32,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void createNewAdmin(AdminInfo adminInfo) {
+        adminInfo.setAdminPass(encoder.encode(adminInfo.getAdminPass()));
         adminDao.save(adminInfo);
     }
 
@@ -42,7 +45,13 @@ public class AdminServiceImpl implements AdminService {
     public boolean isValidAdmin(AdminLoginDTO loginDTO) {
         AdminInfo admin = adminDao.getAdminInfoByAdminName(loginDTO.getAdminName());
         if (admin == null) return false;
-        if (!admin.getAdminPass().equals(loginDTO.getPassword())) return false;
+        if (!admin.getAdminPass().equals(encoder.encode(loginDTO.getPassword()))) return false;
         return true;
+    }
+
+    @Override
+    public void addNewAdmin(AdminInfo info) {
+        info.setAdminPass(encoder.encode(info.getAdminPass()));
+        adminDao.save(info);
     }
 }

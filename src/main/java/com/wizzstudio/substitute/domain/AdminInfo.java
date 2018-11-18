@@ -4,6 +4,9 @@ import com.wizzstudio.substitute.enums.Role;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Created by Kikyou on 18-11-18
@@ -14,12 +17,18 @@ public class AdminInfo {
     @Id
     private Integer adminId;
     @Column
+    @NotNull
+    @Size(min = 7, max = 11)
     private Long adminPhone;
     @Column
+    @NotNull
     private String adminName;
     @Column
+    @NotNull
+    @Size(min = 8)
     private String adminPass;
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Role adminRole;
     @Column
     private Boolean isBoss;
