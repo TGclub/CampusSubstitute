@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.dao;
 
-import com.wizzstudio.substitute.pojo.User;
+import com.wizzstudio.substitute.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

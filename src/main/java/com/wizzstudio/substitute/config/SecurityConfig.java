@@ -2,6 +2,7 @@ package com.wizzstudio.substitute.config;
 
 
 import com.wizzstudio.substitute.security.AuthenticationFilter;
+import com.wizzstudio.substitute.security.service.CustomAdminDetailsService;
 import com.wizzstudio.substitute.security.service.CustomUserDetailsService;
 import com.wizzstudio.substitute.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
+    @Autowired
+    private CustomAdminDetailsService adminDetailsService;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -65,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        AuthenticationFilter filter = new AuthenticationFilter(userDetailsService,redisUtil);
+        AuthenticationFilter filter = new AuthenticationFilter(userDetailsService,adminDetailsService, redisUtil);
 
         http
                 .csrf()

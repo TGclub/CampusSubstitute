@@ -7,7 +7,7 @@ import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.wx.WxInfo;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.enums.Role;
-import com.wizzstudio.substitute.pojo.User;
+import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.util.CookieUtil;
 import com.wizzstudio.substitute.util.RandomUtil;
 import com.wizzstudio.substitute.util.ResultUtil;

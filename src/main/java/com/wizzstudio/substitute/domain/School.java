@@ -1,4 +1,4 @@
-package com.wizzstudio.substitute.pojo;
+package com.wizzstudio.substitute.domain;
 
 import lombok.Data;
 

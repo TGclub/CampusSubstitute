@@ -1,8 +1,8 @@
 package com.wizzstudio.substitute.service;
 
 
-import com.wizzstudio.substitute.pojo.Address;
-import com.wizzstudio.substitute.pojo.School;
+import com.wizzstudio.substitute.domain.Address;
+import com.wizzstudio.substitute.domain.School;
 
 import java.util.List;
 

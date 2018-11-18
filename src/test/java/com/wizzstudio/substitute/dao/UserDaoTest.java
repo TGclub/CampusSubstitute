@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.dao;
 
-import com.wizzstudio.substitute.pojo.User;
+import com.wizzstudio.substitute.domain.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +9,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 
 @SpringBootTest

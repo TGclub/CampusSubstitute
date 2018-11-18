@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.service;
 
-import com.wizzstudio.substitute.pojo.Indent;
+import com.wizzstudio.substitute.domain.Indent;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

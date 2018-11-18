@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.dao;
 
-import com.wizzstudio.substitute.pojo.Address;
+import com.wizzstudio.substitute.domain.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

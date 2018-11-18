@@ -1,18 +1,14 @@
 package com.wizzstudio.substitute.web.controller;
 
-import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
-import com.wizzstudio.substitute.dto.ResultDTO;
-import com.wizzstudio.substitute.pojo.Address;
-import com.wizzstudio.substitute.pojo.School;
-import com.wizzstudio.substitute.pojo.User;
+import com.wizzstudio.substitute.domain.Address;
+import com.wizzstudio.substitute.domain.School;
+import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;

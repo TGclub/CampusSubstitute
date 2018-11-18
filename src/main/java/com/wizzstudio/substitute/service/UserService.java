@@ -1,10 +1,7 @@
 package com.wizzstudio.substitute.service;
 
-import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
-import com.wizzstudio.substitute.pojo.User;
-
-import java.util.List;
+import com.wizzstudio.substitute.domain.User;
 
 /**
  * 定义了用户相关的基本方法

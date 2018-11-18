@@ -1,6 +1,6 @@
 package com.wizzstudio.substitute.service.impl;
 
-import com.wizzstudio.substitute.pojo.Indent;
+import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.service.IndentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 
 import static com.wizzstudio.substitute.enums.GenderEnum.NO_LIMITED;
 import static com.wizzstudio.substitute.enums.IndentTypeEnum.HELP_OTHER;
-import static org.junit.Assert.*;
 
 /**
  * Created By Cx On 2018/11/8 14:56

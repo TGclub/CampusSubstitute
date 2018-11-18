@@ -4,7 +4,7 @@ import com.wizzstudio.substitute.dao.UserDao;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.enums.GenderEnum;
-import com.wizzstudio.substitute.pojo.User;
+import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.util.RandomUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;

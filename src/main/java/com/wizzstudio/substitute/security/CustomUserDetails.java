@@ -1,7 +1,8 @@
 package com.wizzstudio.substitute.security;
 
+import com.wizzstudio.substitute.domain.AdminInfo;
 import com.wizzstudio.substitute.enums.Role;
-import com.wizzstudio.substitute.pojo.User;
+import com.wizzstudio.substitute.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static com.wizzstudio.substitute.enums.Role.ROLE_ADMIN_1;
+import static com.wizzstudio.substitute.enums.Role.ROLE_ADMIN_2;
+import static com.wizzstudio.substitute.enums.Role.ROLE_USER;
 
 /**
  * Created by Kikyou on 18-11-9
@@ -74,17 +79,30 @@ public class CustomUserDetails implements UserDetails {
         );
     }
 
-    private static List<GrantedAuthority> mapTpGrantedAuthority(User user) {
+    public static CustomUserDetails create(AdminInfo admin) {
+        return new CustomUserDetails(admin.getAdminId().toString(),
+                admin.getAdminPhone(),
+                admin.getAdminPass(),
+                mapTpGrantedAuthority(admin));
+    }
+
+    private static <T> List<GrantedAuthority> mapTpGrantedAuthority(T user) {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        switch (user.getRole()) {
-            case ROLE_ADMIN_1:
-                grantedAuthorities.add(new SimpleGrantedAuthority(String.valueOf(Role.ROLE_ADMIN_1)));
-            case ROLE_ADMIN_2:
-                grantedAuthorities.add(new SimpleGrantedAuthority(String.valueOf(Role.ROLE_ADMIN_2)));
-            case ROLE_USER:
-                grantedAuthorities.add(new SimpleGrantedAuthority(String.valueOf(Role.ROLE_USER)));
-            default:
-                break;
+        if (user instanceof User) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(String.valueOf(ROLE_USER)));
+            return grantedAuthorities;
+        }
+        if (user instanceof AdminInfo) {
+            switch (((AdminInfo) user).getAdminRole()) {
+                case ROLE_ADMIN_1:
+                    grantedAuthorities.add(new SimpleGrantedAuthority(String.valueOf(ROLE_ADMIN_1)));
+                case ROLE_ADMIN_2:
+                    grantedAuthorities.add(new SimpleGrantedAuthority(String.valueOf(ROLE_ADMIN_2)));
+                case ROLE_USER:
+                    grantedAuthorities.add(new SimpleGrantedAuthority(String.valueOf(ROLE_USER)));
+                default:
+                    break;
+            }
         }
         return grantedAuthorities;
     }

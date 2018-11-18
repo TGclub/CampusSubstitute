@@ -21,9 +21,9 @@ public class AdminController {
     private AdminService adminService;
     @GetMapping("/privilege/allocation/{userId}/{privilege}")
     @Secured("ROLE_ADMIN_1")
-    public ResponseEntity allocatePrivilege(@PathVariable String userId, @PathVariable String privilege) {
+    public ResponseEntity allocatePrivilege(@PathVariable Integer id, @PathVariable String privilege) {
         Role role = Role.valueOf(privilege);
-        adminService.allocatePrivilege(userId, role);
+        adminService.allocatePrivilege(id, role);
         return ResultUtil.success();
     }
 }

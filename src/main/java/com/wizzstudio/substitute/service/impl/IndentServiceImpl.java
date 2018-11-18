@@ -3,7 +3,7 @@ package com.wizzstudio.substitute.service.impl;
 import com.wizzstudio.substitute.dao.IndentDao;
 import com.wizzstudio.substitute.dto.IndentWxPrePayDto;
 import com.wizzstudio.substitute.enums.IndentStateEnum;
-import com.wizzstudio.substitute.pojo.Indent;
+import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.service.IndentService;
 import com.wizzstudio.substitute.service.WxPayService;
 import lombok.extern.slf4j.Slf4j;

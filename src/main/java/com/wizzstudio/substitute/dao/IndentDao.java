@@ -1,14 +1,10 @@
 package com.wizzstudio.substitute.dao;
 
 import com.wizzstudio.substitute.enums.IndentStateEnum;
-import com.wizzstudio.substitute.pojo.Indent;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.wizzstudio.substitute.domain.Indent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @Repository

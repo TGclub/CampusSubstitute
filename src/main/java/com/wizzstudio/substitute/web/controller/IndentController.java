@@ -5,7 +5,7 @@ import com.wizzstudio.substitute.enums.IndentTypeEnum;
 import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.form.IndentCreateForm;
-import com.wizzstudio.substitute.pojo.Indent;
+import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.service.IndentService;
 import com.wizzstudio.substitute.util.CommonUtil;
 import com.wizzstudio.substitute.util.ResultUtil;
@@ -108,7 +108,6 @@ public class IndentController {
                 break;
             default:
                 return ResultUtil.error();
-
         }
         return ResultUtil.success(indents);
     }

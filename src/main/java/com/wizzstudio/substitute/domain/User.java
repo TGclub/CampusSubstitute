@@ -1,4 +1,4 @@
-package com.wizzstudio.substitute.pojo;
+package com.wizzstudio.substitute.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.enums.GenderEnum;

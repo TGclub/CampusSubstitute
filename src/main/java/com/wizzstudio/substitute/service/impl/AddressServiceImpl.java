@@ -1,8 +1,8 @@
 package com.wizzstudio.substitute.service.impl;
 
-import com.wizzstudio.substitute.pojo.Address;
-import com.wizzstudio.substitute.pojo.School;
-import com.wizzstudio.substitute.pojo.User;
+import com.wizzstudio.substitute.domain.Address;
+import com.wizzstudio.substitute.domain.School;
+import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.service.AddressService;
 import com.wizzstudio.substitute.service.BaseService;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,6 @@
 package com.wizzstudio.substitute.util;
 
 import com.wizzstudio.substitute.dto.ResultDTO;
-import com.wizzstudio.substitute.pojo.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
