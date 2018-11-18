@@ -1,6 +1,7 @@
 package com.wizzstudio.substitute.service;
 
 import com.wizzstudio.substitute.domain.AdminInfo;
+import com.wizzstudio.substitute.dto.AdminLoginDTO;
 import com.wizzstudio.substitute.enums.Role;
 
 /**
@@ -18,4 +19,6 @@ public interface AdminService {
     AdminInfo getAdminInfo(Integer adminId);
 
     void createNewAdmin(AdminInfo admin);
+
+    boolean isValidAdmin(AdminLoginDTO loginDTO);
 }

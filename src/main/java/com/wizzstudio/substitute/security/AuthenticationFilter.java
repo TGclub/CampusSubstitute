@@ -53,14 +53,17 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                     UserDetails userDetails;
                     if (uri.startsWith("/admin")) {
                         userDetails = adminDetailsService.loadUserByUsername(value);
+                        System.out.println("admin uri");
                     } else {
                         userDetails = userDetailsService.loadUserByUsername(value);
                     }
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
-                            null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    log.info("authorized user '{}', setting security context", userDetails.getUsername());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    if (userDetails != null) {
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                                null, userDetails.getAuthorities());
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        log.info("authorized user '{}', setting security context", userDetails.getUsername());
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
                 }
             }
         }

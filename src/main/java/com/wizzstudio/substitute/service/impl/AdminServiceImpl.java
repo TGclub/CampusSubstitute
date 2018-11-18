@@ -2,6 +2,7 @@ package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.dao.AdminDao;
 import com.wizzstudio.substitute.domain.AdminInfo;
+import com.wizzstudio.substitute.dto.AdminLoginDTO;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.service.AdminService;
@@ -19,6 +20,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private AdminDao adminDao;
+
     @Override
     public void allocatePrivilege(Integer id, Role role) {
         AdminInfo adminInfo = adminDao.getAdminInfoByAdminId(id);
@@ -34,5 +36,13 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AdminInfo getAdminInfo(Integer adminId) {
         return adminDao.getAdminInfoByAdminId(adminId);
+    }
+
+    @Override
+    public boolean isValidAdmin(AdminLoginDTO loginDTO) {
+        AdminInfo admin = adminDao.getAdminInfoByAdminName(loginDTO.getAdminName());
+        if (admin == null) return false;
+        if (!admin.getAdminPass().equals(loginDTO.getPassword())) return false;
+        return true;
     }
 }

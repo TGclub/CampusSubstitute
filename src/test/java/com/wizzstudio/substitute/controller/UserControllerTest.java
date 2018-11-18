@@ -1,12 +1,10 @@
-package com.wizzstudio.substitute.web.controller;
+package com.wizzstudio.substitute.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wizzstudio.substitute.ControllerTestUtil;
 import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
-import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.enums.GenderEnum;
-import com.wizzstudio.substitute.util.RandomUtil;
 import okhttp3.*;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -16,10 +14,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by Kikyou on 18-11-8

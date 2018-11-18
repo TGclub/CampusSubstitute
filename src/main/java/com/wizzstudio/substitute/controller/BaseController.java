@@ -1,8 +1,9 @@
-package com.wizzstudio.substitute.web.controller;
+package com.wizzstudio.substitute.controller;
 
 import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.service.AddressService;
+import com.wizzstudio.substitute.service.AdminService;
 import com.wizzstudio.substitute.service.IndentService;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.RedisUtil;
@@ -28,6 +29,9 @@ public class BaseController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    AdminService adminService;
 
     @Autowired
     protected AddressService addressService;

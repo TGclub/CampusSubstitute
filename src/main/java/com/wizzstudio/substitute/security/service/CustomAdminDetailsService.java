@@ -17,9 +17,12 @@ public class CustomAdminDetailsService implements UserDetailsService {
 
     @Autowired
     private AdminDao adminDao;
+
     @Override
-    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        AdminInfo adminInfo =  adminDao.getAdminInfoByAdminId(Integer.valueOf(id));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        AdminInfo adminInfo = adminDao.getAdminInfoByAdminName(username);
+        if (adminInfo == null) return null;
         return CustomUserDetails.create(adminInfo);
     }
 }

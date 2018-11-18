@@ -133,7 +133,7 @@ public class WxPayServiceImpl implements WxPayService {
     public Map<String,String> prePay(IndentWxPrePayDto indentWxPrePayDto) {
         User user = userService.findUserByOpenId(indentWxPrePayDto.getOpenid());
         if (user == null){
-            log.error("[微信统一下单]用户不存在，userId={}",indentWxPrePayDto.getOpenid());
+            log.error("[微信统一下单]用户不存在，adminName={}",indentWxPrePayDto.getOpenid());
             throw new SubstituteException(ResultEnum.USER_NOT_EXISTS);
         }
         log.info("[微信统一下单]用户:{} 进行预下单",indentWxPrePayDto.getOpenid());

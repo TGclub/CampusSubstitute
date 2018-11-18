@@ -1,4 +1,4 @@
-package com.wizzstudio.substitute.web.controller;
+package com.wizzstudio.substitute.controller;
 
 import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.exception.SubstituteException;

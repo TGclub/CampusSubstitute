@@ -1,9 +1,10 @@
-package com.wizzstudio.substitute.web.controller;
+package com.wizzstudio.substitute.controller;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.wizzstudio.substitute.constants.Constant;
+import com.wizzstudio.substitute.dto.AdminLoginDTO;
 import com.wizzstudio.substitute.dto.wx.WxInfo;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.enums.Role;
@@ -33,8 +34,7 @@ public class LoginController extends BaseController{
      * @param loginData
      * @return
      */
-    @PostMapping("/user/login")
-    public ResponseEntity login(@NotNull @RequestBody WxInfo loginData, HttpServletResponse response) {
+    @PostMapping("login/user") public ResponseEntity login(@NotNull @RequestBody WxInfo loginData, HttpServletResponse response) {
         try {
             WxMaJscode2SessionResult sessionResult = wxService.getUserService().getSessionInfo(loginData.getCode());
             User user = userService.findUserByOpenId(sessionResult.getOpenid());
@@ -72,5 +72,18 @@ public class LoginController extends BaseController{
             return ResultUtil.error();
         }
     }
+
+    @PostMapping("login/admin")
+    public ResponseEntity login(@NotNull @RequestBody AdminLoginDTO loginDTO, HttpServletResponse response) {
+        if (adminService.isValidAdmin(loginDTO)){
+            String cookie = CookieUtil.tokenGenerate();
+            redisUtil.storeNewCookie(cookie, loginDTO.getAdminName());
+            CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
+            return ResultUtil.success();
+        }
+        return ResultUtil.error();
+    }
+
+
 
 }

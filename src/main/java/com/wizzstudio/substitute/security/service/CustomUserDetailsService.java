@@ -32,6 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @SuppressWarnings("ConstantConditions")
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         User user = service.findUserById(userId);
+        if (user == null) return null;
         return CustomUserDetails.create(user);
 
     }

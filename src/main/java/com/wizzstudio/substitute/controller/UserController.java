@@ -1,4 +1,4 @@
-package com.wizzstudio.substitute.web.controller;
+package com.wizzstudio.substitute.controller;
 
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
