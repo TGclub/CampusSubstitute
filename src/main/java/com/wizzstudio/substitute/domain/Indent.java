@@ -52,6 +52,18 @@ public class Indent implements Serializable {
     @NotNull
     private BigDecimal indentPrice;
 
+    //加急类型，0:不加急，1:超时 2:退单
+    //columnDefinition表示该字段在数据库中的实际类型。不使用的话，当ddl-auto设为validate会报错
+    @Column(columnDefinition = "TINYINT")
+    private Integer urgentType;
+
+    //加急订单是否已处理，0：否，1：是，默认为0
+    private Boolean isSolved;
+
+    //订单状态,待支付：WAIT_PAY待接单：WAIT_FOR_PERFORMER，执行中：PERFORMING，货物已送达：ARRIVED，已完成：COMPLETED
+    @Enumerated(EnumType.STRING)
+    private IndentStateEnum indentState;
+
     //取货地址ID，订单类型非随意帮时必填
     private Integer takeGoodAddressId;
 
@@ -69,10 +81,6 @@ public class Indent implements Serializable {
 
     //物品金额，仅订单类型为帮我购时非空
     private BigDecimal goodPrice;
-
-    //订单状态,待支付：WAIT_PAY待接单：WAIT_FOR_PERFORMER，执行中：PERFORMING，货物已送达：ARRIVED，已完成：COMPLETED
-    @Enumerated(EnumType.STRING)
-    private IndentStateEnum indentState;
 
     //创建时间
     @Column(updatable = false,insertable = false)

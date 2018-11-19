@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.wizzstudio.substitute.dto.wx.WxPrePayInfo;
 import com.wizzstudio.substitute.enums.BaseEnum;
+import com.wizzstudio.substitute.enums.CodeEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -68,6 +69,16 @@ public class CommonUtil {
     public static <T extends BaseEnum>T getEnum(String enumString,Class<T> enumClass){
         for (T baseEnum : enumClass.getEnumConstants()){
             if (baseEnum.toString().equals(enumString)) return baseEnum;
+        }
+        return null;
+    }
+
+    //遍历枚举类，查询符合code值的枚举,并返回该枚举
+    public static <T extends CodeEnum> T getEnum(Integer code, Class<T> enumClass) {
+        //getEnumConstants()作用：
+        //以声明顺序返回一个数组，该数组包含构成此 Class 对象所表示的枚举类的值，或者在此 Class 对象不表示枚举类型时返回 null
+        for (T each : enumClass.getEnumConstants()) {
+            if (each.getCode().equals(code)) return each;
         }
         return null;
     }

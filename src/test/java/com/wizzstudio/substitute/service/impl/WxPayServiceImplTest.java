@@ -1,5 +1,6 @@
 package com.wizzstudio.substitute.service.impl;
 
+import com.wizzstudio.substitute.domain.CountInfo;
 import com.wizzstudio.substitute.dto.wx.WxPrePayInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,5 +30,11 @@ public class WxPayServiceImplTest {
         wxPrePayInfo.setMch_id("10000100");
         wxPrePayInfo.setNonce_str("ibuaiVcKdpRxkhJA");
         System.out.println("hello world!");
+    }
+
+    @Test
+    public void test(){
+        CountInfo countInfo = CountInfo.builder().loginUser(3).countId(3).schoolId(5).build();
+        System.out.println(countInfo);
     }
 }

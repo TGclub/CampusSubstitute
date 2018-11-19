@@ -11,18 +11,24 @@ import javax.persistence.*;
 @Entity
 @Data
 public class AdminInfo {
+    //管理员Id
     @Id
     private Integer adminId;
+    //管理员电话
     @Column
     private Long adminPhone;
+    //管理员账号，唯一
     @Column
     private String adminName;
+    //管理员密码
     @Column
     private String adminPass;
+    //管理员角色,一级管理员：ROLE_ADMIN_1，二级管理员：ROLE_ADMIN_2
     @Enumerated(EnumType.STRING)
     private Role adminRole;
-    @Column
+    //是否为区域负责人,0:否，1：是
     private Boolean isBoss;
+    //管理员学校Id ，一级管理员没有该属性
     @Column
     private Integer adminSchoolId;
 
