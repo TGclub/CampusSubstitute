@@ -1,11 +1,16 @@
 package com.wizzstudio.substitute.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
+import com.aliyuncs.exceptions.ClientException;
+import com.wizzstudio.substitute.config.AliSmsConfig;
 import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.form.PayForm;
 import com.wizzstudio.substitute.service.WxPayService;
 import com.wizzstudio.substitute.util.CommonUtil;
 import com.wizzstudio.substitute.util.ResultUtil;
+import com.wizzstudio.substitute.util.SmsUtil;
 import com.wizzstudio.substitute.util.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -30,6 +34,8 @@ public class WxPayController {
 
     @Autowired
     WxPayService wxPayService;
+    @Autowired
+    AliSmsConfig aliSmsConfig;
 
     /**
      * 微信支付统一下单接口
@@ -65,5 +71,29 @@ public class WxPayController {
         wxPayService.notify(notifyData);
         //修改完后返回xml告诉微信处理结果，不然微信会一直发送异步通知，则该方法会一直被调用
         return XmlUtil.parseMap2Xml(result);
+    }
+
+    //todo 用于测试短信发送
+    @GetMapping("/test")
+    public ResponseEntity testSms(){
+        //组装请求对象-具体描述见控制台-文档部分内容
+        SendSmsRequest request = new SendSmsRequest();
+        //必填:,短信接收号码,支持以逗号分隔的形式进行批量调用，批量上限为1000个手机号码
+        request.setPhoneNumbers("18185738567");
+        //必填:短信签名名称-可在短信控制台中找到
+        request.setSignName("testCx");
+        //必填:短信模板ID-可在短信控制台中找到
+        request.setTemplateCode("SMS_150865237");
+        //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${param1},您的验证码为${param2}"时,此处的值为
+        Map<String,String> params = new HashMap<>();
+        params.put("param1","test1");
+        params.put("param2","test2");
+        request.setTemplateParam(JSON.toJSON(params).toString());
+        try {
+            SmsUtil.sendSms(request,aliSmsConfig);
+        } catch (ClientException e) {
+            log.info("出错了");
+        }
+        return ResultUtil.success();
     }
 }

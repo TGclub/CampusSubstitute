@@ -74,10 +74,8 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <!--<scope>runtime</scope>-->
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
@@ -108,6 +106,7 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <!--微信小程序github SDK-->
         <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-miniapp</artifactId>
@@ -141,11 +140,23 @@
             <optional>true</optional>
         </dependency>
 
-        <!--用于接收并转换xml-->
+        <!--用于接收并转换xml,微信小程序支付接口参数交流方式为xml-->
         <dependency>
             <groupId>org.simpleframework</groupId>
             <artifactId>simple-xml</artifactId>
             <version>2.7.1</version>
+        </dependency>
+
+        <!--阿里云短信服务依赖-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>4.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+            <version>1.1.0</version>
         </dependency>
     </dependencies>
 
