@@ -1,8 +1,11 @@
 package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.dao.AdminDao;
+import com.wizzstudio.substitute.dao.IndentDao;
 import com.wizzstudio.substitute.domain.AdminInfo;
+import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
+import com.wizzstudio.substitute.enums.IndentStateEnum;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * Created by Kikyou on 18-11-12
@@ -20,6 +24,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private AdminDao adminDao;
+
+    @Autowired
+    private IndentDao indentDao;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -53,5 +60,10 @@ public class AdminServiceImpl implements AdminService {
     public void addNewAdmin(AdminInfo info) {
         info.setAdminPass(encoder.encode(info.getAdminPass()));
         adminDao.save(info);
+    }
+
+    @Override
+    public List<Indent> getUnPickedIndent() {
+        return indentDao.findAllByIndentStateOrderByCreateTimeDesc(IndentStateEnum.WAIT_FOR_PERFORMER);
     }
 }

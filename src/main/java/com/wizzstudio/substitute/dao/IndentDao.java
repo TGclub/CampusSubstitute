@@ -24,5 +24,4 @@ public interface IndentDao extends JpaRepository<Indent, Integer> {
     List<Indent> findAllByIndentStateOrderByCreateTimeDesc(IndentStateEnum state);
 
 
-
 }

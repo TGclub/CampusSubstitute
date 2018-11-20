@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.servlet.http.Cookie;
+
 @Repository
 public class RedisUtil {
 
@@ -17,5 +19,10 @@ public class RedisUtil {
     public String getCachedUserId(String cookie) {
         return redisTemplate.opsForValue().get(cookie);
     }
+
+    public void delete(String key) {
+        redisTemplate.delete(key);
+    }
+
 
 }

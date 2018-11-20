@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 /**
  * Created by Kikyou on 18-11-12
@@ -42,6 +43,13 @@ public class AdminController {
         if (bindingResult.hasErrors()) return ResultUtil.error();
         adminService.addNewAdmin(info);
         return ResultUtil.success();
+    }
+
+
+    @Secured("ROLE_ADMIN_2")
+    @GetMapping("/viewUnPicked")
+    public ResponseEntity viewUnPickedIndent(Principal principal) {
+        return ResultUtil.success(adminService.getUnPickedIndent());
     }
 
 

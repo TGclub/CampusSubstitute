@@ -1,8 +1,11 @@
 package com.wizzstudio.substitute.service;
 
 import com.wizzstudio.substitute.domain.AdminInfo;
+import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
 import com.wizzstudio.substitute.enums.Role;
+
+import java.util.List;
 
 /**
  * Created by Kikyou on 18-11-12
@@ -23,4 +26,6 @@ public interface AdminService {
     boolean isValidAdmin(AdminLoginDTO loginDTO);
 
     void addNewAdmin(AdminInfo admin);
+
+    List<Indent> getUnPickedIndent();
 }

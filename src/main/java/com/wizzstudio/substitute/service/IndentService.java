@@ -51,4 +51,6 @@ public interface IndentService {
     List<Indent> getAllIndent();
 
     List<Indent> getIndentByPrice();
+
+
 }
