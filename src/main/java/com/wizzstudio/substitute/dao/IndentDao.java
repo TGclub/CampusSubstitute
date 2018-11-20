@@ -2,7 +2,9 @@ package com.wizzstudio.substitute.dao;
 
 import com.wizzstudio.substitute.enums.IndentStateEnum;
 import com.wizzstudio.substitute.domain.Indent;
+import com.wizzstudio.substitute.enums.UrgentTypeEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,6 +24,10 @@ public interface IndentDao extends JpaRepository<Indent, Integer> {
     List<Indent> findAllByIndentState(IndentStateEnum state);
     List<Indent> findAllByIndentStateOrderByIndentPriceDesc(IndentStateEnum state);
     List<Indent> findAllByIndentStateOrderByCreateTimeDesc(IndentStateEnum state);
+
+    @Query(value = "select Indent from Indent i where i.isSolved = ?1 and i.urgentType > ?2")
+    List<Indent> findAllByIsSolvedAndUrgentType(Boolean isSolved, Integer type);
+
 
 
 }

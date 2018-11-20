@@ -46,4 +46,7 @@ public class CouponInfo {
     // columnDefinition表示该字段在数据库中的实际类型
     @Column(columnDefinition = "BLOB")
     private Byte[] picture;
+
+    public CouponInfo() {
+    }
 }

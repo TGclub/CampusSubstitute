@@ -1,7 +1,10 @@
 package com.wizzstudio.substitute.service;
 
+import com.wizzstudio.substitute.domain.Feedback;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.domain.User;
+
+import java.util.List;
 
 /**
  * 定义了用户相关的基本方法
@@ -46,5 +49,11 @@ public interface UserService {
     User findUserByOpenId(String openid);
 
     User findUserById(String id);
+
+
+
+
+
+
 
 }

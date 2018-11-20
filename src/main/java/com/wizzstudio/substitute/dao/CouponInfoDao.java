@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CouponInfoDao extends JpaRepository<CouponInfo,Integer> {
+    CouponInfo findByCouponId(Integer id);
 }
