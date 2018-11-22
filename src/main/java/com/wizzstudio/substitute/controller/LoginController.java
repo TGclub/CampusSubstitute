@@ -97,11 +97,12 @@ public class LoginController extends BaseController{
         response.sendRedirect("/login/admin");
     }
 
+    /*
     @PostMapping("/test")
     public String test(@RequestBody AdminLoginDTO dto) {
 
         return "Heoo " + dto.getAdminName();
-    }
+    }*/
 
 
 

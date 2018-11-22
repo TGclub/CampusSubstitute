@@ -80,12 +80,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<Indent> getUnHandledUrgentIndents() {
-        return indentDao.findAllByIsSolvedAndUrgentTypeOrderByCreateTimeDesc(false, 0);
+        return indentDao.findAllByIsSolvedAndUrgentTypeGreaterThanOrderByCreateTimeDesc(false, 0);
     }
 
     @Override
     public List<Indent> getHandledUrgentIndents() {
-        return indentDao.findAllByIsSolvedAndUrgentTypeOrderByCreateTimeDesc(true, 0);
+        return indentDao.findAllByIsSolvedAndUrgentTypeGreaterThanOrderByCreateTimeDesc(true, 0);
     }
 
     @Override
