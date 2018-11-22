@@ -25,8 +25,8 @@ public interface IndentDao extends JpaRepository<Indent, Integer> {
     List<Indent> findAllByIndentStateOrderByIndentPriceDesc(IndentStateEnum state);
     List<Indent> findAllByIndentStateOrderByCreateTimeDesc(IndentStateEnum state);
 
-    @Query(value = "select Indent from Indent i where i.isSolved = ?1 and i.urgentType > ?2")
-    List<Indent> findAllByIsSolvedAndUrgentType(Boolean isSolved, Integer type);
+    //@Query(value = "select Indent from Indent i where i.isSolved = ?1 and i.urgentType > ?2")
+    List<Indent> findAllByIsSolvedAndUrgentTypeOrderByCreateTimeDesc(Boolean isSolved, Integer type);
 
 
 

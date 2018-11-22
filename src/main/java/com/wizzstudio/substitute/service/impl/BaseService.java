@@ -1,4 +1,4 @@
-package com.wizzstudio.substitute.service;
+package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.dao.AddressDao;
 import com.wizzstudio.substitute.dao.SchoolDao;

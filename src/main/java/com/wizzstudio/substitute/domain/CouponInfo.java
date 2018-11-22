@@ -18,7 +18,7 @@ import java.util.Date;
  */
 @Entity
 @Data
-@Builder
+//@Builder
 public class CouponInfo {
     //优惠券ID
     @Id
