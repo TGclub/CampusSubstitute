@@ -9,6 +9,8 @@ import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.RandomUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 
@@ -27,7 +29,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     /**
      * 获取一个未被使用过的用户Id
      */
-    public String getUserUniqueKey(){
+    public String getUserUniqueKey() {
         String userId = RandomUtil.getSixRandom();
         while (findUserById(userId) != null) {
             userId = RandomUtil.getSixRandom();
@@ -46,6 +48,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "user", key = "#id")
     public void modifyUserInfo(String id, ModifyUserInfoDTO newInfo) {
         User user = findUserById(id);
         GenderEnum gender = newInfo.getGender();
@@ -77,8 +80,9 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     /**
      * 获取徒弟或师傅的基本信息
+     *
      * @param returnType 传入一个实例指定返回类型，list作为徒弟处理，UserBasicInfo作为师傅处理
-     * @param userId 徒弟id
+     * @param userId     徒弟id
      * @return 返回一个list或者UserBasicInfo
      */
     @Override
@@ -96,7 +100,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                 BeanUtils.copyProperties(x, basicInfo);
                 basicInfoList.add(basicInfo);
             });
-            return (T)basicInfoList;
+            return (T) basicInfoList;
         } else if (returnType instanceof UserBasicInfo) {
             String masterId = user.getMasterId();
             if (masterId != null) {
@@ -120,6 +124,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
+    @Cacheable(cacheNames = "user", key = "#id", unless = "#result==null")
     public User findUserById(String id) {
         return userDao.findUserById(id);
     }
