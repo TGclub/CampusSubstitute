@@ -2,6 +2,7 @@ package com.wizzstudio.substitute.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ import java.util.Date;
 @Entity
 @Data
 @Builder
+@AllArgsConstructor
 public class CouponInfo {
     //优惠券ID
     @Id
