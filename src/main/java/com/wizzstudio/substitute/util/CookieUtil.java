@@ -34,8 +34,13 @@ public class CookieUtil {
 
         Cookie[] cookies = request.getCookies();
         if (cookies == null) return null;
-        return Arrays.stream(cookies).filter(c -> c.getName().equals(Constant.TOKEN)).collect(Collectors.toList()).get(0);
-
+        Cookie cookie;
+        try {
+            cookie = Arrays.stream(cookies).filter(c -> c.getName().equals(Constant.TOKEN)).collect(Collectors.toList()).get(0);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+        return cookie;
     }
 
 

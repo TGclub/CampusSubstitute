@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Kikyou on 18-11-12
  */
 @Service
-@Transactional
+@Transactional(rollbackOn = Exception.class)
 public class AdminServiceImpl implements AdminService {
 
     @Autowired
@@ -47,12 +47,6 @@ public class AdminServiceImpl implements AdminService {
     public void allocatePrivilege(Integer id, Role role) {
         AdminInfo adminInfo = adminDao.getAdminInfoByAdminId(id);
         adminInfo.setAdminRole(role);
-        adminDao.save(adminInfo);
-    }
-
-    @Override
-    public void createNewAdmin(AdminInfo adminInfo) {
-        adminInfo.setAdminPass(encoder.encode(adminInfo.getAdminPass()));
         adminDao.save(adminInfo);
     }
 
@@ -86,12 +80,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<Indent> getUnHandledUrgentIndents() {
-        return indentDao.findAllByIsSolvedAndUrgentType(false, 0);
+        return indentDao.findAllByIsSolvedAndUrgentTypeGreaterThanOrderByCreateTimeDesc(false, 0);
     }
 
     @Override
     public List<Indent> getHandledUrgentIndents() {
-        return indentDao.findAllByIsSolvedAndUrgentType(true, 0);
+        return indentDao.findAllByIsSolvedAndUrgentTypeGreaterThanOrderByCreateTimeDesc(true, 0);
     }
 
     @Override

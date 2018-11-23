@@ -127,12 +127,7 @@ public class AdminController {
         return ResultUtil.success();
     }
 
-    @Secured("ROLE_ADMIN_1")
-    @PostMapping("/create")
-    public ResponseEntity createNewAdmin(@RequestBody AdminInfo adminInfo) {
-        adminService.addNewAdmin(adminInfo);
-        return ResultUtil.success();
-    }
+
 
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/delete/{id}")
@@ -147,6 +142,7 @@ public class AdminController {
         adminService.modifyIsBossAttribute(id, true);
         return ResultUtil.success();
     }
+
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/midify/setSchool/{id}/{schoolId}")
     public ResponseEntity setSchoolId(@PathVariable int id, @PathVariable int schooId) {

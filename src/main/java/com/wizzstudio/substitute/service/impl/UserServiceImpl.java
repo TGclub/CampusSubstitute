@@ -5,7 +5,6 @@ import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.domain.User;
-import com.wizzstudio.substitute.service.BaseService;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
