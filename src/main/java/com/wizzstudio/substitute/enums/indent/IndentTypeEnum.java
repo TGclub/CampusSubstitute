@@ -1,4 +1,6 @@
-package com.wizzstudio.substitute.enums;
+package com.wizzstudio.substitute.enums.indent;
+
+import com.wizzstudio.substitute.enums.BaseEnum;
 
 /**
  * 订单类型枚举类

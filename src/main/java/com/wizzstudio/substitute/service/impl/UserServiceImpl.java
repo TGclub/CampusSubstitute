@@ -8,6 +8,7 @@ import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.service.BaseService;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.RandomUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,12 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @Transactional(rollbackOn = Exception.class)
 public class UserServiceImpl extends BaseService implements UserService {
 
@@ -37,13 +40,13 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public User addNewUser(User user) {
+    public User saveUser(User user) {
         return userDao.save(user);
     }
 
     @Override
-    public User getUserInfo(String openId) {
-        return userDao.findByOpenid(openId);
+    public User getByOpenid(String openid) {
+        return userDao.findByOpenid(openid);
     }
 
     @Override
@@ -111,8 +114,6 @@ public class UserServiceImpl extends BaseService implements UserService {
         } else {
             return null;
         }
-
-
     }
 
     @Override
@@ -123,6 +124,18 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public User findUserById(String id) {
         return userDao.findUserById(id);
+    }
+
+    @Override
+    public void reduceBalance(String userId, BigDecimal number) {
+        User user = findUserById(userId);
+        if (user.getBalance().compareTo(number) < 0){
+            log.error("【用户支付】支付失败，用户余额不足，balance={},reduceNumber={}",user.getBalance(),number);
+            throw new SecurityException("支付失败，用户余额不足");
+        }
+        //扣钱并保存信息
+        user.setBalance(user.getBalance().subtract(number));
+        saveUser(user);
     }
 
 

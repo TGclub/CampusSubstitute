@@ -45,9 +45,16 @@ public class LoginController extends BaseController{
             WxMaJscode2SessionResult sessionResult = wxService.getUserService().getSessionInfo(loginData.getCode());
             User user = userService.findUserByOpenId(sessionResult.getOpenid());
             if (user == null) {
+                //获得一个未被使用过的userId
+                String userId = RandomUtil.getSixRandom();
+                user = userService.findUserById(userId);
+                while(user != null){
+                    userId = RandomUtil.getSixRandom();
+                    user = userService.findUserById(userId);
+                }
                 WxMaUserInfo wxUserInfo = wxService.getUserService().getUserInfo(sessionResult.getSessionKey(), loginData.getEncryptedData(), loginData.getIv());
                 user = User.newBuilder()
-                        .setId(RandomUtil.getSixRandom())
+                        .setId(userId)
                         .setUserName(wxUserInfo.getNickName())
                         .setOpenid(wxUserInfo.getOpenId())
                         .setAvatar(wxUserInfo.getAvatarUrl())
@@ -67,7 +74,7 @@ public class LoginController extends BaseController{
                     default:
                         return ResultUtil.error("用户信息有误");
                 }
-                userService.addNewUser(user);
+                userService.saveUser(user);
                 String cookie = CookieUtil.tokenGenerate();
                 redisUtil.storeNewCookie(cookie, user.getId());
                 CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);

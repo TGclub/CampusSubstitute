@@ -1,10 +1,9 @@
 package com.wizzstudio.substitute.service;
 
-import com.wizzstudio.substitute.domain.Feedback;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.domain.User;
+import java.math.BigDecimal;
 
-import java.util.List;
 
 /**
  * 定义了用户相关的基本方法
@@ -15,14 +14,14 @@ public interface UserService {
      * @param user 用户信息
      * @return
      */
-    User addNewUser(User user);
+    User saveUser(User user);
 
     /**
      * 通过openId获取用户信息
-     * @param openId 用户openId
+     * @param openid 用户openid
      * @return
      */
-    User getUserInfo(String openId);
+    User getByOpenid(String openid);
 
     /**
      * 更新用户信息
@@ -31,7 +30,7 @@ public interface UserService {
     void modifyUserInfo(String id, ModifyUserInfoDTO newInfo);
 
     /**
-     *添加推荐人
+     * 添加推荐人
      * @param userId 用户id
      * @param masterId 师傅id
      * @return true 添加成功, false 添加失败
@@ -50,10 +49,12 @@ public interface UserService {
 
     User findUserById(String id);
 
-
-
-
-
+    /**
+     * 扣除某用户number的余额量
+     * @param userId 用户id
+     * @param number 减少金额量
+     */
+    void reduceBalance(String userId, BigDecimal number);
 
 
 }

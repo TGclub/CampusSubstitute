@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 
 import static com.wizzstudio.substitute.enums.GenderEnum.NO_LIMITED;
-import static com.wizzstudio.substitute.enums.IndentTypeEnum.HELP_OTHER;
+import static com.wizzstudio.substitute.enums.indent.IndentTypeEnum.HELP_OTHER;
 
 /**
  * Created By Cx On 2018/11/8 14:56
@@ -31,16 +31,16 @@ public class IndentServiceImplTest {
         Indent indent = new Indent();
         indent.setIndentType(HELP_OTHER);
         indent.setRequireGender(NO_LIMITED);
-        indent.setPublisherOpenid("TEST");
+        indent.setPublisherId("TEST");
         indent.setPublisherPhone(12345678901L);
         indent.setIndentContent("hello");
         indent.setIndentPrice(new BigDecimal(1));
-        indentService.publishedNewIndent(indent,"127.0.0.1");
+        indentService.save(indent);
     }
 
     @Test
     public void getIndentInFuzzyMatching() {
-        indentService.getIndentInFuzzyMatching(1,"3",5);
+        System.out.println(indentService.getWaitInFuzzyMatching(10,"{"));
     }
 
     @Test

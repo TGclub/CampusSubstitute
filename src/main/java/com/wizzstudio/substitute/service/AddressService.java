@@ -22,6 +22,8 @@ public interface AddressService {
      */
     List<Address> getUsualAddress(String userId);
 
+    List<Address> getAllByAddress(String address);
+
     /**
      * 通过关键字获取学校
      * @param school 学校名称

@@ -4,14 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.exceptions.ClientException;
 import com.wizzstudio.substitute.config.AliSmsConfig;
+import com.wizzstudio.substitute.domain.Indent;
+import com.wizzstudio.substitute.dto.wx.WxPrePayDto;
 import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.form.PayForm;
 import com.wizzstudio.substitute.service.WxPayService;
-import com.wizzstudio.substitute.util.CommonUtil;
-import com.wizzstudio.substitute.util.ResultUtil;
-import com.wizzstudio.substitute.util.SmsUtil;
-import com.wizzstudio.substitute.util.XmlUtil;
+import com.wizzstudio.substitute.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,8 +37,22 @@ public class WxPayController {
     @Autowired
     AliSmsConfig aliSmsConfig;
 
+    private WxPrePayDto createWxPrePayDto(PayForm payForm, HttpServletRequest request) {
+        int totalFee = MoneyUtil.Yuan2Fen(payForm.getTotalFee());
+        return WxPrePayDto.builder().indentId(RandomUtil.genUniqueKey())
+                .openid(payForm.getUserOpenid())
+                .totalFee(totalFee)
+                .clientIp(CommonUtil.getClientIp(request))
+                .build();
+    }
+
+
     /**
-     * 微信支付统一下单接口
+     * 微信支付统一下单接口，即充值接口
+     * 调用预支付接口，获得前端调用支付接口需要的五个参数 和 sign：appId、timeStamp（下单时间）、nonceStr（随机字符串）
+     * package：统一下单接口返回的 prepay_id 参数值，格式如：prepay_id=wx2017033010242291fcfe0db70013231072
+     * signType：签名类型，默认为MD5
+     * sign ： 以上数据的加密字符串
      */
     @PostMapping("/prepay")
     @ResponseBody
@@ -50,10 +64,8 @@ public class WxPayController {
                     : bindingResult.getFieldError().getDefaultMessage();
             throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
         }
-        //获取客户端IP
-        String clientIP = CommonUtil.getClientIp(request);
         //支付统一下单
-        //wxPayService.prePay(payForm,clientIP);
+        wxPayService.prePay(createWxPrePayDto(payForm,request));
         return ResultUtil.success();
     }
 

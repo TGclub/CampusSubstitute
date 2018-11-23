@@ -2,8 +2,8 @@ package com.wizzstudio.substitute.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.enums.GenderEnum;
-import com.wizzstudio.substitute.enums.IndentStateEnum;
-import com.wizzstudio.substitute.enums.IndentTypeEnum;
+import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
+import com.wizzstudio.substitute.enums.indent.IndentTypeEnum;
 import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
 import lombok.Data;
 
@@ -26,21 +26,19 @@ public class Indent implements Serializable {
     //送货人id
     private String performerId;
 
-    //下单用户openid
+    //下单用户id
     @NotNull
-    private String publisherOpenid;
+    private String publisherId;
 
-    //联系人电话,不能用publisherOpenid查，因为可能不同
+    //联系人电话,不能用publisherId查，因为可能不同
     @NotNull
     private Long publisherPhone;
 
     //订单类型，帮我购：HELP_BUY，帮我递：HELP_SEND，随意帮：HELP_OTHER
-    @NotNull
     @Enumerated(EnumType.STRING)
     private IndentTypeEnum indentType;
 
     //订单要求性别，男：”MALE”,女：”FEMALE”,不限：”NO_LIMITED”
-    @NotNull
     @Enumerated(value = EnumType.STRING)
     private GenderEnum requireGender;
 
