@@ -41,7 +41,6 @@ public class AdminController {
         return ResultUtil.success();
     }
 
-
     @GetMapping("statistics/viewUnPicked")
     public ResponseEntity viewUnPickedIndent(Principal principal) {
         return ResultUtil.success(adminService.getUnPickedIndent());
@@ -126,8 +125,6 @@ public class AdminController {
         adminService.handleFeedBack(id);
         return ResultUtil.success();
     }
-
-
 
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/delete/{id}")
