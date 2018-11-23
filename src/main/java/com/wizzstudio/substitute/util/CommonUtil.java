@@ -1,27 +1,14 @@
 package com.wizzstudio.substitute.util;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.core.util.QuickWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.XppDriver;
-import com.wizzstudio.substitute.dto.wx.WxPrePayInfo;
 import com.wizzstudio.substitute.enums.BaseEnum;
 import com.wizzstudio.substitute.enums.CodeEnum;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
+ * 公用工具类
  * Created By Cx On 2018/11/6 11:30
  */
 public class CommonUtil {
