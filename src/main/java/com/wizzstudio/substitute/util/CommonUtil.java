@@ -15,7 +15,7 @@ public class CommonUtil {
 
     /**
      * 获取客户端IP
-     *
+     * 
      * 如果用反向代理软件，将http://ip:port/ 的URL反向代理为http://www.xxx.com/ 的URL时，
      * 当我们访问http://www.xxx.com/index.jsp/ 时，并不是我们访问服务器,
      * 而是先由代理服务器去访问http://ip:port/index.jsp ，代理服务器再将访问到的结果返回给我们的浏览器，
