@@ -1,4 +1,4 @@
-package com.wizzstudio.substitute.enums;
+package com.wizzstudio.substitute.enums.indent;
 
 public enum IndentStateEnum {
     /**

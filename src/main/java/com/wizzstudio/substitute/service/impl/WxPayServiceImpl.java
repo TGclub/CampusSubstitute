@@ -2,14 +2,14 @@ package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.config.WeChatAccountConfig;
 import com.wizzstudio.substitute.constants.Constant;
-import com.wizzstudio.substitute.dto.IndentWxPrePayDto;
+import com.wizzstudio.substitute.domain.DepositInfo;
+import com.wizzstudio.substitute.dto.wx.WxPrePayDto;
 import com.wizzstudio.substitute.dto.wx.WxPayAsyncResponse;
 import com.wizzstudio.substitute.dto.wx.WxPrePayInfo;
 import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.exception.SubstituteException;
-import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.domain.User;
-import com.wizzstudio.substitute.service.IndentService;
+import com.wizzstudio.substitute.service.DepositInfoService;
 import com.wizzstudio.substitute.service.WxPayService;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.*;
@@ -36,7 +36,7 @@ public class WxPayServiceImpl implements WxPayService {
     @Autowired
     UserService userService;
     @Autowired
-    IndentService indentService;
+    DepositInfoService depositInfoService;
     @Autowired
     WeChatAccountConfig weChatAccountConfig;
 
@@ -70,18 +70,18 @@ public class WxPayServiceImpl implements WxPayService {
     /**
      * 组装统一下单需要的PayInfo对象
      */
-    private WxPrePayInfo createPayInfo(IndentWxPrePayDto indentWxPrePayDto){
+    private WxPrePayInfo createPayInfo(WxPrePayDto wxPrePayDto){
         //构建WxPayInfo对象
         WxPrePayInfo wxPrePayInfo = WxPrePayInfo.builder().appid(weChatAccountConfig.getAppid())
                 .mch_id(weChatAccountConfig.getMchId())
                 .nonce_str(RandomUtil.getRandomString(32))
                 .notify_url(weChatAccountConfig.getNotifyUrl())
                 .trade_type(Constant.WxPay.TRADE_TYPE)
-                .openid(indentWxPrePayDto.getOpenid())
+                .openid(wxPrePayDto.getOpenid())
                 .body(Constant.WxPay.PAY_BODY)
-                .total_fee(indentWxPrePayDto.getTotalFee())
-                .out_trade_no(indentWxPrePayDto.getIndentId())
-                .spbill_create_ip(indentWxPrePayDto.getClientIp())
+                .total_fee(wxPrePayDto.getTotalFee())
+                .out_trade_no(wxPrePayDto.getIndentId())
+                .spbill_create_ip(wxPrePayDto.getClientIp())
                 //todo 是否可删
                 .device_info("WEB")
                 //todo 是否可删,默认即为MD5
@@ -127,17 +127,23 @@ public class WxPayServiceImpl implements WxPayService {
     /**
      * 用户统一预下单
      * 详见： https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_1&index=1
-     * 返回微信小程序前端调起支付API时需要的五个参数：
+     * 返回前端调用支付接口需要的五个参数 和 sign：
+     * appId
+     * timeStamp（下单时间戳）
+     * nonceStr（随机字符串，32位以内）
+     * package：统一下单接口返回的 prepay_id 参数值，格式如：prepay_id=wx2017033010242291fcfe0db70013231072
+     * signType：签名类型，默认为MD5
+     * sign ： 以上数据的加密字符串
      */
     @Override
-    public Map<String,String> prePay(IndentWxPrePayDto indentWxPrePayDto) {
-        User user = userService.findUserByOpenId(indentWxPrePayDto.getOpenid());
+    public Map<String,String> prePay(WxPrePayDto wxPrePayDto) {
+        User user = userService.findUserByOpenId(wxPrePayDto.getOpenid());
         if (user == null){
-            log.error("[微信统一下单]用户不存在，adminName={}",indentWxPrePayDto.getOpenid());
+            log.error("[微信统一下单]用户不存在，adminName={}", wxPrePayDto.getOpenid());
             throw new SubstituteException(ResultEnum.USER_NOT_EXISTS);
         }
-        log.info("[微信统一下单]用户:{} 进行预下单",indentWxPrePayDto.getOpenid());
-        WxPrePayInfo wxPrePayInfo = createPayInfo(indentWxPrePayDto);
+        log.info("[微信统一下单]用户:{} 进行预下单", wxPrePayDto.getOpenid());
+        WxPrePayInfo wxPrePayInfo = createPayInfo(wxPrePayDto);
 
 
         //todo，封装参数为xml
@@ -222,20 +228,17 @@ public class WxPayServiceImpl implements WxPayService {
         log.info("[微信支付]，异步通知，asyncResponse={}",asyncResponse);
 
         //查询订单，并判断订单是否存在，金额是否一致
-        Indent indent = indentService.getSpecificIndentInfo(Integer.valueOf(asyncResponse.getOutTradeNo()));
-        if(indent == null){
+        DepositInfo depositInfo = depositInfoService.findById(asyncResponse.getOutTradeNo());
+        if(depositInfo == null){
             log.error("[微信支付]，异步通知，订单不存在,orderId={}",asyncResponse.getOutTradeNo());
             throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
         }
         //todo 这样比较不知道对不对
-        if (asyncResponse.getTotalFee() == indent.getIndentPrice().movePointRight(2).intValue()){
+        if (asyncResponse.getTotalFee().equals(MoneyUtil.Yuan2Fen(depositInfo.getDepositMoney()))){
             log.error("[微信支付]，异步通知，订单金额不一致,orderId={},订单金额={},异步通知金额={}",asyncResponse.getOutTradeNo(),
-                    indent.getIndentPrice(),asyncResponse.getTotalFee()/100);
+                    depositInfo.getDepositMoney(),asyncResponse.getTotalFee()/100);
             throw new SubstituteException(ResultEnum.WX_NOTIFY_MONEY_VERIFY_ERROR);
         }
-
-        //todo 修改订单支付状态
-        //indentService.paid()
 
     }
 

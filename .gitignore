@@ -1,6 +1,7 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
-application.properties
+# 不能写成application.properties，这样表示的是忽略当前文件夹下的
+**/application.properties
 
 ### STS ###
 .apt_generated

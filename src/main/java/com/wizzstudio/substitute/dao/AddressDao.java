@@ -10,4 +10,6 @@ import java.util.List;
 public interface AddressDao extends JpaRepository<Address, Integer> {
     Address findAddressById(Integer id);
     List<Address> findAddressByUserId(String userId);
+    //通过address模糊查询
+    List<Address> findAllByAddressLike(String address);
 }

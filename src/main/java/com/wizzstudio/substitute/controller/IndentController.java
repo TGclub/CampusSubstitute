@@ -1,7 +1,7 @@
 package com.wizzstudio.substitute.controller;
 
 import com.wizzstudio.substitute.enums.GenderEnum;
-import com.wizzstudio.substitute.enums.IndentTypeEnum;
+import com.wizzstudio.substitute.enums.indent.IndentTypeEnum;
 import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.form.IndentCreateForm;
@@ -16,12 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created By Cx On 2018/11/12 22:09
+ */
 @Slf4j
 @RestController
 @RequestMapping("/indent")
@@ -73,8 +75,7 @@ public class IndentController {
      * 发布帮我购/递/随意帮接口
      */
     @PostMapping
-    public ResponseEntity publishNewIndent(@RequestBody @Valid IndentCreateForm indentCreateForm, HttpServletRequest request,
-                                           BindingResult bindingResult) {
+    public ResponseEntity publishNewIndent(@RequestBody @Valid IndentCreateForm indentCreateForm , BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             //表单校验有误
             log.error("[发布订单]参数不正确，indentCreateForm={}", indentCreateForm);
@@ -86,51 +87,43 @@ public class IndentController {
         checkIndentCreateForm(indentCreateForm);
         Indent newIndent = new Indent();
         BeanUtils.copyProperties(indentCreateForm, newIndent);
-        //不用管，这里肯定非空，因为上面check过了
         newIndent.setIndentType(CommonUtil.getEnum(indentCreateForm.getIndentType(), IndentTypeEnum.class));
         newIndent.setRequireGender(CommonUtil.getEnum(indentCreateForm.getRequireGender(), GenderEnum.class));
-        indentService.publishedNewIndent(newIndent, CommonUtil.getClientIp(request));
+        //下单
+        indentService.save(newIndent);
         return ResultUtil.success();
     }
 
-    @GetMapping("list")
-    public ResponseEntity getIndentList(@RequestParam(required = true, defaultValue = "0") Integer sort, @RequestParam(required = false) String key) {
-        List<Indent> indents;
-        switch (sort) {
-            case 0:
-                indents = indentService.getAllIndent();
-                break;
-            case 10:
-                indents = indentService.getIndentByCreateTime();
-                break;
-            case 20:
-                indents = indentService.getIndentByPrice();
-                break;
-            default:
-                return ResultUtil.error();
-        }
-        return ResultUtil.success(indents);
+    /**
+     * 广场订单列表接口，获取待接单的订单liebia
+     * @param sort 排序方式，默认值为0，默认：0，时间：10，价格:20
+     * @param key 搜索关键字，按送达地址进行模糊匹配
+     * @return 订单列表
+     */
+    @GetMapping("/list")
+    public ResponseEntity getIndentList(@RequestParam(defaultValue = "0") Integer sort, @RequestParam(required = false) String key) {
+        return ResultUtil.success(indentService.getWaitInFuzzyMatching(sort,key));
     }
 
 
     @GetMapping(value = "/detail/{indentId}/{userId}")
     public ResponseEntity getIndentInfo(@PathVariable Integer indentId, @PathVariable String userId) {
-        return ResultUtil.success(indentService.getSpecificIndentInfo(indentId));
+        return ResultUtil.success(indentService.getIndentDetail(indentId,userId));
     }
 
     @GetMapping(value = "/price/{indentId}/{userId}")
     public ResponseEntity addIndentPrice(@PathVariable Integer indentId, @PathVariable String userId) {
-        indentService.addIndentPrice(indentId);
+        indentService.addIndentPrice(indentId,userId);
         return ResultUtil.success();
     }
 
-    @GetMapping("performer/{userId}")
+    @GetMapping("/performer/{userId}")
     public ResponseEntity getUserPersonalPerformedIndentList(@PathVariable @NotNull String userId) {
         List<Indent> indents = indentService.getUserPerformedIndent(userId);
         return ResultUtil.success(indents);
     }
 
-    @GetMapping("publisher/{userId}")
+    @GetMapping("/publisher/{userId}")
     public ResponseEntity getUserPersonalPublishedIndentList(@PathVariable @NotNull String userId) {
         List<Indent> indents = indentService.getUserPublishedIndent(userId);
         return ResultUtil.success(indents);
