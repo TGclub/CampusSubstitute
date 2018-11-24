@@ -40,7 +40,7 @@ public class AdminController {
         adminService.addNewAdmin(info);
         return ResultUtil.success();
     }
-
+    
     @GetMapping("statistics/viewUnPicked")
     public ResponseEntity viewUnPickedIndent(Principal principal) {
         return ResultUtil.success(adminService.getUnPickedIndent());
