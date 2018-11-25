@@ -27,7 +27,7 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.security.Principal;
 
-@Controller
+@RestController
 @Slf4j
 public class LoginController extends BaseController{
 
@@ -103,6 +103,13 @@ public class LoginController extends BaseController{
         if (cookie != null) redisUtil.delete(cookie.getValue());
         response.sendRedirect("/login/admin");
     }
+
+    /*
+    @PostMapping("/test")
+    public String test(@RequestBody AdminLoginDTO dto) {
+
+        return "Heoo " + dto.getAdminName();
+    }*/
 
 
 

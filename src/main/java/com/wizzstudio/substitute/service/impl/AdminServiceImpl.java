@@ -3,14 +3,12 @@ package com.wizzstudio.substitute.service.impl;
 import com.wizzstudio.substitute.dao.*;
 import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
-import com.wizzstudio.substitute.enums.IndentStateEnum;
 import com.wizzstudio.substitute.enums.Role;
-import com.wizzstudio.substitute.enums.UrgentTypeEnum;
 import com.wizzstudio.substitute.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,7 +17,7 @@ import java.util.List;
  * Created by Kikyou on 18-11-12
  */
 @Service
-@Transactional
+@Transactional(rollbackOn = Exception.class)
 public class AdminServiceImpl implements AdminService {
 
     @Autowired
@@ -33,6 +31,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private UserDao userDao;
+
     @Autowired
     private IndentDao indentDao;
 
@@ -52,12 +51,6 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void createNewAdmin(AdminInfo adminInfo) {
-        adminInfo.setAdminPass(encoder.encode(adminInfo.getAdminPass()));
-        adminDao.save(adminInfo);
-    }
-
-    @Override
     public AdminInfo getAdminInfo(Integer adminId) {
         return adminDao.getAdminInfoByAdminId(adminId);
     }
@@ -69,10 +62,10 @@ public class AdminServiceImpl implements AdminService {
         if (!admin.getAdminPass().equals(encoder.encode(loginDTO.getPassword()))) return false;
         return true;
     }
-
+    //表内将密码列设置为32为字符型，对密码加密后的密文会超出两倍左右，故暂时不采用密码加密了。
     @Override
     public void addNewAdmin(AdminInfo info) {
-        info.setAdminPass(encoder.encode(info.getAdminPass()));
+        //info.setAdminPass(encoder.encode(info.getAdminPass()));
         adminDao.save(info);
     }
 
@@ -87,12 +80,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<Indent> getUnHandledUrgentIndents() {
-        return indentDao.findAllByIsSolvedAndUrgentType(false, 0);
+        return indentDao.findAllByIsSolvedAndUrgentTypeGreaterThanOrderByCreateTimeDesc(false, 0);
     }
 
     @Override
     public List<Indent> getHandledUrgentIndents() {
-        return indentDao.findAllByIsSolvedAndUrgentType(true, 0);
+        return indentDao.findAllByIsSolvedAndUrgentTypeGreaterThanOrderByCreateTimeDesc(true, 0);
     }
 
     @Override
