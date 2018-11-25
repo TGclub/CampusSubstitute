@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +28,9 @@ import java.util.Map;
 /**
  * Created By Cx On 2018/11/6 22:09
  */
-@Controller
+@RestController
 @Slf4j
-@RequestMapping("wxpay/")
+@RequestMapping("/wxpay")
 public class WxPayController {
 
     @Autowired
@@ -46,7 +47,6 @@ public class WxPayController {
                 .build();
     }
 
-
     /**
      * 微信支付统一下单接口，即充值接口
      * 调用预支付接口，获得前端调用支付接口需要的五个参数 和 sign：appId、timeStamp（下单时间）、nonceStr（随机字符串）
@@ -55,7 +55,6 @@ public class WxPayController {
      * sign ： 以上数据的加密字符串
      */
     @PostMapping("/prepay")
-    @ResponseBody
     public ResponseEntity prePay(@RequestBody @Valid PayForm payForm, HttpServletRequest request, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             //表单校验有误
@@ -74,16 +73,19 @@ public class WxPayController {
      * 注意：同样的通知可能会多次发送给商户系统。商户系统必须能够正确处理重复的通知。
      * @param notifyData 是一个xml格式的数据，包含支付成功后的一些信息
      * @return 返回xml，提醒微信已接收并处理该回调结果，否则会一直回调
+     * 注意：方法名不能叫notify，否则会报错：无法覆盖java.lang.Object中的notify()
      */
-    @PostMapping("/notify")
-    public String notify(@RequestBody String notifyData){
+    @GetMapping("/notify")
+    public String wxNotify(String notifyData){
         Map<String,String> result = new HashMap<>();
         result.put("return_code","SUCCESS");
         result.put("return_msg","OK");
         wxPayService.notify(notifyData);
         //修改完后返回xml告诉微信处理结果，不然微信会一直发送异步通知，则该方法会一直被调用
+        System.out.println(XmlUtil.parseMap2Xml(result));
         return XmlUtil.parseMap2Xml(result);
     }
+
 
     //todo 用于测试短信发送
     @GetMapping("/test")

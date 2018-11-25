@@ -10,13 +10,14 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.io.XMLWriter;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created By Cx On 2018/11/12 10:30
@@ -57,11 +58,17 @@ public class XmlUtil {
 
     /**
      * 将map转换为XML
-     * XStream会很玄学的将字段中的_更改为__,所以需要replace
      */
     public static String parseMap2Xml(Map<String,String> map){
-        xstream.alias("xml", map.getClass());
-        return xstream.toXML(map).replace("__", "_");
+        StringBuffer sb = new StringBuffer();
+        sb.append("<xml>").append("\n");
+        for (String key : map.keySet()){
+            sb.append("<").append(key).append(">");
+            sb.append("<![CDATA[").append(map.get(key)).append("]]>");
+            sb.append("</").append(key).append(">").append("\n");
+        }
+        sb.append("</xml>");
+        return sb.toString();
     }
 
     /**

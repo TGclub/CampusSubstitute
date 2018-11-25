@@ -80,13 +80,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests();
 
-        http.authorizeRequests()
-                .antMatchers("/login/**")
-                .permitAll()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/indent/**")
-                .hasAuthority("ROLE_USER");
+
+        http.authorizeRequests().anyRequest().permitAll();
+//        http.authorizeRequests()
+//                .antMatchers("/login/**")
+//                .permitAll()
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers("/indent/**")
+//                .hasAuthority("ROLE_USER");
+
         http
                 .logout()
                 .logoutUrl("/logout");
