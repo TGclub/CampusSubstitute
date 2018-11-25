@@ -3,13 +3,12 @@ package com.wizzstudio.substitute.service.impl;
 import com.wizzstudio.substitute.dao.*;
 import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
-import com.wizzstudio.substitute.enums.IndentStateEnum;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,6 +31,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private UserDao userDao;
+
     @Autowired
     private IndentDao indentDao;
 
@@ -62,10 +62,10 @@ public class AdminServiceImpl implements AdminService {
         if (!admin.getAdminPass().equals(encoder.encode(loginDTO.getPassword()))) return false;
         return true;
     }
-
+    //表内将密码列设置为32为字符型，对密码加密后的密文会超出两倍左右，故暂时不采用密码加密了。
     @Override
     public void addNewAdmin(AdminInfo info) {
-        info.setAdminPass(encoder.encode(info.getAdminPass()));
+        //info.setAdminPass(encoder.encode(info.getAdminPass()));
         adminDao.save(info);
     }
 

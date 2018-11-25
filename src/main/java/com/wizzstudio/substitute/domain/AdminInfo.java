@@ -1,12 +1,11 @@
 package com.wizzstudio.substitute.domain;
 
 import com.wizzstudio.substitute.enums.Role;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * Created by Kikyou on 18-11-18
@@ -20,7 +19,6 @@ public class AdminInfo {
     //管理员电话
     @Column
     @NotNull
-    @Size(min = 7, max = 11)
     private Long adminPhone;
     //管理员账号，唯一
     @Column
@@ -41,20 +39,8 @@ public class AdminInfo {
     @Column
     private Integer adminSchoolId;
 
-    public AdminInfo(Integer adminId, Long adminPhone, String adminName, String adminPass, Role adminRole, Boolean isBoss, Integer adminSchoolId) {
-        this.adminId = adminId;
-        this.adminPhone = adminPhone;
-        this.adminName = adminName;
-        this.adminPass = adminPass;
-        this.adminRole = adminRole;
-        this.isBoss = isBoss;
-        this.adminSchoolId = adminSchoolId;
-    }
-
-    public AdminInfo() {
-    }
-
     private AdminInfo(Builder builder) {
+        setAdminId(builder.adminId);
         setAdminPhone(builder.adminPhone);
         setAdminName(builder.adminName);
         setAdminPass(builder.adminPass);
@@ -69,6 +55,7 @@ public class AdminInfo {
 
     public static Builder newBuilder(AdminInfo copy) {
         Builder builder = new Builder();
+        builder.adminId = copy.getAdminId();
         builder.adminPhone = copy.getAdminPhone();
         builder.adminName = copy.getAdminName();
         builder.adminPass = copy.getAdminPass();
@@ -78,34 +65,61 @@ public class AdminInfo {
         return builder;
     }
 
+    public Integer getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Integer adminId) {
+        this.adminId = adminId;
+    }
+
+    public AdminInfo(Integer adminId, Long adminPhone, String adminName, String adminPass, Role adminRole, Boolean isBoss, Integer adminSchoolId) {
+        this.adminId = adminId;
+        this.adminPhone = adminPhone;
+        this.adminName = adminName;
+        this.adminPass = adminPass;
+        this.adminRole = adminRole;
+        this.isBoss = isBoss;
+        this.adminSchoolId = adminSchoolId;
+    }
+
+    public AdminInfo() {
+    }
+
 
     public static final class Builder {
-        private Long adminPhone;
-        private String adminName;
-        private String adminPass;
-        private Role adminRole;
+        private Integer adminId;
+        private @NotNull @Size(min = 7, max = 11) Long adminPhone;
+        private @NotNull String adminName;
+        private @NotNull @Size(min = 8) String adminPass;
+        private @NotNull Role adminRole;
         private Boolean isBoss;
         private Integer adminSchoolId;
 
         private Builder() {
         }
 
-        public Builder setAdminPhone(Long adminPhone) {
+        public Builder setAdminId(Integer adminId) {
+            this.adminId = adminId;
+            return this;
+        }
+
+        public Builder setAdminPhone(@NotNull @Size(min = 7, max = 11) Long adminPhone) {
             this.adminPhone = adminPhone;
             return this;
         }
 
-        public Builder setAdminName(String adminName) {
+        public Builder setAdminName(@NotNull String adminName) {
             this.adminName = adminName;
             return this;
         }
 
-        public Builder setAdminPass(String adminPass) {
+        public Builder setAdminPass(@NotNull @Size(min = 8) String adminPass) {
             this.adminPass = adminPass;
             return this;
         }
 
-        public Builder setAdminRole(Role adminRole) {
+        public Builder setAdminRole(@NotNull Role adminRole) {
             this.adminRole = adminRole;
             return this;
         }
