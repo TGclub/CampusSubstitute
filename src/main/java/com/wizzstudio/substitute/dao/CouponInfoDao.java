@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * Created By Cx On 2018/11/20 0:19
  */
 @Repository
-public interface CouponInfoDao extends JpaRepository<CouponInfo,Integer> {
+public interface CouponInfoDao extends JpaRepository<CouponInfo, Integer> {
     CouponInfo findByCouponId(Integer id);
 }

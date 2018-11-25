@@ -29,7 +29,7 @@ public class WithdrawRequest {
     private Boolean isSolved;
 
     //创建时间，单位：毫秒，默认为插入时间
-    @Column(updatable = false,insertable = false)
+    @Column(updatable = false, insertable = false)
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 }

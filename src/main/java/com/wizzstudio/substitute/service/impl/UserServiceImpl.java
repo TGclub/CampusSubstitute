@@ -1,13 +1,20 @@
 package com.wizzstudio.substitute.service.impl;
 
+import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.wizzstudio.substitute.dao.UserDao;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
+import com.wizzstudio.substitute.dto.wx.WxInfo;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.domain.User;
+import com.wizzstudio.substitute.enums.Role;
+import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -28,16 +35,55 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Autowired
     UserDao userDao;
+    @Autowired
+    WxMaService wxService;
 
-    /**
-     * 获取一个未被使用过的用户Id
-     */
-    public String getUserUniqueKey() {
-        String userId = RandomUtil.getSixRandom();
-        while (findUserById(userId) != null) {
-            userId = RandomUtil.getSixRandom();
+    @Override
+    public User userLogin(WxInfo loginData) throws WxErrorException {
+        //通过code获取openid
+        WxMaJscode2SessionResult sessionResult = wxService.getUserService().getSessionInfo(loginData.getCode());
+        //通过openid在数据库中寻找是否存在该用户
+        User user = findUserByOpenId(sessionResult.getOpenid());
+        //若不存在，则注册用户
+        if (user == null) {
+            //获得一个未被使用过的userId
+            String userId = RandomUtil.getSixRandom();
+            user = findUserById(userId);
+            while (user != null) {
+                userId = RandomUtil.getSixRandom();
+                user = findUserById(userId);
+            }
+            //获取用户信息
+            WxMaUserInfo wxUserInfo = wxService.getUserService().getUserInfo(sessionResult.getSessionKey(), loginData.getEncryptedData(), loginData.getIv());
+            //构造用户信息
+            user = User.newBuilder()
+                    .setId(userId)
+                    .setUserName(wxUserInfo.getNickName())
+                    .setOpenid(wxUserInfo.getOpenId())
+                    .setAvatar(wxUserInfo.getAvatarUrl())
+                    .setRole(Role.ROLE_USER)
+                    .build();
+            switch (Integer.valueOf(wxUserInfo.getGender())) {
+                //性别 0：未知、1：男、2：女
+                case 0:
+                    user.setGender(GenderEnum.NO_LIMITED);
+                    break;
+                case 1:
+                    user.setGender(GenderEnum.MALE);
+                    break;
+                case 2:
+                    user.setGender(GenderEnum.FEMALE);
+                    break;
+                default:
+                    log.error("[用户注册]注册失败，用户信息有误，sex={}", wxUserInfo.getGender());
+                    throw new SubstituteException("用户信息有误");
+            }
+            log.info("[用户注册]注册新用户成功，openid={} " + user.getOpenid());
+            //保存用户信息到数据库
+            return saveUser(user);
         }
-        return userId;
+        //若用户已存在，直接返回用户信息
+        return user;
     }
 
     @Override
@@ -133,8 +179,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public void reduceBalance(String userId, BigDecimal number) {
         User user = findUserById(userId);
-        if (user.getBalance().compareTo(number) < 0){
-            log.error("【用户支付】支付失败，用户余额不足，balance={},reduceNumber={}",user.getBalance(),number);
+        if (user.getBalance().compareTo(number) < 0) {
+            log.error("【用户支付】支付失败，用户余额不足，balance={},reduceNumber={}", user.getBalance(), number);
             throw new SecurityException("支付失败，用户余额不足");
         }
         //扣钱并保存信息

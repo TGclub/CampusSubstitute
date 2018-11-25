@@ -73,6 +73,7 @@ public class WxPrePayInfo implements Serializable {
     //非必填，指定支付方式，当等于no_credit时可限制用户不能使用信用卡支付
     private String limit_pay;
 
-    public WxPrePayInfo(){}
+    public WxPrePayInfo() {
+    }
 
 }

@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
  */
 public class ResultUtil<T> {
 
-    public static ResponseEntity success(Integer code, String msg,Object data) {
+    public static ResponseEntity success(Integer code, String msg, Object data) {
         return new ResponseEntity<>(new ResultDTO<>(code, msg, data), HttpStatus.OK);
     }
 
@@ -18,7 +18,7 @@ public class ResultUtil<T> {
         return success(0, "请求成功", data);
     }
 
-    public static ResponseEntity success(String msg,Object data) {
+    public static ResponseEntity success(String msg, Object data) {
         return success(0, msg, data);
     }
 
@@ -28,7 +28,7 @@ public class ResultUtil<T> {
     }
 
     public static ResponseEntity error(Integer code, String msg, HttpStatus status) {
-        return new ResponseEntity<>(new ResultDTO<>(code, msg, null),status);
+        return new ResponseEntity<>(new ResultDTO<>(code, msg, null), status);
     }
 
     public static ResponseEntity error(Integer code, String msg) {

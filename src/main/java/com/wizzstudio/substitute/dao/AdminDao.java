@@ -13,7 +13,9 @@ import java.util.List;
 @Repository
 public interface AdminDao extends JpaRepository<AdminInfo, Integer> {
     AdminInfo getAdminInfoByAdminId(Integer id);
+
     AdminInfo getAdminInfoByAdminName(String name);
+
     List<AdminInfo> getAdminInfoByAdminRole(Role role);
 
 }

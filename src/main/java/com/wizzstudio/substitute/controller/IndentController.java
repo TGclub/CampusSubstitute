@@ -75,7 +75,7 @@ public class IndentController {
      * 发布帮我购/递/随意帮接口
      */
     @PostMapping
-    public ResponseEntity publishNewIndent(@RequestBody @Valid IndentCreateForm indentCreateForm , BindingResult bindingResult) {
+    public ResponseEntity publishNewIndent(@RequestBody @Valid IndentCreateForm indentCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             //表单校验有误
             log.error("[发布订单]参数不正确，indentCreateForm={}", indentCreateForm);
@@ -96,24 +96,25 @@ public class IndentController {
 
     /**
      * 广场订单列表接口，获取待接单的订单liebia
+     *
      * @param sort 排序方式，默认值为0，默认：0，时间：10，价格:20
-     * @param key 搜索关键字，按送达地址进行模糊匹配
+     * @param key  搜索关键字，按送达地址进行模糊匹配
      * @return 订单列表
      */
     @GetMapping("/list")
     public ResponseEntity getIndentList(@RequestParam(defaultValue = "0") Integer sort, @RequestParam(required = false) String key) {
-        return ResultUtil.success(indentService.getWaitInFuzzyMatching(sort,key));
+        return ResultUtil.success(indentService.getWaitInFuzzyMatching(sort, key));
     }
 
 
     @GetMapping(value = "/detail/{indentId}/{userId}")
     public ResponseEntity getIndentInfo(@PathVariable Integer indentId, @PathVariable String userId) {
-        return ResultUtil.success(indentService.getIndentDetail(indentId,userId));
+        return ResultUtil.success(indentService.getIndentDetail(indentId, userId));
     }
 
     @GetMapping(value = "/price/{indentId}/{userId}")
     public ResponseEntity addIndentPrice(@PathVariable Integer indentId, @PathVariable String userId) {
-        indentService.addIndentPrice(indentId,userId);
+        indentService.addIndentPrice(indentId, userId);
         return ResultUtil.success();
     }
 

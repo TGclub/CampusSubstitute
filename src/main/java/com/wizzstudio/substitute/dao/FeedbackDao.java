@@ -10,8 +10,9 @@ import java.util.List;
  * Created By Cx On 2018/11/20 0:20
  */
 @Repository
-public interface FeedbackDao extends JpaRepository<Feedback,Integer> {
+public interface FeedbackDao extends JpaRepository<Feedback, Integer> {
     Feedback findByFeedbackId(int id);
+
     List<Feedback> findByIsRead(Boolean isRead);
 
 }

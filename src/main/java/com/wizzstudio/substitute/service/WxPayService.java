@@ -21,10 +21,11 @@ public interface WxPayService {
      * signType：签名类型，默认为MD5
      * sign ： 以上数据的加密字符串
      */
-    Map<String,String> prePay(WxPrePayDto wxPrePayDto);
+    Map<String, String> prePay(WxPrePayDto wxPrePayDto);
 
     /**
      * 支付异步通知，当支付成功后该方法会接收到通知
+     *
      * @param notifyData 是一个xml格式的数据，包含支付成功后的一些信息
      */
     void notify(String notifyData);

@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  * Created By Cx On 2018/11/20 0:21
  */
 @Repository
-public interface TradeInfoDao extends JpaRepository<TradeInfo,Integer> {
+public interface TradeInfoDao extends JpaRepository<TradeInfo, Integer> {
 }

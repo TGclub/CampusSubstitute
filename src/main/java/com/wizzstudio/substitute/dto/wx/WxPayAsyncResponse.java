@@ -21,7 +21,9 @@ public class WxPayAsyncResponse {
     @Element(name = "return_msg", required = false)
     private String returnMsg;
 
-    /** 以下字段在return_code为SUCCESS的时候有返回. */
+    /**
+     * 以下字段在return_code为SUCCESS的时候有返回.
+     */
     //微信分配的小程序ID
     @Element(name = "appid", required = false)
     private String appid;
@@ -114,7 +116,9 @@ public class WxPayAsyncResponse {
     @Element(name = "mweb_url", required = false)
     private String mwebUrl;
 
-    /** 支付优惠时多返回字段 */
+    /**
+     * 支付优惠时多返回字段
+     */
     //应结订单金额=订单金额-非充值代金券金额，应结订单金额<=订单金额。
     @Element(name = "settlement_total_fee", required = false)
     private Integer settlementTotalFee;

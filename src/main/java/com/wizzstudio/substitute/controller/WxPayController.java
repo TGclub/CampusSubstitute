@@ -55,7 +55,7 @@ public class WxPayController {
      * sign ： 以上数据的加密字符串
      */
     @PostMapping("/prepay")
-    public ResponseEntity prePay(@RequestBody @Valid PayForm payForm, HttpServletRequest request, BindingResult bindingResult){
+    public ResponseEntity prePay(@RequestBody @Valid PayForm payForm, HttpServletRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             //表单校验有误
             log.error("[微信统一下单]参数不正确，payForm={}", payForm);
@@ -64,22 +64,23 @@ public class WxPayController {
             throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
         }
         //支付统一下单
-        wxPayService.prePay(createWxPrePayDto(payForm,request));
+        wxPayService.prePay(createWxPrePayDto(payForm, request));
         return ResultUtil.success();
     }
 
     /**
      * 微信小程序支付，异步回调接口
      * 注意：同样的通知可能会多次发送给商户系统。商户系统必须能够正确处理重复的通知。
+     *
      * @param notifyData 是一个xml格式的数据，包含支付成功后的一些信息
      * @return 返回xml，提醒微信已接收并处理该回调结果，否则会一直回调
      * 注意：方法名不能叫notify，否则会报错：无法覆盖java.lang.Object中的notify()
      */
     @GetMapping("/notify")
-    public String wxNotify(String notifyData){
-        Map<String,String> result = new HashMap<>();
-        result.put("return_code","SUCCESS");
-        result.put("return_msg","OK");
+    public String wxNotify(String notifyData) {
+        Map<String, String> result = new HashMap<>();
+        result.put("return_code", "SUCCESS");
+        result.put("return_msg", "OK");
         wxPayService.notify(notifyData);
         //修改完后返回xml告诉微信处理结果，不然微信会一直发送异步通知，则该方法会一直被调用
         System.out.println(XmlUtil.parseMap2Xml(result));
@@ -89,7 +90,7 @@ public class WxPayController {
 
     //todo 用于测试短信发送
     @GetMapping("/test")
-    public ResponseEntity testSms(){
+    public ResponseEntity testSms() {
         //组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
         //必填:,短信接收号码,支持以逗号分隔的形式进行批量调用，批量上限为1000个手机号码
@@ -99,12 +100,12 @@ public class WxPayController {
         //必填:短信模板ID-可在短信控制台中找到
         request.setTemplateCode("SMS_150865237");
         //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${param1},您的验证码为${param2}"时,此处的值为
-        Map<String,String> params = new HashMap<>();
-        params.put("param1","test1");
-        params.put("param2","test2");
+        Map<String, String> params = new HashMap<>();
+        params.put("param1", "test1");
+        params.put("param2", "test2");
         request.setTemplateParam(JSON.toJSON(params).toString());
         try {
-            SmsUtil.sendSms(request,aliSmsConfig);
+            SmsUtil.sendSms(request, aliSmsConfig);
         } catch (ClientException e) {
             log.info("出错了");
         }

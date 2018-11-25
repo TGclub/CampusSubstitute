@@ -71,11 +71,11 @@ public class User implements Serializable {
     //师傅收入：当推荐人获得的收入
     private BigDecimal masterIncome;
 
-    @Column(insertable = false,updatable = false)
+    @Column(insertable = false, updatable = false)
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 
-    @Column(updatable = false,insertable = false)
+    @Column(updatable = false, insertable = false)
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
 

@@ -14,7 +14,7 @@ public enum IndentStateEnum {
      */
     ARRIVED,
     /**
-     *订单完成
+     * 订单完成
      */
     COMPLETED
 }

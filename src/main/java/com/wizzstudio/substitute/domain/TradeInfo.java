@@ -39,12 +39,12 @@ public class TradeInfo {
     private BigDecimal totalPrice;
 
     //创建时间
-    @Column(updatable = false,insertable = false)
+    @Column(updatable = false, insertable = false)
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 
     //最近更新时间
-    @Column(updatable = false,insertable = false)
+    @Column(updatable = false, insertable = false)
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
 }

@@ -2,6 +2,9 @@ package com.wizzstudio.substitute.service;
 
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.domain.User;
+import com.wizzstudio.substitute.dto.wx.WxInfo;
+import me.chanjar.weixin.common.error.WxErrorException;
+
 import java.math.BigDecimal;
 
 
@@ -9,10 +12,18 @@ import java.math.BigDecimal;
  * 定义了用户相关的基本方法
  */
 public interface UserService {
+
     /**
-     *
+     * 用户登录
+     * @param loginData 用户登录所需信息
+     * @return 用户信息
+     */
+    User userLogin(WxInfo loginData) throws WxErrorException;
+
+    /**
+     * 新增或修改用户信息
      * @param user 用户信息
-     * @return
+     * @return 用户信息
      */
     User saveUser(User user);
 

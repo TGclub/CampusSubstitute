@@ -12,9 +12,10 @@ public class HttpUtil {
 
     /**
      * 以HTTPS的方式，与requestUrl以requestMethod的方式进行通信
-     * @param requestUrl 通信url
+     *
+     * @param requestUrl    通信url
      * @param requestMethod 通信方法GET、POST、PUT
-     * @param output 请求参数
+     * @param output        请求参数
      * @return URL响应返回的StringBuffer
      */
     public static StringBuffer httpsRequest(String requestUrl, String requestMethod, String output) throws IOException {

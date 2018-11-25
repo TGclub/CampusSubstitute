@@ -47,10 +47,11 @@ public class WxPayServiceImpl implements WxPayService {
      * 使用URL键值对的格式（即key1=value1&key2=value2…）拼接成字符串stringA。
      * 在stringA最后拼接上key得到stringSignTemp字符串，并对stringSignTemp进行MD5运算，
      * 再将得到的字符串所有字符转换为大写，得到sign值signValue。
+     *
      * @param fieldMap 支付信息对象
      * @return MD5签名过的字符串
      */
-    private String getMD5Sign(Map<String,String> fieldMap){
+    private String getMD5Sign(Map<String, String> fieldMap) {
         StringBuilder sbA = new StringBuilder();
         //该list用于存储所有字段名，并通过ASCII码排序,最后从fieldMap中依次取出,fieldMap的key为fieldName，value为该name对应的值
         List<String> fieldNames = new ArrayList<>(fieldMap.keySet());
@@ -70,7 +71,7 @@ public class WxPayServiceImpl implements WxPayService {
     /**
      * 组装统一下单需要的PayInfo对象
      */
-    private WxPrePayInfo createPayInfo(WxPrePayDto wxPrePayDto){
+    private WxPrePayInfo createPayInfo(WxPrePayDto wxPrePayDto) {
         //构建WxPayInfo对象
         WxPrePayInfo wxPrePayInfo = WxPrePayInfo.builder().appid(weChatAccountConfig.getAppid())
                 .mch_id(weChatAccountConfig.getMchId())
@@ -96,7 +97,7 @@ public class WxPayServiceImpl implements WxPayService {
         Date date = new Date();
         String timeStart = TimeUtil.getFormatTime(date, Constant.WxPay.TIME_FORMAT);
         //过期时间为半小时
-        String timeExpire = TimeUtil.getFormatTime(new Date(date.getTime()+30 * 60 * 1000), Constant.WxPay.TIME_FORMAT);
+        String timeExpire = TimeUtil.getFormatTime(new Date(date.getTime() + 30 * 60 * 1000), Constant.WxPay.TIME_FORMAT);
         wxPrePayInfo.setTime_start(timeStart);
         wxPrePayInfo.setTime_expire(timeExpire);
 
@@ -104,9 +105,9 @@ public class WxPayServiceImpl implements WxPayService {
         //getFields()获得的是公有的字段，DeclaredFields是获取所有声明的，无论权限（不包括父类）
         Field[] fields = wxPrePayInfo.getClass().getDeclaredFields();
         //该list用于存储所有字段名，并通过ASCII码排序,最后从fieldMap中依次取出,fieldMap的key为fieldName，value为该name对应的值
-        Map<String,String> fieldMap = new HashMap<>();
+        Map<String, String> fieldMap = new HashMap<>();
         try {
-            for (Field field : fields){
+            for (Field field : fields) {
                 //设置对象的访问权限，保证对private的属性的访问
                 field.setAccessible(true);
                 //获取payInfo对象field字段的值,如果为空，则查看下一个
@@ -114,7 +115,7 @@ public class WxPayServiceImpl implements WxPayService {
                 if (o == null) continue;
                 fieldMap.put(field.getName(), field.get(wxPrePayInfo).toString());
             }
-        }catch (IllegalAccessException e){
+        } catch (IllegalAccessException e) {
             log.error("[微信统一下单]服务器异常");
             throw new SubstituteException(ResultEnum.INNER_ERROR);
         }
@@ -136,9 +137,9 @@ public class WxPayServiceImpl implements WxPayService {
      * sign ： 以上数据的加密字符串
      */
     @Override
-    public Map<String,String> prePay(WxPrePayDto wxPrePayDto) {
+    public Map<String, String> prePay(WxPrePayDto wxPrePayDto) {
         User user = userService.findUserByOpenId(wxPrePayDto.getOpenid());
-        if (user == null){
+        if (user == null) {
             log.error("[微信统一下单]用户不存在，adminName={}", wxPrePayDto.getOpenid());
             throw new SubstituteException(ResultEnum.USER_NOT_EXISTS);
         }
@@ -158,10 +159,10 @@ public class WxPayServiceImpl implements WxPayService {
             StringBuffer buffer = HttpUtil.httpsRequest(Constant.WxPay.UNIFIED_ORDER_URL, "POST", xml);
             log.info("统一预下单返回参数如下: \n".concat(buffer.toString()));
             result = XmlUtil.parseXml2Map(buffer.toString());
-        }catch (IOException e){
-            log.error("[微信统一下单]调用微信统一下单接口失败,requestXml={}",xml);
+        } catch (IOException e) {
+            log.error("[微信统一下单]调用微信统一下单接口失败,requestXml={}", xml);
             throw new SubstituteException(ResultEnum.INNER_ERROR);
-        }catch (DocumentException e){
+        } catch (DocumentException e) {
             log.error("[微信统一下单]微信统一下单接口获取信息转换Map失败");
             throw new SubstituteException(ResultEnum.INNER_ERROR);
         }
@@ -170,19 +171,18 @@ public class WxPayServiceImpl implements WxPayService {
         String return_code = result.get("return_code");
         //返回信息，如非OK，则为错误原因
         String return_msg = result.get("return_msg");
-        Map<String,String> returnParam = new HashMap<>();
-        if("SUCCESS".equals(return_code) && "OK".equals(return_msg)) {
-            returnParam.put("package","prepay_id=".concat(result.get("prepay_id")));
-            returnParam.put("appId",wxPrePayInfo.getAppid());
-            returnParam.put("nonceStr",RandomUtil.getRandomString(32));
-            returnParam.put("signType","MD5");
-            returnParam.put("timeStamp",String.valueOf(new Date().getTime()));
-            returnParam.put("sign",getMD5Sign(returnParam));
-        }
-        else {
+        Map<String, String> returnParam = new HashMap<>();
+        if ("SUCCESS".equals(return_code) && "OK".equals(return_msg)) {
+            returnParam.put("package", "prepay_id=".concat(result.get("prepay_id")));
+            returnParam.put("appId", wxPrePayInfo.getAppid());
+            returnParam.put("nonceStr", RandomUtil.getRandomString(32));
+            returnParam.put("signType", "MD5");
+            returnParam.put("timeStamp", String.valueOf(new Date().getTime()));
+            returnParam.put("sign", getMD5Sign(returnParam));
+        } else {
             //如果交易失败
-            log.error("[微信统一下单]统一下单错误！,return_msg={}",return_msg);
-            throw new SubstituteException(return_msg,ResultEnum.INNER_ERROR.getCode());
+            log.error("[微信统一下单]统一下单错误！,return_msg={}", return_msg);
+            throw new SubstituteException(return_msg, ResultEnum.INNER_ERROR.getCode());
         }
         return returnParam;
     }
@@ -190,15 +190,14 @@ public class WxPayServiceImpl implements WxPayService {
 
     /**
      * 处理异步通知注意事项：
-     *  1.验证签名是否正确。防止他人模拟发送一个异步请求
-     *  2.验证支付状态是否为支付成功
-     *  3.验证支付金额是否正确
-     *  4.验证支付人（支付人 == 下单人）   按需验证，不需要可以不验证，其他都必须验证
-     *
+     * 1.验证签名是否正确。防止他人模拟发送一个异步请求
+     * 2.验证支付状态是否为支付成功
+     * 3.验证支付金额是否正确
+     * 4.验证支付人（支付人 == 下单人）   按需验证，不需要可以不验证，其他都必须验证
      */
     @Override
     public void notify(String notifyData) {
-        Map<String,String> notifyMap;
+        Map<String, String> notifyMap;
         WxPayAsyncResponse asyncResponse;
         try {
             //xml解析为map
@@ -218,25 +217,25 @@ public class WxPayServiceImpl implements WxPayService {
         }
 
         //2.验证支付状态是否为支付成功
-        if(!"SUCCESS".equals(asyncResponse.getReturnCode()) || !"SUCCESS".equals(asyncResponse.getResultCode())) {
+        if (!"SUCCESS".equals(asyncResponse.getReturnCode()) || !"SUCCESS".equals(asyncResponse.getResultCode())) {
             log.error("【微信支付异步通知】发起支付失败, returnCode 或 asyncResponse.getResultCode() != SUCCESS, returnMsg = {}"
                     , asyncResponse.getReturnMsg());
             throw new SubstituteException("【微信支付异步通知】发起支付失败");
         }
 
         //3.验证支付金额是否正确
-        log.info("[微信支付]，异步通知，asyncResponse={}",asyncResponse);
+        log.info("[微信支付]，异步通知，asyncResponse={}", asyncResponse);
 
         //查询订单，并判断订单是否存在，金额是否一致
         DepositInfo depositInfo = depositInfoService.findById(asyncResponse.getOutTradeNo());
-        if(depositInfo == null){
-            log.error("[微信支付]，异步通知，订单不存在,orderId={}",asyncResponse.getOutTradeNo());
+        if (depositInfo == null) {
+            log.error("[微信支付]，异步通知，订单不存在,orderId={}", asyncResponse.getOutTradeNo());
             throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
         }
         //todo 这样比较不知道对不对
-        if (asyncResponse.getTotalFee().equals(MoneyUtil.Yuan2Fen(depositInfo.getDepositMoney()))){
-            log.error("[微信支付]，异步通知，订单金额不一致,orderId={},订单金额={},异步通知金额={}",asyncResponse.getOutTradeNo(),
-                    depositInfo.getDepositMoney(),asyncResponse.getTotalFee()/100);
+        if (asyncResponse.getTotalFee().equals(MoneyUtil.Yuan2Fen(depositInfo.getDepositMoney()))) {
+            log.error("[微信支付]，异步通知，订单金额不一致,orderId={},订单金额={},异步通知金额={}", asyncResponse.getOutTradeNo(),
+                    depositInfo.getDepositMoney(), asyncResponse.getTotalFee() / 100);
             throw new SubstituteException(ResultEnum.WX_NOTIFY_MONEY_VERIFY_ERROR);
         }
 

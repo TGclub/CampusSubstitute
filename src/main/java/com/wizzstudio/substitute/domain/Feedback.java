@@ -33,7 +33,7 @@ public class Feedback {
     private Boolean isRead;
 
     //创建时间，默认为当前时间
-    @Column(updatable = false,insertable = false)
+    @Column(updatable = false, insertable = false)
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 }

@@ -10,12 +10,9 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.io.XMLWriter;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
 
@@ -29,9 +26,11 @@ public class XmlUtil {
             return new PrettyPrintWriter(out) {
                 //增加CDATA标记
                 boolean cdata = true;
+
                 public void startNode(String name, Class clazz) {
                     super.startNode(name, clazz);
                 }
+
                 protected void writeText(QuickWriter writer, String text) {
                     if (cdata) {
                         writer.write("<![CDATA[");
@@ -59,10 +58,10 @@ public class XmlUtil {
     /**
      * 将map转换为XML
      */
-    public static String parseMap2Xml(Map<String,String> map){
-        StringBuffer sb = new StringBuffer();
+    public static String parseMap2Xml(Map<String, String> map) {
+        StringBuilder sb = new StringBuilder();
         sb.append("<xml>").append("\n");
-        for (String key : map.keySet()){
+        for (String key : map.keySet()) {
             sb.append("<").append(key).append(">");
             sb.append("<![CDATA[").append(map.get(key)).append("]]>");
             sb.append("</").append(key).append(">").append("\n");
@@ -83,14 +82,14 @@ public class XmlUtil {
         //获取根节点下的子节点列表
         List<Element> elementList = root.elements();
         //遍历子节点，并以key-value的形式存入map
-        for (Element e : elementList){
+        for (Element e : elementList) {
             map.put(e.getName(), e.getText());
         }
         return map;
     }
 
     /**
-     *  xml转对象
+     * xml转对象
      */
     public static Object parseXml2Object(String xml, Class objClass) {
         Serializer serializer = new Persister();

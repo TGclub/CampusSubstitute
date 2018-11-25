@@ -37,6 +37,6 @@ public class SmsUtil {
 
         //发送短信
         SendSmsResponse response = acsClient.getAcsResponse(request);
-        log.info("【发送短信】电话 = {}，发送状态 = {}",request.getPhoneNumbers(),response.getCode());
+        log.info("【发送短信】电话 = {}，发送状态 = {}", request.getPhoneNumbers(), response.getCode());
     }
 }

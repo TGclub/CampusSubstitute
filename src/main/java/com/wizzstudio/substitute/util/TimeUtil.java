@@ -21,7 +21,7 @@ public class TimeUtil {
      * 将符合format(如：yyyy-MM-dd HH:mm:ss)格式的字符串day转成时间戳
      * 如changeDate(1999-01-01,yyyy-MM-dd )
      */
-    public static Long changDate(String day,String format){
+    public static Long changDate(String day, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         try {
             Date date = sdf.parse(day);
@@ -34,7 +34,7 @@ public class TimeUtil {
     /**
      * 将时间戳转换为format格式的字符串
      */
-    public static String stampToDate(Long s, String format){
+    public static String stampToDate(Long s, String format) {
         if (s == null) {
             return "";
         }

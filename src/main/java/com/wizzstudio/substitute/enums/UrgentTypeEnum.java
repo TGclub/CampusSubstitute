@@ -10,8 +10,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum UrgentTypeEnum implements CodeEnum {
     NOT_URGENT(0, "未加急"),
-    OVERTIME(1,"超时"),
-    CANCEL(2,"退单"),
+    OVERTIME(1, "超时"),
+    CANCEL(2, "退单"),
     ;
 
     //状态码
