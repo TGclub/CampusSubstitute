@@ -1,8 +1,8 @@
 package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.dao.IndentDao;
-import com.wizzstudio.substitute.domain.Address;
 import com.wizzstudio.substitute.domain.User;
+import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.enums.indent.IndentSortTypeEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.domain.Indent;
@@ -19,6 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import static com.wizzstudio.substitute.constants.Constant.FEMALE;
+import static com.wizzstudio.substitute.constants.Constant.MALE;
+import static com.wizzstudio.substitute.constants.Constant.NO_LIMITED;
 
 @Service
 @Slf4j
@@ -56,25 +61,43 @@ public class IndentServiceImpl implements IndentService {
     }
 
     @Override
-    public List<Indent> getWaitInFuzzyMatching(Integer sortType, String shippingAddress) {
-        List<Address> addresses = addressService.getAllByAddress(shippingAddress);
-        List<Integer> ids = new ArrayList<>();
-        addresses.forEach(x -> ids.add(x.getId()));
+    public List<Indent> getWaitInFuzzyMatching(Integer sortType, GenderEnum sexType) {
         IndentSortTypeEnum sortTypeEnum = CommonUtil.getEnum(sortType, IndentSortTypeEnum.class);
         if (sortTypeEnum == null) {
             log.error("[获取订单列表]获取失败，sortType有误，sortType={}", sortType);
             throw new SubstituteException("sortType有误");
         }
+        GenderEnum excludeGender;
+        switch (sexType){
+            case MALE:
+                excludeGender = GenderEnum.FEMALE;
+                break;
+            case FEMALE:
+                excludeGender = GenderEnum.MALE;
+                break;
+            default:
+                //未知或异常字段时时报错
+                log.error("[获取订单列表]获取失败，sexType有误，sexType={}", sexType);
+                throw new SubstituteException("sexType有误");
+        }
         List<Indent> indents;
         switch (sortTypeEnum) {
             case SORT_BY_TIME:
-                indents = indentDao.findWaitByShippingAddressIdInOrderByCreateTimeDesc(ids);
+                indents = indentDao.findAllByIndentStateAndRequireGenderNotOrderByCreateTimeDesc(IndentStateEnum.WAIT_FOR_PERFORMER,excludeGender);
                 break;
             case SORT_BY_PRICE:
-                indents = indentDao.findWaitByShippingAddressIdInOrderByIndentPriceDesc(ids);
+                indents = indentDao.findAllByIndentStateAndRequireGenderNotOrderByIndentPriceDesc(IndentStateEnum.WAIT_FOR_PERFORMER,excludeGender);
                 break;
             case SORT_BY_DEFAULT:
-                indents = indentDao.findWaitByShippingAddressIdInOrderByDefault(ids);
+                List<Indent> temp = indentDao.findAllByIndentStateAndRequireGenderNot(IndentStateEnum.WAIT_FOR_PERFORMER,excludeGender);
+                //随机打乱一下
+                Random random = new Random();
+                indents = new ArrayList<>();
+                while (temp.size() > 0) {
+                    int i = random.nextInt(temp.size());
+                    indents.add(temp.get(i));
+                    temp.remove(i);
+                }
                 break;
             default:
                 log.error("[获取订单列表]获取失败，sortType有误，sortType={}", sortType);
@@ -127,21 +150,6 @@ public class IndentServiceImpl implements IndentService {
         //增加订单悬赏金
         indent.setIndentPrice(indent.getIndentPrice().add(new BigDecimal(1)));
         save(indent);
-    }
-
-    @Override
-    public List<Indent> getAllIndent() {
-        return indentDao.findAllByIndentState(IndentStateEnum.WAIT_FOR_PERFORMER);
-    }
-
-    @Override
-    public List<Indent> getIndentByPrice() {
-        return indentDao.findAllByIndentStateOrderByIndentPriceDesc(IndentStateEnum.WAIT_FOR_PERFORMER);
-    }
-
-    @Override
-    public List<Indent> getIndentByCreateTime() {
-        return indentDao.findAllByIndentStateOrderByCreateTimeDesc(IndentStateEnum.WAIT_FOR_PERFORMER);
     }
 
 }

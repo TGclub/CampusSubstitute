@@ -22,6 +22,11 @@ public interface Constant {
 
     int TEST_PORT = 8001;
 
+    //性别
+    String MALE = "MALE";
+    String FEMALE = "FEMALE";
+    String NO_LIMITED = "NO_LIMITED";
+
     interface WxPay{
         //微信支付统一下单时间格式
         String TIME_FORMAT = "yyyyMMddHHmmss";

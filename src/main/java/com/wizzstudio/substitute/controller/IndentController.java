@@ -95,15 +95,15 @@ public class IndentController {
     }
 
     /**
-     * 广场订单列表接口，获取待接单的订单liebia
+     * 广场订单列表接口，获取待接单的订单列表，只能看到同性别的订单
      *
      * @param sort 排序方式，默认值为0，默认：0，时间：10，价格:20
-     * @param key  搜索关键字，按送达地址进行模糊匹配
+     * @param sexType 性别类型，MALE 、 FEMALE ，未知或其他字段会报错
      * @return 订单列表
      */
     @GetMapping("/list")
-    public ResponseEntity getIndentList(@RequestParam(defaultValue = "0") Integer sort, @RequestParam(required = false) String key) {
-        return ResultUtil.success(indentService.getWaitInFuzzyMatching(sort, key));
+    public ResponseEntity getIndentList(@RequestParam(defaultValue = "0") Integer sort, GenderEnum sexType) {
+        return ResultUtil.success(indentService.getWaitInFuzzyMatching(sort,sexType));
     }
 
 

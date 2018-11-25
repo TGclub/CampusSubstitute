@@ -33,6 +33,7 @@ public class AddressServiceImpl extends BaseService implements AddressService {
 
     @Override
     public List<Address> getAllByAddress(String address) {
+        if (address == null) address = "";
         return addressDao.findAllByAddressLike("%".concat(address).concat("%"));
     }
 

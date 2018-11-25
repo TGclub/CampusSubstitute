@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum IndentSortTypeEnum implements CodeEnum {
-    SORT_BY_DEFAULT(10, "根据默认排序"),
+    SORT_BY_DEFAULT(0, "根据默认排序"),
     SORT_BY_TIME(10, "根据创建时间排序"),
     SORT_BY_PRICE(20, "根据价格排序"),
     ;

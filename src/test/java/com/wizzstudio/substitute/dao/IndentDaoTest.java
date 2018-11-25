@@ -1,5 +1,6 @@
 package com.wizzstudio.substitute.dao;
 
+import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +38,6 @@ public class IndentDaoTest {
     }
 
     @Test
-    public void findWaitByIndentContentLike() {
-        List<Integer> a = new ArrayList<>();
-        a.add(1);
-        a.add(2);
-        System.out.println("================================================================");
-        System.out.println(indentDao.findWaitByShippingAddressIdInOrderByDefault(a));
-    }
-
-    @Test
     public void findAllByIndentContentLikeOrderByIndentPriceDesc() {
         System.out.println("================================================================");
     }
@@ -55,7 +47,7 @@ public class IndentDaoTest {
     }
 
     @Test
-    public void findAllByIndentStateOrderByIndentPriceDesc() {
+    public void findAllByIndentStateAndRequireGenderNot() {
     }
 
     @Test

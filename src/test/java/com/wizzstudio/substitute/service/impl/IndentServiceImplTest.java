@@ -40,7 +40,6 @@ public class IndentServiceImplTest {
 
     @Test
     public void getIndentInFuzzyMatching() {
-        System.out.println(indentService.getWaitInFuzzyMatching(10,"{"));
     }
 
     @Test
