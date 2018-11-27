@@ -92,11 +92,6 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public User getByOpenid(String openid) {
-        return userDao.findByOpenid(openid);
-    }
-
-    @Override
     @CacheEvict(cacheNames = "user", key = "#id")
     public void modifyUserInfo(String id, ModifyUserInfoDTO newInfo) {
         User user = findUserById(id);

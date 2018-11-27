@@ -6,6 +6,7 @@ import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.form.IndentCreateForm;
 import com.wizzstudio.substitute.domain.Indent;
+import com.wizzstudio.substitute.form.IndentUserForm;
 import com.wizzstudio.substitute.service.IndentService;
 import com.wizzstudio.substitute.util.CommonUtil;
 import com.wizzstudio.substitute.util.ResultUtil;
@@ -73,6 +74,7 @@ public class IndentController {
 
     /**
      * 发布帮我购/递/随意帮接口
+     * 若用户余额不足，则抛异常
      */
     @PostMapping
     public ResponseEntity publishNewIndent(@RequestBody @Valid IndentCreateForm indentCreateForm, BindingResult bindingResult) {
@@ -95,6 +97,31 @@ public class IndentController {
     }
 
     /**
+     * 增加赏金接口，若用户余额不足，则抛出异常
+     */
+    @GetMapping("/price/{indentId}/{userId}")
+    public ResponseEntity addIndentPrice(@PathVariable Integer indentId, @PathVariable String userId) {
+        indentService.addIndentPrice(indentId, userId);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 用户接单接口
+     */
+    @PostMapping("/take/indent")
+    public ResponseEntity takeIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            //表单校验有误
+            log.error("[接单]参数不正确，indentCreateForm={}", indentUserForm);
+            String msg = bindingResult.getFieldError() == null ? ResultEnum.PARAM_ERROR.getMsg()
+                    : bindingResult.getFieldError().getDefaultMessage();
+            throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
+        }
+        indentService.takeIndent(indentUserForm.getIndentId(), indentUserForm.getUserId());
+        return ResultUtil.success();
+    }
+
+    /**
      * 广场订单列表接口，获取待接单的订单列表，只能看到同性别的订单
      *
      * @param sort 排序方式，默认值为0，默认：0，时间：10，价格:20
@@ -106,28 +133,31 @@ public class IndentController {
         return ResultUtil.success(indentService.getWaitInFuzzyMatching(sort,sexType));
     }
 
-
-    @GetMapping(value = "/detail/{indentId}/{userId}")
-    public ResponseEntity getIndentInfo(@PathVariable Integer indentId, @PathVariable String userId) {
-        return ResultUtil.success(indentService.getIndentDetail(indentId, userId));
-    }
-
-    @GetMapping(value = "/price/{indentId}/{userId}")
-    public ResponseEntity addIndentPrice(@PathVariable Integer indentId, @PathVariable String userId) {
-        indentService.addIndentPrice(indentId, userId);
-        return ResultUtil.success();
-    }
-
+    /**
+     * 获取某用户已接订单列表
+     */
     @GetMapping("/performer/{userId}")
     public ResponseEntity getUserPersonalPerformedIndentList(@PathVariable @NotNull String userId) {
         List<Indent> indents = indentService.getUserPerformedIndent(userId);
         return ResultUtil.success(indents);
     }
 
+    /**
+     * 获取某用户已发布订单列表
+     */
     @GetMapping("/publisher/{userId}")
     public ResponseEntity getUserPersonalPublishedIndentList(@PathVariable @NotNull String userId) {
         List<Indent> indents = indentService.getUserPublishedIndent(userId);
         return ResultUtil.success(indents);
+    }
+
+
+    /**
+     * 获取订单详情，若请求用户不是下单人 或 接单人，则隐藏公司信息 和 取件码
+     */
+    @GetMapping(value = "/detail/{indentId}/{userId}")
+    public ResponseEntity getIndentInfo(@PathVariable Integer indentId, @PathVariable String userId) {
+        return ResultUtil.success(indentService.getIndentDetail(indentId, userId));
     }
 
 }

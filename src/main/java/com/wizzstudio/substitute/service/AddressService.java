@@ -16,6 +16,11 @@ public interface AddressService {
     //List<Address> searchAddress();
 
     /**
+     * 通过id获取address信息
+     */
+    Address getById(Integer addressId);
+
+    /**
      * 获取所有常用地址信息接口
      * @param userId
      * @return

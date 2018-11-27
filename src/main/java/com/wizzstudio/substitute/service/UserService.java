@@ -28,13 +28,6 @@ public interface UserService {
     User saveUser(User user);
 
     /**
-     * 通过openId获取用户信息
-     * @param openid 用户openid
-     * @return
-     */
-    User getByOpenid(String openid);
-
-    /**
      * 更新用户信息
      * @param newInfo 可更新的用户信息
      */
@@ -56,8 +49,15 @@ public interface UserService {
      */
     <T>T getBasicInfo(T type, String userId);
 
+    /**
+     * 通过openId获取用户信息
+     * @param openid 用户openid
+     */
     User findUserByOpenId(String openid);
 
+    /**
+     * 通过Id获取用户信息
+     */
     User findUserById(String id);
 
     /**
