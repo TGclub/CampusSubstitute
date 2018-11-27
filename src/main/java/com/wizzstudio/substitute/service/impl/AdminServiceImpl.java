@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
+
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
@@ -60,12 +61,13 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean isValidAdmin(AdminLoginDTO loginDTO) {
-        log.info("name: "+ loginDTO.getAdminName() + "," + "passwd" + loginDTO.getPassword());
+        log.info("name: " + loginDTO.getAdminName() + "," + "passwd" + loginDTO.getPassword());
         AdminInfo admin = adminDao.getAdminInfoByAdminName(loginDTO.getAdminName());
-        log.info(admin.getAdminName() + " in database"  + admin.getAdminPass());
+        log.info(admin.getAdminName() + " in database" + admin.getAdminPass());
         if (!admin.getAdminPass().equals(loginDTO.getPassword())) return false;
         return true;
     }
+
     //表内将密码列设置为32为字符型，对密码加密后的密文会超出两倍左右，故暂时不采用密码加密了。
     @Override
     public void addNewAdmin(AdminInfo info) {
@@ -128,7 +130,12 @@ public class AdminServiceImpl implements AdminService {
     public void handleWithDrawDeposit(String id) {
         User user = userDao.findUserById(id);
         user.setBalance(new BigDecimal(0));
+        List<WithdrawRequest> withdrawRequests = withdrawRequestDao.findAllByUserId(id);
         userDao.save(user);
+        withdrawRequests.stream().forEach(r -> {
+            r.setIsSolved(true);
+            withdrawRequestDao.save(r);
+        });
     }
 
     @Override

@@ -13,5 +13,6 @@ import java.util.List;
 public interface WithdrawRequestDao extends JpaRepository<WithdrawRequest, Integer> {
     WithdrawRequest findByWithdrawId(int id);
 
+    List<WithdrawRequest> findAllByUserId(String userId);
     List<WithdrawRequest> findAllByIsSolved(boolean isSolved);
 }
