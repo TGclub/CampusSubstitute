@@ -9,7 +9,6 @@ import com.wizzstudio.substitute.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,6 +17,7 @@ import java.util.List;
  * Created by Kikyou on 18-11-12
  */
 @Service
+//todo 这里使用javax包，不知道会不会和spring框架自带的产生冲突，导致事务失效
 @Transactional(rollbackOn = Exception.class)
 public class AdminServiceImpl implements AdminService {
 

@@ -27,6 +27,11 @@ public class AddressServiceImpl extends BaseService implements AddressService {
     }
 
     @Override
+    public Address getById(Integer addressId) {
+        return addressDao.findById(addressId).orElse(null);
+    }
+
+    @Override
     public List<Address> getUsualAddress(String userId) {
         return addressDao.findAddressByUserId(userId);
     }
