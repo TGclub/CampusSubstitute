@@ -6,6 +6,7 @@ import com.wizzstudio.substitute.dto.AdminLoginDTO;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.service.AdminService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @Service
 @Transactional(rollbackOn = Exception.class)
+@Slf4j
 public class AdminServiceImpl implements AdminService {
 
     @Autowired
@@ -58,9 +60,10 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean isValidAdmin(AdminLoginDTO loginDTO) {
+        log.info("name: "+ loginDTO.getAdminName() + "," + "passwd" + loginDTO.getPassword());
         AdminInfo admin = adminDao.getAdminInfoByAdminName(loginDTO.getAdminName());
-        if (admin == null) return false;
-        if (!admin.getAdminPass().equals(encoder.encode(loginDTO.getPassword()))) return false;
+        log.info(admin.getAdminName() + " in database"  + admin.getAdminPass());
+        if (!admin.getAdminPass().equals(loginDTO.getPassword())) return false;
         return true;
     }
     //表内将密码列设置为32为字符型，对密码加密后的密文会超出两倍左右，故暂时不采用密码加密了。

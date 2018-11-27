@@ -141,9 +141,9 @@ public class AdminController {
     }
 
     @Secured("ROLE_ADMIN_1")
-    @GetMapping("/midify/setSchool/{id}/{schoolId}")
-    public ResponseEntity setSchoolId(@PathVariable int id, @PathVariable int schooId) {
-        adminService.modifySecondAdminSchool(id, schooId);
+    @GetMapping("/modify/setSchool/{id}/{schoolId}")
+    public ResponseEntity setSchoolId(@PathVariable int id, @PathVariable int schoolId) {
+        adminService.modifySecondAdminSchool(id, schoolId);
         return ResultUtil.success();
     }
 

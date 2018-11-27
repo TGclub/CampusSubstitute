@@ -82,14 +82,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         http.authorizeRequests().anyRequest().permitAll();
-//        http.authorizeRequests()
-//                .antMatchers("/login/**")
-//                .permitAll()
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers("/indent/**")
-//                .hasAuthority("ROLE_USER");
-
+        http.authorizeRequests()
+                .antMatchers("/login/**")
+                .permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/indent/**")
+                .hasAuthority("ROLE_USER");
         http
                 .logout()
                 .logoutUrl("/logout");

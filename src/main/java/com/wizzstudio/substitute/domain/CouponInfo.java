@@ -26,19 +26,24 @@ public class CouponInfo {
     private Integer couponId;
 
     //最小满减金额，单位元
+    @Column
     private BigDecimal leastPrice;
 
     //可减金额，单位元
+    @Column
     private BigDecimal reducePrice;
 
     //是否删除，0：否，1：是,默认0
+    @Column
     private Boolean isDeleted;
 
     //生效时间
+    @Column
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date validTime;
 
     //失效时间
+    @Column
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date invalidTime;
 

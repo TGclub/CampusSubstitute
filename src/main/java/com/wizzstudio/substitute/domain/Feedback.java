@@ -16,7 +16,7 @@ import java.util.Date;
  */
 @Entity
 @Data
-@Builder
+//@Builder
 public class Feedback {
 
     //反馈id
@@ -36,4 +36,7 @@ public class Feedback {
     @Column(updatable = false, insertable = false)
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
+
+    public Feedback() {
+    }
 }

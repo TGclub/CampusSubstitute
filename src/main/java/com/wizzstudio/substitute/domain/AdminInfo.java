@@ -27,7 +27,7 @@ public class AdminInfo {
     //管理员密码
     @Column
     @NotNull
-    @Size(min = 8)
+    //@Size(min = 8)
     private String adminPass;
     //管理员角色,一级管理员：ROLE_ADMIN_1，二级管理员：ROLE_ADMIN_2
     @Enumerated(EnumType.STRING)
