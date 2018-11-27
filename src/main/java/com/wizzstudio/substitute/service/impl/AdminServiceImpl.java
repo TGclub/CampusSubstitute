@@ -10,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -20,8 +20,8 @@ import java.util.List;
  * Created by Kikyou on 18-11-12
  */
 @Service
-@Transactional(rollbackOn = Exception.class)
 @Slf4j
+@Transactional(rollbackFor = Exception.class)
 public class AdminServiceImpl implements AdminService {
 
     @Autowired
