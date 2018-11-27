@@ -130,7 +130,7 @@ public class IndentController {
      */
     @GetMapping("/list")
     public ResponseEntity getIndentList(@RequestParam(defaultValue = "0") Integer sort, GenderEnum sexType) {
-        return ResultUtil.success(indentService.getWaitInFuzzyMatching(sort,sexType));
+        return ResultUtil.success(indentService.getWait(sort,sexType));
     }
 
     /**
@@ -138,8 +138,7 @@ public class IndentController {
      */
     @GetMapping("/performer/{userId}")
     public ResponseEntity getUserPersonalPerformedIndentList(@PathVariable @NotNull String userId) {
-        List<Indent> indents = indentService.getUserPerformedIndent(userId);
-        return ResultUtil.success(indents);
+        return ResultUtil.success(indentService.getUserPerformedIndent(userId));
     }
 
     /**
@@ -147,8 +146,7 @@ public class IndentController {
      */
     @GetMapping("/publisher/{userId}")
     public ResponseEntity getUserPersonalPublishedIndentList(@PathVariable @NotNull String userId) {
-        List<Indent> indents = indentService.getUserPublishedIndent(userId);
-        return ResultUtil.success(indents);
+        return ResultUtil.success(indentService.getUserPublishedIndent(userId));
     }
 
 

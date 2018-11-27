@@ -48,7 +48,7 @@ public interface IndentService {
      * @param sexType         用户性别
      * @return 订单列表
      */
-    List<IndentVO> getWaitInFuzzyMatching(Integer sortType, GenderEnum sexType);
+    List<IndentVO> getWait(Integer sortType, GenderEnum sexType);
 
     /**
      * 获取指定订单信息

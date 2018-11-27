@@ -134,7 +134,7 @@ public class IndentServiceImpl implements IndentService {
     }
 
     @Override
-    public List<IndentVO> getWaitInFuzzyMatching(Integer sortType, GenderEnum sexType) {
+    public List<IndentVO> getWait(Integer sortType, GenderEnum sexType) {
         IndentSortTypeEnum sortTypeEnum = CommonUtil.getEnum(sortType, IndentSortTypeEnum.class);
         if (sortTypeEnum == null) {
             log.error("[获取订单列表]获取失败，sortType有误，sortType={}", sortType);
@@ -196,7 +196,7 @@ public class IndentServiceImpl implements IndentService {
     @Override
     public IndentVO getIndentDetail(Integer indentId, String userId) {
         Indent indent = indentDao.findByIndentId(indentId);
-        if (!userId.equals(indent.getPerformerId()) || !userId.equals(indent.getPublisherId())) {
+        if (!userId.equals(indent.getPerformerId()) && !userId.equals(indent.getPublisherId())) {
             //如果查询用户不是送货人 或 下单人 则将companyName、pickupCode置空
             indent.setCompanyName(null);
             indent.setPickupCode(null);

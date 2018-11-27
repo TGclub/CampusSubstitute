@@ -28,6 +28,7 @@ public class AddressServiceImpl extends BaseService implements AddressService {
 
     @Override
     public Address getById(Integer addressId) {
+        if (addressId == null) return null;
         return addressDao.findById(addressId).orElse(null);
     }
 

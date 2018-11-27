@@ -23,14 +23,10 @@ public class UserController extends BaseController {
 
     /**
      * 用户基本信息获取
-     *
-     * @param userId
-     * @return
      */
     @GetMapping(value = "/{userId}")
     public ResponseEntity getUseInfo(@PathVariable String userId) {
         User user = userService.findUserById(userId);
-
         if (user != null) {
             return ResultUtil.success(user);
         } else {
@@ -40,25 +36,15 @@ public class UserController extends BaseController {
 
     /**
      * 修改用户信息
-     *
-     * @param userId
-     * @param modifyUserInfoDTO
-     * @return
      */
     @PostMapping(value = "/info/{userId}")
     public ResponseEntity modifyUserInfo(@PathVariable String userId, @RequestBody ModifyUserInfoDTO modifyUserInfoDTO) {
-
         userService.modifyUserInfo(userId, modifyUserInfoDTO);
         return ResultUtil.success();
-
-
     }
 
     /**
      * 获取徒弟信息
-     *
-     * @param userId
-     * @return
      */
     @GetMapping(value = "/apprentices/{userId}")
     public ResponseEntity getAllApprenticesInfo(@PathVariable String userId) {
@@ -69,9 +55,6 @@ public class UserController extends BaseController {
 
     /**
      * 获取师傅信息
-     *
-     * @param userId
-     * @return
      */
     @GetMapping(value = "/master/{userId}")
     public ResponseEntity getMasterInfo(@PathVariable String userId) {
@@ -82,10 +65,6 @@ public class UserController extends BaseController {
 
     /**
      * 添加师傅
-     *
-     * @param userId
-     * @param masterId
-     * @return
      */
     @PostMapping(value = "/master/{userId}/{masterId}")
     public ResponseEntity addMaster(@PathVariable String userId, @PathVariable String masterId) {
@@ -96,30 +75,31 @@ public class UserController extends BaseController {
         }
     }
 
+    /**
+     * 添加某用户的常用地址
+     */
     @PostMapping(value = "/address/{userId}")
     public ResponseEntity addAddress(@PathVariable String userId, @RequestBody String address) {
         addressService.addUsualAddress(userId, address);
         return ResultUtil.success();
     }
 
+    /**
+     * 获取某用户所有常用地址列表
+     */
+    @GetMapping(value = "/addresses/{userId}")
+    public ResponseEntity getAllAddress(@PathVariable String userId) {
+        List<Address> addresses = addressService.getUsualAddress(userId);
+        return ResultUtil.success(addresses);
+    }
+
+    /**
+     * 通过key关键字模糊匹配相应的schoolName
+     */
     @GetMapping(value = "/school")
     public ResponseEntity getSchool(String key) {
         List<School> schools = addressService.getSchoolInFuzzyMatching(key);
         return ResultUtil.success(schools);
-    }
-
-    /**
-     * 获取所有常用地址列表
-     *
-     * @param userId
-     * @return
-     */
-
-    @GetMapping(value = "/addresses/{userId}")
-    public ResponseEntity getAllAddress(@PathVariable String userId) {
-        List<Address> addresses = addressService.getUsualAddress(userId);
-
-        return ResultUtil.success(addresses);
     }
 
 }
