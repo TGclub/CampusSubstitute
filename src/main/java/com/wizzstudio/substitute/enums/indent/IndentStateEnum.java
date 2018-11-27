@@ -1,5 +1,8 @@
 package com.wizzstudio.substitute.enums.indent;
 
+/**
+ * 订单状态
+ */
 public enum IndentStateEnum {
     /**
      * 等待接单

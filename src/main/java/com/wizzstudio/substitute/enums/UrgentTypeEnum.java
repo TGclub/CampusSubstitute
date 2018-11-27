@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
+ * 订单加急类型
  * Created By Cx On 2018/11/19 23:40
  */
 @Getter

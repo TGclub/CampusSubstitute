@@ -1,6 +1,5 @@
 package com.wizzstudio.substitute.controller;
 
-import com.wizzstudio.substitute.VO.IndentVO;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.enums.indent.IndentTypeEnum;
 import com.wizzstudio.substitute.enums.ResultEnum;
@@ -139,7 +138,7 @@ public class IndentController {
      */
     @GetMapping("/performer/{userId}")
     public ResponseEntity getUserPersonalPerformedIndentList(@PathVariable @NotNull String userId) {
-        List<IndentVO> indents = indentService.getUserPerformedIndent(userId);
+        List<Indent> indents = indentService.getUserPerformedIndent(userId);
         return ResultUtil.success(indents);
     }
 
@@ -148,7 +147,7 @@ public class IndentController {
      */
     @GetMapping("/publisher/{userId}")
     public ResponseEntity getUserPersonalPublishedIndentList(@PathVariable @NotNull String userId) {
-        List<IndentVO> indents = indentService.getUserPublishedIndent(userId);
+        List<Indent> indents = indentService.getUserPublishedIndent(userId);
         return ResultUtil.success(indents);
     }
 
