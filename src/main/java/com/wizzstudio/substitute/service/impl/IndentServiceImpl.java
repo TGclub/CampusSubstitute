@@ -9,6 +9,7 @@ import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.enums.indent.IndentSortTypeEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.domain.Indent;
+import com.wizzstudio.substitute.exception.CheckException;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.service.AddressService;
 import com.wizzstudio.substitute.service.IndentService;
@@ -25,7 +26,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -44,7 +44,7 @@ public class IndentServiceImpl implements IndentService {
     /**
      * 将indent 封装为 indentVO
      */
-    private IndentVO indent2VO(Indent indent){
+    private IndentVO indent2VO(Indent indent) throws CheckException {
         IndentVO indentVO = new IndentVO();
         BeanUtils.copyProperties(indent,indentVO);
         Address shpping = addressService.getById(indent.getShippingAddressId()),
@@ -62,35 +62,52 @@ public class IndentServiceImpl implements IndentService {
         }else {
             indentVO.setTakeGoodAddress(takeGoods.getAddress());
         }
-        //检验用户学校信息是否有效，并拼装
-        User publisher = userService.findUserById(indent.getPublisherId()),
-                performer = userService.findUserById(indent.getPerformerId());
-        School publisherSchool = schoolService.getById(publisher.getSchoolId()),
-                performerSchool = schoolService.getById(performer.getSchoolId());
+        //检验下单用户信息是否有效，并拼装
+        User publisher = userService.findUserById(indent.getPublisherId());
+        if (publisher == null){
+            log.error("[获取订单信息]publisherId不存在，indent={}", indent);
+            throw new CheckException("订单信息有误，下单用户不存在");
+        }
+        School publisherSchool = schoolService.getById(publisher.getSchoolId());
         if (publisherSchool == null){
             log.error("[获取订单信息]publisherSchoolId不存在，indent={},\npublisher={}", indent, publisher);
-            indentVO.setPublisherSchool(null);
+            throw new CheckException("下单用户信息有误，请完善学校信息");
         }else {
             indentVO.setPublisherSchool(publisherSchool.getSchoolName());
         }
-        if (performerSchool == null){
-            log.error("[获取订单信息]performerSchoolId不存在，indent={},\nperformer={}", indent, performer);
-            indentVO.setPerformerSchool(null);
-        }else {
-            indentVO.setPerformerSchool(performerSchool.getSchoolName());
-        }
-        //拼装用户信息
-        indentVO.setPerformerGender(performer.getGender());
-        indentVO.setPerformerAvatar(performer.getAvatar());
-        indentVO.setPerformerNickName(performer.getUserName());
         indentVO.setPublisherGender(publisher.getGender());
         indentVO.setPublisherAvatar(publisher.getAvatar());
         indentVO.setPublisherNickName(publisher.getUserName());
+        //检验该订单是否已被接，若被接，拼接上接单人信息
+        if (indent.getPerformerId() != null){
+            User performer = userService.findUserById(indent.getPerformerId());
+            if (performer == null){
+                log.error("[获取订单信息]performerId不存在，indent={}", indent);
+                throw new CheckException("订单信息有误，接单人不存在");
+            }
+            School performerSchool = schoolService.getById(performer.getSchoolId());
+            if (performerSchool == null){
+                log.error("[获取订单信息]performerSchoolId不存在，indent={},\nperformer={}", indent, performer);
+                throw new CheckException("接单用户信息有误，请完善学校信息");
+            }else {
+                indentVO.setPerformerSchool(performerSchool.getSchoolName());
+            }
+            indentVO.setPerformerGender(performer.getGender());
+            indentVO.setPerformerAvatar(performer.getAvatar());
+            indentVO.setPerformerNickName(performer.getUserName());
+        }
         return indentVO;
     }
 
     private List<IndentVO> indent2VO(List<Indent> indents){
-        return indents.stream().map(this::indent2VO).collect(Collectors.toList());
+        List<IndentVO> indentVOS = new ArrayList<>();
+        indents.forEach(e -> {
+            try {
+                indentVOS.add(indent2VO(e));
+            } catch (CheckException ignored) {
+            }
+        });
+        return indentVOS;
     }
 
     /**
@@ -184,7 +201,12 @@ public class IndentServiceImpl implements IndentService {
             indent.setCompanyName(null);
             indent.setPickupCode(null);
         }
-        return indent2VO(indent);
+        try {
+            return indent2VO(indent);
+        } catch (CheckException e) {
+            log.error("[获取订单详情]获取失败，订单信息有误,message={},indent={}",e.getMessage(),indent);
+            throw new SubstituteException(e.getMessage());
+        }
     }
 
     @Override
