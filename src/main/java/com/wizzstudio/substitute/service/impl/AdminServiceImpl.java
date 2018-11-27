@@ -126,12 +126,16 @@ public class AdminServiceImpl implements AdminService {
         feedbackDao.save(feedback);
     }
 
+    /**
+     * 处理提现请求，按照一次提现全部提出处理。
+     * @param id 用户id
+     */
     @Override
     public void handleWithDrawDeposit(String id) {
         User user = userDao.findUserById(id);
         user.setBalance(new BigDecimal(0));
-        List<WithdrawRequest> withdrawRequests = withdrawRequestDao.findAllByUserId(id);
         userDao.save(user);
+        List<WithdrawRequest> withdrawRequests = withdrawRequestDao.findAllByUserId(id);
         withdrawRequests.stream().forEach(r -> {
             r.setIsSolved(true);
             withdrawRequestDao.save(r);
