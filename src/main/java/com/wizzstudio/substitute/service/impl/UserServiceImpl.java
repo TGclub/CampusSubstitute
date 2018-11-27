@@ -3,6 +3,7 @@ package com.wizzstudio.substitute.service.impl;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.wizzstudio.substitute.dao.SchoolDao;
 import com.wizzstudio.substitute.dao.UserDao;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
@@ -35,8 +36,12 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Autowired
     UserDao userDao;
+
     @Autowired
     WxMaService wxService;
+
+    @Autowired
+    SchoolDao schoolDao;
 
     @Override
     public User userLogin(WxInfo loginData) throws WxErrorException {
@@ -142,6 +147,7 @@ public class UserServiceImpl extends BaseService implements UserService {
             apprentices.forEach(x -> {
                 UserBasicInfo basicInfo = new UserBasicInfo();
                 BeanUtils.copyProperties(x, basicInfo);
+                basicInfo.setSchool(schoolDao.findSchoolById(x.getSchoolId()).getSchoolName());
                 basicInfoList.add(basicInfo);
             });
             return (T) basicInfoList;
@@ -151,6 +157,7 @@ public class UserServiceImpl extends BaseService implements UserService {
                 User master = findUserById(masterId);
                 UserBasicInfo basicInfo = new UserBasicInfo();
                 BeanUtils.copyProperties(master, basicInfo);
+                basicInfo.setSchool(schoolDao.findSchoolById(master.getSchoolId()).getSchoolName());
                 return (T) basicInfo;
             } else {
                 return null;
