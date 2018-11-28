@@ -11,5 +11,5 @@ import java.util.List;
  */
 @Repository
 public interface CountInfoDao extends JpaRepository<CountInfo, Integer> {
-    List<CountInfo> getAllByCountDateBetween(Integer from, Integer to);
+    List<CountInfo> getAllByCountDateBetweenOrderByCountDate(Integer from, Integer to);
 }

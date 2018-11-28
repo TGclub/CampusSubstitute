@@ -16,7 +16,7 @@ public class UserBasicInfo implements Serializable {
 
     private String avatar;
 
-    private String school;
+    private String schoolName;
 
     private GenderEnum gender;
 
@@ -24,12 +24,12 @@ public class UserBasicInfo implements Serializable {
     }
 
 
-    public UserBasicInfo(String id, String userName, Long phone, String avatar, String school, GenderEnum gender) {
+    public UserBasicInfo(String id, String userName, Long phone, String avatar, String schoolName, GenderEnum gender) {
         this.id = id;
         this.userName = userName;
         this.phone = phone;
         this.avatar = avatar;
-        this.school = school;
+        this.schoolName = schoolName;
         this.gender = gender;
     }
 
@@ -37,7 +37,7 @@ public class UserBasicInfo implements Serializable {
         setId(builder.id);
         setUserName(builder.userName);
         setAvatar(builder.avatar);
-        setSchool(builder.school);
+        setSchoolName(builder.school);
         setGender(builder.gender);
     }
 
@@ -50,7 +50,7 @@ public class UserBasicInfo implements Serializable {
         builder.id = copy.getId();
         builder.userName = copy.getUserName();
         builder.avatar = copy.getAvatar();
-        builder.school = copy.getSchool();
+        builder.school = copy.getSchoolName();
         builder.gender = copy.getGender();
         return builder;
     }
@@ -79,12 +79,12 @@ public class UserBasicInfo implements Serializable {
         this.avatar = avatar;
     }
 
-    public String getSchool() {
-        return school;
+    public String getSchoolName() {
+        return schoolName;
     }
 
-    public void setSchool(String school) {
-        this.school = school;
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 
     public GenderEnum getGender() {

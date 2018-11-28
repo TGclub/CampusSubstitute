@@ -109,17 +109,22 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 获取所有常用地址列表
+     * 获取所有常用地址列表, 当key不为空的时候按关键词进行模糊匹配
      *
      * @param userId
      * @return
      */
 
     @GetMapping(value = "/addresses/{userId}")
-    public ResponseEntity getAllAddress(@PathVariable String userId) {
-        List<Address> addresses = addressService.getUsualAddress(userId);
-
+    public ResponseEntity getAllAddress(@PathVariable String userId, String key) {
+        List<Address> addresses;
+        if (key != null) {
+             addresses = addressService.getAllByAddress(key);
+        } else {
+             addresses = addressService.getUsualAddress(userId);
+        }
         return ResultUtil.success(addresses);
     }
+
 
 }
