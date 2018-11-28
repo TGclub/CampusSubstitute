@@ -114,8 +114,13 @@ public class IndentServiceImpl implements IndentService {
      * 创建新订单
      */
     @Override
-    public void save(Indent indent) {
+    public void create(Indent indent) {
         User user = userService.findUserById(indent.getPublisherId());
+        if (user == null){
+            //若用户id有误
+            log.error("[创建订单]创建失败，下单用户不存在，publisherId={},indent={}", indent.getPublisherId(),indent);
+            throw new SubstituteException("下单用户不存在，publisherId有误");
+        }
         BigDecimal indentPrice = indent.getIndentPrice();
         BigDecimal userBalance = user.getBalance();
         if (userBalance.compareTo(indentPrice) < 0) {
@@ -134,7 +139,7 @@ public class IndentServiceImpl implements IndentService {
     }
 
     @Override
-    public List<IndentVO> getWaitInFuzzyMatching(Integer sortType, GenderEnum sexType) {
+    public List<IndentVO> getWait(Integer sortType, GenderEnum sexType) {
         IndentSortTypeEnum sortTypeEnum = CommonUtil.getEnum(sortType, IndentSortTypeEnum.class);
         if (sortTypeEnum == null) {
             log.error("[获取订单列表]获取失败，sortType有误，sortType={}", sortType);
@@ -196,7 +201,7 @@ public class IndentServiceImpl implements IndentService {
     @Override
     public IndentVO getIndentDetail(Integer indentId, String userId) {
         Indent indent = indentDao.findByIndentId(indentId);
-        if (!userId.equals(indent.getPerformerId()) || !userId.equals(indent.getPublisherId())) {
+        if (!userId.equals(indent.getPerformerId()) && !userId.equals(indent.getPublisherId())) {
             //如果查询用户不是送货人 或 下单人 则将companyName、pickupCode置空
             indent.setCompanyName(null);
             indent.setPickupCode(null);
@@ -227,7 +232,7 @@ public class IndentServiceImpl implements IndentService {
         userService.reduceBalance(userId, new BigDecimal(1));
         //增加订单悬赏金
         indent.setIndentPrice(indent.getIndentPrice().add(new BigDecimal(1)));
-        save(indent);
+        indentDao.save(indent);
     }
 
     @Override

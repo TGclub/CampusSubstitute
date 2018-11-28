@@ -12,6 +12,7 @@ import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.exception.SubstituteException;
+import com.wizzstudio.substitute.service.SchoolService;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -38,10 +39,12 @@ public class UserServiceImpl extends BaseService implements UserService {
     UserDao userDao;
 
     @Autowired
+    SchoolService schoolService;
+    @Autowired
     WxMaService wxService;
-
     @Autowired
     SchoolDao schoolDao;
+
 
     @Override
     public User userLogin(WxInfo loginData) throws WxErrorException {
@@ -66,7 +69,6 @@ public class UserServiceImpl extends BaseService implements UserService {
                     .setUserName(wxUserInfo.getNickName())
                     .setOpenid(wxUserInfo.getOpenId())
                     .setAvatar(wxUserInfo.getAvatarUrl())
-                    .setRole(Role.ROLE_USER)
                     .build();
             switch (Integer.valueOf(wxUserInfo.getGender())) {
                 //性别 0：未知、1：男、2：女

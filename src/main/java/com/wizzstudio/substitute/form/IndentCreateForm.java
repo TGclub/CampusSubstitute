@@ -23,8 +23,8 @@ public class IndentCreateForm {
     private String requireGender;
 
     //下单用户openid
-    @NotNull(message = "下单用户openid不能为空")
-    private String publisherOpenid;
+    @NotNull(message = "下单用户Id不能为空")
+    private String publisherId;
 
     //联系电话
     @NotNull(message = "用户联系电话不能为空")

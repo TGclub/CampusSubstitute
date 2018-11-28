@@ -35,7 +35,7 @@ public class IndentServiceImplTest {
         indent.setPublisherPhone(12345678901L);
         indent.setIndentContent("hello");
         indent.setIndentPrice(new BigDecimal(1));
-        indentService.save(indent);
+        indentService.create(indent);
     }
 
     @Test

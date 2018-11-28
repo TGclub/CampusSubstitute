@@ -2,6 +2,7 @@ package com.wizzstudio.substitute.controller;
 
 import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.ResultDTO;
+import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.service.AddressService;
 import com.wizzstudio.substitute.service.AdminService;
 import com.wizzstudio.substitute.service.IndentService;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,12 +47,16 @@ public class BaseController {
     public BaseController() {
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity handleException(Exception e) {
+    @ExceptionHandler(SubstituteException.class)
+    @ResponseBody
+    public ResponseEntity handleSubstituteException(SubstituteException e) {
+        return ResultUtil.error(e.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity handleAccessDeniedException(Exception e) {
         log.error(e.getMessage());
-        if (e instanceof AccessDeniedException)
-            return ResultUtil.error(Constant.SYSTEM_BUSY_CODE, e.getMessage(), HttpStatus.UNAUTHORIZED);
-        return ResultUtil.error();
+        return ResultUtil.error(Constant.SYSTEM_BUSY_CODE, e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
 }

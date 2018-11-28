@@ -1,6 +1,5 @@
 package com.wizzstudio.substitute.controller;
 
-import com.wizzstudio.substitute.VO.IndentVO;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.enums.indent.IndentTypeEnum;
 import com.wizzstudio.substitute.enums.ResultEnum;
@@ -93,16 +92,23 @@ public class IndentController {
         newIndent.setIndentType(CommonUtil.getEnum(indentCreateForm.getIndentType(), IndentTypeEnum.class));
         newIndent.setRequireGender(CommonUtil.getEnum(indentCreateForm.getRequireGender(), GenderEnum.class));
         //下单
-        indentService.save(newIndent);
+        indentService.create(newIndent);
         return ResultUtil.success();
     }
 
     /**
      * 增加赏金接口，若用户余额不足，则抛出异常
      */
-    @GetMapping("/price/{indentId}/{userId}")
-    public ResponseEntity addIndentPrice(@PathVariable Integer indentId, @PathVariable String userId) {
-        indentService.addIndentPrice(indentId, userId);
+    @PostMapping("/price")
+    public ResponseEntity addIndentPrice(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            //表单校验有误
+            log.error("[增加订单赏金]参数不正确，indentCreateForm={}", indentUserForm);
+            String msg = bindingResult.getFieldError() == null ? ResultEnum.PARAM_ERROR.getMsg()
+                    : bindingResult.getFieldError().getDefaultMessage();
+            throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
+        }
+        indentService.addIndentPrice(indentUserForm.getIndentId(), indentUserForm.getUserId());
         return ResultUtil.success();
     }
 
@@ -131,7 +137,7 @@ public class IndentController {
      */
     @GetMapping("/list")
     public ResponseEntity getIndentList(@RequestParam(defaultValue = "0") Integer sort, GenderEnum sexType) {
-        return ResultUtil.success(indentService.getWaitInFuzzyMatching(sort,sexType));
+        return ResultUtil.success(indentService.getWait(sort,sexType));
     }
 
     /**
@@ -139,8 +145,7 @@ public class IndentController {
      */
     @GetMapping("/performer/{userId}")
     public ResponseEntity getUserPersonalPerformedIndentList(@PathVariable @NotNull String userId) {
-        List<IndentVO> indents = indentService.getUserPerformedIndent(userId);
-        return ResultUtil.success(indents);
+        return ResultUtil.success(indentService.getUserPerformedIndent(userId));
     }
 
     /**
@@ -148,8 +153,7 @@ public class IndentController {
      */
     @GetMapping("/publisher/{userId}")
     public ResponseEntity getUserPersonalPublishedIndentList(@PathVariable @NotNull String userId) {
-        List<IndentVO> indents = indentService.getUserPublishedIndent(userId);
-        return ResultUtil.success(indents);
+        return ResultUtil.success(indentService.getUserPublishedIndent(userId));
     }
 
 
@@ -159,6 +163,11 @@ public class IndentController {
     @GetMapping(value = "/detail/{indentId}/{userId}")
     public ResponseEntity getIndentInfo(@PathVariable Integer indentId, @PathVariable String userId) {
         return ResultUtil.success(indentService.getIndentDetail(indentId, userId));
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity test() {
+        throw new SubstituteException(ResultEnum.PARAM_ERROR);
     }
 
 }

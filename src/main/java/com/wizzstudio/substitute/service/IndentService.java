@@ -12,7 +12,7 @@ public interface IndentService {
      * 若用户余额不足，则抛异常
      * @param indent 订单信息
      */
-    void save(Indent indent);
+    void create(Indent indent);
 
     /**
      * 增加赏金，每次只增加一元
@@ -48,7 +48,7 @@ public interface IndentService {
      * @param sexType         用户性别
      * @return 订单列表
      */
-    List<IndentVO> getWaitInFuzzyMatching(Integer sortType, GenderEnum sexType);
+    List<IndentVO> getWait(Integer sortType, GenderEnum sexType);
 
     /**
      * 获取指定订单信息
