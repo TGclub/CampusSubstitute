@@ -6,6 +6,7 @@ import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.enums.indent.IndentTypeEnum;
 import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ import java.util.Date;
 //订单
 @Entity
 @Data
+@DynamicInsert
 public class Indent implements Serializable {
 
     //订单id

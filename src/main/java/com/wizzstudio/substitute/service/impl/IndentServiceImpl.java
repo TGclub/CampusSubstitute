@@ -114,8 +114,13 @@ public class IndentServiceImpl implements IndentService {
      * 创建新订单
      */
     @Override
-    public void save(Indent indent) {
+    public void create(Indent indent) {
         User user = userService.findUserById(indent.getPublisherId());
+        if (user == null){
+            //若用户id有误
+            log.error("[创建订单]创建失败，下单用户不存在，publisherId={},indent={}", indent.getPublisherId(),indent);
+            throw new SubstituteException("下单用户不存在，publisherId有误");
+        }
         BigDecimal indentPrice = indent.getIndentPrice();
         BigDecimal userBalance = user.getBalance();
         if (userBalance.compareTo(indentPrice) < 0) {
@@ -227,7 +232,7 @@ public class IndentServiceImpl implements IndentService {
         userService.reduceBalance(userId, new BigDecimal(1));
         //增加订单悬赏金
         indent.setIndentPrice(indent.getIndentPrice().add(new BigDecimal(1)));
-        save(indent);
+        indentDao.save(indent);
     }
 
     @Override

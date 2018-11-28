@@ -16,7 +16,7 @@ public class ExceptionHandle {
 
     @ExceptionHandler(SubstituteException.class)
     @ResponseBody
-    public ResponseEntity handleSellException(SubstituteException e) {
+    public ResponseEntity handleSubstituteException(SubstituteException e) {
         return ResultUtil.error(e.getCode(), e.getMessage());
     }
 }
