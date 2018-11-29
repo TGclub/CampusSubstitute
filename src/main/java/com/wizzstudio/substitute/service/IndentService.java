@@ -26,6 +26,21 @@ public interface IndentService {
     void takeIndent(Integer indentId, String userId);
 
     /**
+     * 接单人送达接口
+     */
+    void arrivedIndent(Integer indentId, String userId);
+
+    /**
+     * 完结订单
+     */
+    void finishedIndent(Integer indentId, String userId);
+
+    /**
+     * 取消订单
+     */
+    void canceledIndent(Integer indentId, String userId);
+
+    /**
      * 获取用户已发布的订单
      *
      * @param userId 用户id

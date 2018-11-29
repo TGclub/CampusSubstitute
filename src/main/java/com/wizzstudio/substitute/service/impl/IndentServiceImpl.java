@@ -1,6 +1,7 @@
 package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.VO.IndentVO;
+import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dao.IndentDao;
 import com.wizzstudio.substitute.domain.Address;
 import com.wizzstudio.substitute.domain.School;
@@ -201,6 +202,10 @@ public class IndentServiceImpl implements IndentService {
     @Override
     public IndentVO getIndentDetail(Integer indentId, String userId) {
         Indent indent = indentDao.findByIndentId(indentId);
+        if (indent == null){
+            log.error("【获取订单详情】获取订单详情失败，订单id不存在，indentId={}", indentId);
+            throw new SubstituteException("获取订单详情失败，订单id不存在");
+        }
         if (!userId.equals(indent.getPerformerId()) && !userId.equals(indent.getPublisherId())) {
             //如果查询用户不是送货人 或 下单人 则将companyName、pickupCode置空
             indent.setCompanyName(null);
@@ -217,6 +222,10 @@ public class IndentServiceImpl implements IndentService {
     @Override
     public void addIndentPrice(Integer indentId, String userId) {
         Indent indent = indentDao.findByIndentId(indentId);
+        if (indent == null){
+            log.error("【增加赏金】增加赏金失败，订单id不存在，indentId={}", indentId);
+            throw new SubstituteException("增加赏金失败，订单id不存在");
+        }
         if (!indent.getPublisherId().equals(userId)) {
             //若不是下单人请求接口
             log.error("【增加赏金】增加失败，操作用户非下单人，userId={},publisherId={}", userId, indent.getPublisherId());
@@ -243,11 +252,111 @@ public class IndentServiceImpl implements IndentService {
             throw new SubstituteException("接单失败，用户不存在");
         }
         Indent indent = indentDao.findByIndentId(indentId);
-        if (indent.getPerformerId() != null || indent.getIndentState() != IndentStateEnum.WAIT_FOR_PERFORMER){
-            log.error("【接单】接单失败，该订单已被接，performerId={}, indentId={}, indentState={}",
-                    indent.getPerformerId(),indent.getIndentId(),indent.getIndentState());
-            throw new SubstituteException("接单失败，该订单已被接");
+        if (indent == null){
+            log.error("【接单】接单失败，订单id不存在，indentId={}", indentId);
+            throw new SubstituteException("接单失败，订单id不存在");
         }
+        if (indent.getPerformerId() != null || indent.getIndentState() != IndentStateEnum.WAIT_FOR_PERFORMER){
+            log.error("【接单】接单失败，该订单状态有误，indent={}", indent);
+            throw new SubstituteException("接单失败，该订单状态有误");
+        }
+        //用户接单
+        indent.setPerformerId(userId);
+        indent.setIndentState(IndentStateEnum.PERFORMING);
+        indentDao.save(indent);
+    }
+
+    @Override
+    public void arrivedIndent(Integer indentId, String userId) {
+        Indent indent = indentDao.findByIndentId(indentId);
+        if (indent == null){
+            log.error("【送达订单】送达订单失败，订单id不存在，indentId={}", indentId);
+            throw new SubstituteException("送达订单失败，订单id不存在");
+        }
+        if (indent.getPerformerId() == null || indent.getIndentState() != IndentStateEnum.PERFORMING){
+            log.error("【送达订单】送达订单失败，订单信息有误，indent={}", indent);
+            throw new SubstituteException("送达订单失败，该订单信息有误");
+        }
+        if (!userId.equals(indent.getPerformerId())){
+            log.error("【送达订单】送达订单失败，该用户非接单人，userId={}，indent={}", userId,indent);
+            throw new SubstituteException("送达订单失败，该用户无权限，非接单人");
+        }
+        //该订单已送达
+        indent.setIndentState(IndentStateEnum.ARRIVED);
+        indentDao.save(indent);
+    }
+
+    @Override
+    public void finishedIndent(Integer indentId, String userId) {
+        //1、校验参数是否正确,订单状态是否正确
+        Indent indent = indentDao.findByIndentId(indentId);
+        if (indent == null){
+            log.error("【完结订单】完结订单失败，订单id不存在，indentId={}", indentId);
+            throw new SubstituteException("完结订单失败，订单id不存在");
+        }
+        if (indent.getIndentState() == IndentStateEnum.CANCELED){
+            log.error("【完结订单】完结订单失败，订单已取消，indent={}", indent);
+            throw new SubstituteException("完结订单失败，订单已取消");
+        }
+        if (!userId.equals(indent.getPublisherId())){
+            log.error("【完结订单】完结订单失败，该用户非下单人，userId={}，indent={}", userId,indent);
+            throw new SubstituteException("完结订单失败，该用户无权限，非下单人");
+        }
+        User performer = userService.findUserById(indent.getPerformerId());
+        if (performer == null){
+            log.error("【完结订单】完结订单失败，该订单未被接，indent={}", userId,indent);
+            throw new SubstituteException("完结订单失败，该订单未被接");
+        }
+        //2、开始分钱
+        BigDecimal companyIncome = indent.getIndentPrice().multiply(new BigDecimal(Constant.IncomeRatio.COMPANY)),
+                masterIncome = indent.getIndentPrice().multiply(new BigDecimal(Constant.IncomeRatio.MASTER)),
+                performerIncome = indent.getIndentPrice().multiply(new BigDecimal(Constant.IncomeRatio.PERFORMER));
+
+        if (performer.getMasterId() != null){
+            //2.1如果用户有推荐人，给推荐人分钱
+            User master = userService.findUserById(performer.getMasterId());
+            //推荐人获得奖励, 并记录
+            master.setBalance(master.getBalance().add(masterIncome));
+            master.setMasterIncome(master.getMasterIncome().add(masterIncome));
+            master.setAllIncome(master.getAllIncome().add(masterIncome));
+            userService.saveUser(master);
+        }else {
+            //用户没有推荐人,推荐人金额给用户
+            performerIncome = performerIncome.add(masterIncome);
+        }
+        //2.2给用户分钱
+        performer.setBalance(performer.getBalance().add(performerIncome));
+        performer.setAllIncome(performer.getAllIncome().add(performerIncome));
+        userService.saveUser(performer);
+        //2.3 todo 记录公司收益到count表中
+        //3、保存订单
+        indent.setIndentState(IndentStateEnum.COMPLETED);
+        indentDao.save(indent);
+    }
+
+    @Override
+    public void canceledIndent(Integer indentId, String userId) {
+        //1、校验参数是否正确,订单状态是否正确
+        Indent indent = indentDao.findByIndentId(indentId);
+        if (indent == null){
+            log.error("【取消订单】取消订单失败，订单id不存在，indentId={}", indentId);
+            throw new SubstituteException("取消订单失败，订单id不存在");
+        }
+        if (indent.getIndentState() == IndentStateEnum.COMPLETED){
+            log.error("【取消订单】取消订单失败，订单已完成，indent={}", indent);
+            throw new SubstituteException("取消订单失败，订单已完结");
+        }
+        if (!userId.equals(indent.getPublisherId())){
+            log.error("【取消订单】取消订单失败，操作用户非下单人，userId={}，indent={}", userId,indent);
+            throw new SubstituteException("取消订单失败，操作用户无权限，非下单人");
+        }
+        //2、退钱
+        User user = userService.findUserById(indent.getPublisherId());
+        user.setBalance(user.getBalance().add(indent.getIndentPrice()));
+        userService.saveUser(user);
+        //3、修改订单状态
+        indent.setIndentState(IndentStateEnum.CANCELED);
+        indentDao.save(indent);
     }
 
 }
