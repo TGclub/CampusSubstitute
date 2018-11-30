@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ import java.util.Date;
 @Data
 @NamedQuery(name = "getAllApprentice", query = "select u from User u where" +
         " u.masterId = :account")
+@DynamicInsert
 public class User implements Serializable {
 
     private static final long serialVersionUID = 3537218534766243734L;
