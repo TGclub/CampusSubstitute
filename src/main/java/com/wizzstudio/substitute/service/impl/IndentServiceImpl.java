@@ -48,13 +48,15 @@ public class IndentServiceImpl implements IndentService {
     private IndentVO indent2VO(Indent indent) throws CheckException {
         IndentVO indentVO = new IndentVO();
         BeanUtils.copyProperties(indent,indentVO);
-        Address shpping = addressService.getById(indent.getShippingAddressId());
+        Address shipping = addressService.getById(indent.getShippingAddressId());
         //检验地址信息是否有效,并进行拼装
-        if (shpping == null){
-            log.warn("[获取订单信息]shippingAddressId不存在，indent={}", indent);
-            indentVO.setShippingAddress(null);
+        if (shipping == null){
+            log.error("[获取订单信息]shippingAddressId不存在，indent={}", indent);
+            throw new CheckException("订单信息有误，取货地址信息有误");
         }else {
-            indentVO.setShippingAddress(shpping.getAddress());
+            indentVO.setShippingAddress(shipping.getAddress());
+            indentVO.setPublisherName(shipping.getUserName());
+            indentVO.setPublisherPhone(shipping.getPhone());
         }
         //检验下单用户信息是否有效，并拼装
         User publisher = userService.findUserById(indent.getPublisherId());
@@ -115,16 +117,16 @@ public class IndentServiceImpl implements IndentService {
             log.error("[创建订单]创建失败，下单用户不存在，publisherId={},indent={}", indent.getPublisherId(),indent);
             throw new SubstituteException("下单用户不存在，publisherId有误");
         }
-        BigDecimal indentPrice = indent.getIndentPrice();
+        Integer indentPrice = indent.getIndentPrice();
         BigDecimal userBalance = user.getBalance();
-        if (userBalance.compareTo(indentPrice) < 0) {
+        if (userBalance.compareTo(BigDecimal.valueOf(indentPrice)) < 0) {
             //若用户余额不足支付订单
             log.error("[创建订单]创建失败，用户余额不足，userOpenid={},userBalance={},indentPrice={}", user.getOpenid(),
                     userBalance, indentPrice);
             throw new SubstituteException("用户余额不足");
         }
         //扣钱
-        user.setBalance(userBalance.subtract(indentPrice));
+        user.setBalance(userBalance.subtract(BigDecimal.valueOf(indentPrice)));
         userService.saveUser(user);
         //设置订单状态
         indent.setIndentState(IndentStateEnum.WAIT_FOR_PERFORMER);
@@ -232,7 +234,7 @@ public class IndentServiceImpl implements IndentService {
         //扣钱
         userService.reduceBalance(userId, new BigDecimal(1));
         //增加订单悬赏金
-        indent.setIndentPrice(indent.getIndentPrice().add(new BigDecimal(1)));
+        indent.setIndentPrice(indent.getIndentPrice() + 1);
         indentDao.save(indent);
     }
 
@@ -300,9 +302,10 @@ public class IndentServiceImpl implements IndentService {
             throw new SubstituteException("完结订单失败，该订单未被接");
         }
         //2、开始分钱
-        BigDecimal companyIncome = indent.getIndentPrice().multiply(new BigDecimal(Constant.IncomeRatio.COMPANY)),
-                masterIncome = indent.getIndentPrice().multiply(new BigDecimal(Constant.IncomeRatio.MASTER)),
-                performerIncome = indent.getIndentPrice().multiply(new BigDecimal(Constant.IncomeRatio.PERFORMER));
+        //注意：这里不能使用new BigDecimal(double)的方法构造，会有精度缺失
+        BigDecimal companyIncome = BigDecimal.valueOf(indent.getIndentPrice() * Constant.IncomeRatio.COMPANY),
+                masterIncome = BigDecimal.valueOf(indent.getIndentPrice() * Constant.IncomeRatio.MASTER),
+                performerIncome = BigDecimal.valueOf(indent.getIndentPrice() * Constant.IncomeRatio.PERFORMER);
 
         if (performer.getMasterId() != null){
             //2.1如果用户有推荐人，给推荐人分钱
@@ -344,7 +347,7 @@ public class IndentServiceImpl implements IndentService {
         }
         //2、退钱
         User user = userService.findUserById(indent.getPublisherId());
-        user.setBalance(user.getBalance().add(indent.getIndentPrice()));
+        user.setBalance(user.getBalance().add(BigDecimal.valueOf(indent.getIndentPrice())));
         userService.saveUser(user);
         //3、修改订单状态
         indent.setIndentState(IndentStateEnum.CANCELED);
