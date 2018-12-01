@@ -2,8 +2,11 @@ package com.wizzstudio.substitute.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,6 +19,9 @@ import java.util.Date;
 @Data
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@DynamicInsert
 public class CouponRecord {
 
     //优惠券领取记录ID

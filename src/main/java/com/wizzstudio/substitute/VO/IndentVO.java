@@ -49,6 +49,9 @@ public class IndentVO {
     //订单状态,待接单：WAIT_FOR_PERFORMER，执行中：PERFORMING，货物已送达：ARRIVED，已完成：COMPLETED
     private IndentStateEnum indentState;
 
+    //取货地址，订单类型非随意帮时必填
+    private String takeGoodAddress;
+
     //联系人姓名,不能用publisherId查，因为可能不同，订单类型非随意帮时必填
     private String publisherName;
 
@@ -62,9 +65,6 @@ public class IndentVO {
     private BigDecimal goodPrice;
 
 //======================================需要自己拼接的字段========================================================
-    //取货地址，订单类型非随意帮时必填
-    private String takeGoodAddress;
-
     //送达地点，订单类型为帮我递时必填
     private String shippingAddress;
 

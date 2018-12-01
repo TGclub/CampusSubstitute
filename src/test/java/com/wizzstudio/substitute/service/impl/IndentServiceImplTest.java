@@ -32,7 +32,6 @@ public class IndentServiceImplTest {
         indent.setIndentType(HELP_OTHER);
         indent.setRequireGender(NO_LIMITED);
         indent.setPublisherId("TEST");
-        indent.setPublisherPhone(12345678901L);
         indent.setIndentContent("hello");
         indent.setIndentPrice(new BigDecimal(1));
         indentService.create(indent);

@@ -48,20 +48,13 @@ public class IndentServiceImpl implements IndentService {
     private IndentVO indent2VO(Indent indent) throws CheckException {
         IndentVO indentVO = new IndentVO();
         BeanUtils.copyProperties(indent,indentVO);
-        Address shpping = addressService.getById(indent.getShippingAddressId()),
-                takeGoods = addressService.getById(indent.getTakeGoodAddressId());
+        Address shpping = addressService.getById(indent.getShippingAddressId());
         //检验地址信息是否有效,并进行拼装
         if (shpping == null){
             log.warn("[获取订单信息]shippingAddressId不存在，indent={}", indent);
             indentVO.setShippingAddress(null);
         }else {
             indentVO.setShippingAddress(shpping.getAddress());
-        }
-        if (takeGoods == null){
-            log.warn("[获取订单信息]shippingAddressId不存在，indent={}", indent);
-            indentVO.setTakeGoodAddress(null);
-        }else {
-            indentVO.setTakeGoodAddress(takeGoods.getAddress());
         }
         //检验下单用户信息是否有效，并拼装
         User publisher = userService.findUserById(indent.getPublisherId());
@@ -183,8 +176,8 @@ public class IndentServiceImpl implements IndentService {
                 throw new SubstituteException("sortType有误");
         }
         indents.forEach(x -> {
-            x.setCompanyName(null);
-            x.setPickupCode(null);
+            //将隐私信息置空
+            x.setSecretText(null);
         });
         return indent2VO(indents);
     }
@@ -207,9 +200,8 @@ public class IndentServiceImpl implements IndentService {
             throw new SubstituteException("获取订单详情失败，订单id不存在");
         }
         if (!userId.equals(indent.getPerformerId()) && !userId.equals(indent.getPublisherId())) {
-            //如果查询用户不是送货人 或 下单人 则将companyName、pickupCode置空
-            indent.setCompanyName(null);
-            indent.setPickupCode(null);
+            //如果查询用户不是送货人 或 下单人 则将隐私信息置空
+            indent.setSecretText(null);
         }
         try {
             return indent2VO(indent);
