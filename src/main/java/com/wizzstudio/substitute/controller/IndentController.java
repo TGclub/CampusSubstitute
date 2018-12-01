@@ -129,6 +129,54 @@ public class IndentController {
     }
 
     /**
+     * 接单人送达接口
+     */
+    @PostMapping("/arrived/indent")
+    public ResponseEntity arrivedIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            //表单校验有误
+            log.error("[送达订单]参数不正确，indentCreateForm={}", indentUserForm);
+            String msg = bindingResult.getFieldError() == null ? ResultEnum.PARAM_ERROR.getMsg()
+                    : bindingResult.getFieldError().getDefaultMessage();
+            throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
+        }
+        indentService.arrivedIndent(indentUserForm.getIndentId(), indentUserForm.getUserId());
+        return ResultUtil.success();
+    }
+
+    /**
+     * 下单人完结订单 ： 开始进行分钱
+     */
+    @PostMapping("/finished/indent")
+    public ResponseEntity finishedIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            //表单校验有误
+            log.error("[完结订单]参数不正确，indentCreateForm={}", indentUserForm);
+            String msg = bindingResult.getFieldError() == null ? ResultEnum.PARAM_ERROR.getMsg()
+                    : bindingResult.getFieldError().getDefaultMessage();
+            throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
+        }
+        indentService.finishedIndent(indentUserForm.getIndentId(), indentUserForm.getUserId());
+        return ResultUtil.success();
+    }
+
+    /**
+     * 下单人取消订单 ： 退钱
+     */
+    @DeleteMapping("/canceled/indent")
+    public ResponseEntity canceledIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            //表单校验有误
+            log.error("[取消订单]参数不正确，indentCreateForm={}", indentUserForm);
+            String msg = bindingResult.getFieldError() == null ? ResultEnum.PARAM_ERROR.getMsg()
+                    : bindingResult.getFieldError().getDefaultMessage();
+            throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
+        }
+        indentService.canceledIndent(indentUserForm.getIndentId(), indentUserForm.getUserId());
+        return ResultUtil.success();
+    }
+
+    /**
      * 广场订单列表接口，获取待接单的订单列表，只能看到同性别的订单
      *
      * @param sort 排序方式，默认值为0，默认：0，时间：10，价格:20

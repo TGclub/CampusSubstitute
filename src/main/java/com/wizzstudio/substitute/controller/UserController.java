@@ -40,10 +40,6 @@ public class UserController extends BaseController {
 
     /**
      * 修改用户信息
-     *
-     * @param userId
-     * @param modifyUserInfoDTO
-     * @return
      */
     @PostMapping(value = "/info/{userId}")
     public ResponseEntity modifyUserInfo(@PathVariable String userId, @RequestBody ModifyUserInfoDTO modifyUserInfoDTO) {
@@ -110,9 +106,6 @@ public class UserController extends BaseController {
 
     /**
      * 获取所有常用地址列表, 当key不为空的时候按关键词进行模糊匹配
-     *
-     * @param userId
-     * @return
      */
 
     @GetMapping(value = "/addresses/{userId}")

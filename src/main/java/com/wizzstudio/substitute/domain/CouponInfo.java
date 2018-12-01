@@ -5,6 +5,7 @@ import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import java.util.Date;
 @Data
 @Builder
 @AllArgsConstructor
+@DynamicInsert
 public class CouponInfo {
     //优惠券ID
     @Id

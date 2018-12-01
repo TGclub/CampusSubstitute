@@ -15,9 +15,7 @@ import java.io.Serializable;
 @Data
 @Builder
 @AllArgsConstructor
-public class WxPrePayInfo implements Serializable {
-
-    private static final long serialVersionUID = -7187359421292513037L;
+public class WxPrePayInfo{
 
     //必填，微信分配的小程序ID
     private String appid;

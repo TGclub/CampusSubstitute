@@ -32,10 +32,6 @@ public class Indent implements Serializable {
     @NotNull
     private String publisherId;
 
-    //联系人电话,不能用publisherId查，因为可能不同
-    @NotNull
-    private Long publisherPhone;
-
     //订单类型，帮我购：HELP_BUY，帮我递：HELP_SEND，随意帮：HELP_OTHER
     @Enumerated(EnumType.STRING)
     private IndentTypeEnum indentType;
@@ -64,20 +60,14 @@ public class Indent implements Serializable {
     @Enumerated(EnumType.STRING)
     private IndentStateEnum indentState;
 
-    //取货地址ID，订单类型非随意帮时必填
-    private Integer takeGoodAddressId;
+    //取货地址，订单类型非随意帮时必填
+    private String takeGoodAddress;
 
     //送达地点ID，订单类型为帮我递时必填
     private Integer shippingAddressId;
 
-    //联系人姓名,不能用publisherId查，因为可能不同，订单类型非随意帮时必填
-    private String publisherName;
-
-    //快递公司名，仅订单类型为帮我递时非空
-    private String companyName;
-
-    //取货码，仅订单类型为帮我递时非空
-    private String pickupCode;
+    //隐私信息，仅订单类型为帮我递时非空
+    private String secretText;
 
     //物品金额，仅订单类型为帮我购时非空
     private BigDecimal goodPrice;

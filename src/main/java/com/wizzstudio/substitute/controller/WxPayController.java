@@ -5,10 +5,12 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.exceptions.ClientException;
 import com.wizzstudio.substitute.config.AliSmsConfig;
 import com.wizzstudio.substitute.domain.Indent;
+import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.dto.wx.WxPrePayDto;
 import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.form.PayForm;
+import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.service.WxPayService;
 import com.wizzstudio.substitute.util.*;
 import lombok.extern.slf4j.Slf4j;
@@ -36,12 +38,19 @@ public class WxPayController {
     @Autowired
     WxPayService wxPayService;
     @Autowired
+    UserService userService;
+    @Autowired
     AliSmsConfig aliSmsConfig;
 
     private WxPrePayDto createWxPrePayDto(PayForm payForm, HttpServletRequest request) {
         int totalFee = MoneyUtil.Yuan2Fen(payForm.getTotalFee());
+        User user = userService.findUserById(payForm.getUserId());
+        if (user == null) {
+            log.error("[微信统一下单]用户不存在，userId={}", payForm.getUserId());
+            throw new SubstituteException(ResultEnum.USER_NOT_EXISTS);
+        }
         return WxPrePayDto.builder().indentId(RandomUtil.genUniqueKey())
-                .openid(payForm.getUserOpenid())
+                .openid(user.getOpenid())
                 .totalFee(totalFee)
                 .clientIp(CommonUtil.getClientIp(request))
                 .build();
@@ -64,8 +73,9 @@ public class WxPayController {
             throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
         }
         //支付统一下单
-        wxPayService.prePay(createWxPrePayDto(payForm, request));
-        return ResultUtil.success();
+        Map<String,String> params = wxPayService.prePay(createWxPrePayDto(payForm, request));
+        log.info("[微信统一下单]用户:{}下单充值{}元",payForm.getUserId(), payForm.getTotalFee());
+        return ResultUtil.success(params);
     }
 
     /**

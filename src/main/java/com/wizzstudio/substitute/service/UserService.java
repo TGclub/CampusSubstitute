@@ -66,6 +66,4 @@ public interface UserService {
      * @param number 减少金额量
      */
     void reduceBalance(String userId, BigDecimal number);
-
-
 }

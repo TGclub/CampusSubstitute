@@ -1,7 +1,10 @@
 package com.wizzstudio.substitute.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +17,9 @@ import java.math.BigDecimal;
 @Builder
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@DynamicInsert
 public class CountInfo {
     //统计ID
     @Id

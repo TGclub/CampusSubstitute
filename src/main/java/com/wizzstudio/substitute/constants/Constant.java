@@ -37,4 +37,14 @@ public interface Constant {
         //微信预支付下单接口URL
         String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     }
+
+    //收益占比
+    interface IncomeRatio{
+        //公司10%，区域负责人5%，但区域负责人的收益是由公司直接发放
+        Double COMPANY = 0.15;
+        //推荐人收益10%
+        Double MASTER = 0.1;
+        //本人收益75%
+        Double PERFORMER = 0.75;
+    }
 }

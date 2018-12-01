@@ -2,8 +2,11 @@ package com.wizzstudio.substitute.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +21,9 @@ import java.util.Date;
 @Entity
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@DynamicInsert
 public class DepositInfo {
     //充值ID
     @Id
@@ -29,7 +35,7 @@ public class DepositInfo {
     //充值金额,单位：元
     private BigDecimal depositMoney;
 
-    //充值是否成功，0：否，1：是，默认为0'
+    //充值是否成功，0：否，1：是，默认为0
     private Boolean isSuccess;
 
     //创建时间

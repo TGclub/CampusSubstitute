@@ -12,9 +12,9 @@ import java.math.BigDecimal;
  */
 @Data
 public class PayForm {
-    //用户openid
-    @NotBlank(message = "用户openid不能为空")
-    private String userOpenid;
+    //用户id
+    @NotBlank(message = "用户id不能为空")
+    private String userId;
     //支付金额,单位：元
     @NotNull(message = "支付金额不能为空")
     private BigDecimal totalFee;

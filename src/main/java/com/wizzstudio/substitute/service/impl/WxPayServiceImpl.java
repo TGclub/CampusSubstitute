@@ -140,12 +140,11 @@ public class WxPayServiceImpl implements WxPayService {
     public Map<String, String> prePay(WxPrePayDto wxPrePayDto) {
         User user = userService.findUserByOpenId(wxPrePayDto.getOpenid());
         if (user == null) {
-            log.error("[微信统一下单]用户不存在，adminName={}", wxPrePayDto.getOpenid());
+            log.error("[微信统一下单]用户不存在，openid={}", wxPrePayDto.getOpenid());
             throw new SubstituteException(ResultEnum.USER_NOT_EXISTS);
         }
         log.info("[微信统一下单]用户:{} 进行预下单", wxPrePayDto.getOpenid());
         WxPrePayInfo wxPrePayInfo = createPayInfo(wxPrePayDto);
-
 
         //todo，封装参数为xml
         String xml = XmlUtil.payInfoToXML(wxPrePayInfo);
@@ -240,5 +239,4 @@ public class WxPayServiceImpl implements WxPayService {
         }
 
     }
-
 }
