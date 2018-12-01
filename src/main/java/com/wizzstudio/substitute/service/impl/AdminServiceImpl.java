@@ -63,14 +63,13 @@ public class AdminServiceImpl implements AdminService {
         log.info("name: " + loginDTO.getAdminName() + "," + "passwd" + loginDTO.getPassword());
         AdminInfo admin = adminDao.getAdminInfoByAdminName(loginDTO.getAdminName());
         log.info(admin.getAdminName() + " in database" + admin.getAdminPass());
-        if (!admin.getAdminPass().equals(loginDTO.getPassword())) return false;
+        if (!admin.getAdminPass().equals(encoder.encode(loginDTO.getPassword()))) return false;
         return true;
     }
 
-    //表内将密码列设置为32为字符型，对密码加密后的密文会超出两倍左右，故暂时不采用密码加密了。
     @Override
     public void addNewAdmin(AdminInfo info) {
-        //info.setAdminPass(encoder.encode(info.getAdminPass()));
+        info.setAdminPass(encoder.encode(info.getAdminPass()));
         adminDao.save(info);
     }
 
