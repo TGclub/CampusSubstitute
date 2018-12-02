@@ -2,6 +2,7 @@ package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.dao.IndentDao;
 import com.wizzstudio.substitute.domain.Indent;
+import com.wizzstudio.substitute.enums.UrgentTypeEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.service.ScheduledService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +45,13 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     public void markTheOutOfTimeIndent() {
         for (Integer indentId : indentMap.keySet()) {
-            if (System.currentTimeMillis() - indentMap.get(indentId) > 900000) {
-                Indent indent = indentDao.findByIndentId(indentId);
-                indent.setIndentState(IndentStateEnum.OUT_OF_TIME);
+            Indent indent = indentDao.findByIndentId(indentId);
+            if (!indent.getIndentState().equals(IndentStateEnum.WAIT_FOR_PERFORMER)) {
+                indentMap.remove(indentId);
+                continue;
+            }
+            if (System.currentTimeMillis() - indentMap.get(indentId) > 3600000) {
+                indent.setUrgentType(UrgentTypeEnum.OVERTIME.getCode());
                 indentDao.save(indent);
                 indentMap.remove(indentId);
             }

@@ -353,6 +353,7 @@ public class IndentServiceImpl implements IndentService {
         //3、修改订单状态
         indent.setIndentState(IndentStateEnum.CANCELED);
         indentDao.save(indent);
+        scheduledService.removeIndentFromMap(indentId);
     }
 
 }
