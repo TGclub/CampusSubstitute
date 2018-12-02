@@ -48,6 +48,7 @@ public class ScheduledServiceImpl implements ScheduledService {
                 Indent indent = indentDao.findByIndentId(indentId);
                 indent.setIndentState(IndentStateEnum.OUT_OF_TIME);
                 indentDao.save(indent);
+                indentMap.remove(indentId);
             }
         }
     }
