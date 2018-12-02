@@ -146,6 +146,7 @@ public class AdminController {
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/coupon/viewAll")
     public ResponseEntity viewAllCoupon() {
+
         return ResultUtil.success(adminService.getAllCoupon());
     }
 

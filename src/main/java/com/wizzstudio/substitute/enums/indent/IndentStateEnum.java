@@ -23,5 +23,9 @@ public enum IndentStateEnum {
     /**
      * 订单取消，仅可在订单完成前取消订单
      */
-    CANCELED
+    CANCELED,
+    /**
+     * 订单取消
+     */
+    OUT_OF_TIME
 }

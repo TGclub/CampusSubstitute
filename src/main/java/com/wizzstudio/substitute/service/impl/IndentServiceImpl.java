@@ -12,10 +12,7 @@ import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.exception.CheckException;
 import com.wizzstudio.substitute.exception.SubstituteException;
-import com.wizzstudio.substitute.service.AddressService;
-import com.wizzstudio.substitute.service.IndentService;
-import com.wizzstudio.substitute.service.SchoolService;
-import com.wizzstudio.substitute.service.UserService;
+import com.wizzstudio.substitute.service.*;
 import com.wizzstudio.substitute.util.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -41,6 +38,8 @@ public class IndentServiceImpl implements IndentService {
     AddressService addressService;
     @Autowired
     SchoolService schoolService;
+    @Autowired
+    ScheduledServiceImpl scheduledService;
 
     /**
      * 将indent 封装为 indentVO
@@ -132,6 +131,7 @@ public class IndentServiceImpl implements IndentService {
         indent.setIndentState(IndentStateEnum.WAIT_FOR_PERFORMER);
         //将订单保存到数据库中
         indentDao.save(indent);
+        scheduledService.addIndent(indent.getIndentId());
     }
 
     @Override
@@ -258,6 +258,7 @@ public class IndentServiceImpl implements IndentService {
         indent.setPerformerId(userId);
         indent.setIndentState(IndentStateEnum.PERFORMING);
         indentDao.save(indent);
+        scheduledService.removeIndentFromMap(indentId);
     }
 
     @Override
