@@ -39,7 +39,7 @@ public class CouponInfo {
     @Column
     private Boolean isDeleted;
 
-    //生效时间
+    //validTime
     @Column
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date validTime;

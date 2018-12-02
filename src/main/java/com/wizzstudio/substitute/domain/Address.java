@@ -52,4 +52,7 @@ public class Address implements Serializable {
         this.address = address;
         this.userId = userId;
     }
+
+    public Address() {
+    }
 }
