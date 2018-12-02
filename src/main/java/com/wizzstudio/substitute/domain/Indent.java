@@ -32,6 +32,9 @@ public class Indent implements Serializable {
     @NotNull
     private String publisherId;
 
+    //优惠券ID,可能为空
+    private Integer couponId;
+
     //订单类型，帮我购：HELP_BUY，帮我递：HELP_SEND，随意帮：HELP_OTHER
     @Enumerated(EnumType.STRING)
     private IndentTypeEnum indentType;
@@ -46,7 +49,13 @@ public class Indent implements Serializable {
 
     //订单悬赏金
     @NotNull
-    private BigDecimal indentPrice;
+    private Integer indentPrice;
+
+    //订单优惠额，单位元，默认0元
+    private Integer couponPrice;
+
+    //实付金额,单位元
+    private Integer totalPrice;
 
     //加急类型，0:不加急，1:超时 2:退单
     //columnDefinition表示该字段在数据库中的实际类型。不使用的话，当ddl-auto设为validate会报错
@@ -70,7 +79,7 @@ public class Indent implements Serializable {
     private String secretText;
 
     //物品金额，仅订单类型为帮我购时非空
-    private BigDecimal goodPrice;
+    private Integer goodPrice;
 
     //创建时间
     @Column(updatable = false, insertable = false)

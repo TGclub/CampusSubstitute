@@ -29,11 +29,11 @@ public class CouponInfo {
 
     //最小满减金额，单位元
     @Column
-    private BigDecimal leastPrice;
+    private Integer leastPrice;
 
     //可减金额，单位元
     @Column
-    private BigDecimal reducePrice;
+    private Integer reducePrice;
 
     //是否删除，0：否，1：是,默认0
     @Column
