@@ -3,16 +3,20 @@ package com.wizzstudio.substitute.service.impl;
 import com.wizzstudio.substitute.dao.*;
 import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
+import com.wizzstudio.substitute.dto.CouponDTO;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -98,7 +102,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void addNewCoupon(CouponInfo coupon) {
+    public void addNewCoupon(CouponDTO newCoupon) throws IOException {
+        CouponInfo coupon = new CouponInfo();
+        coupon.setIsDeleted(false);
+        coupon.setReducePrice(newCoupon.getReducePrice());
+        coupon.setValidTime(new Date(newCoupon.getValidTime()));
+        coupon.setInvalidTime(new Date(newCoupon.getInvalidTime()));
+        coupon.setLeastPrice(newCoupon.getLeastPrice());
+        coupon.setPicture(newCoupon.getPicture().getBytes());
         couponInfoDao.save(coupon);
     }
 
@@ -126,6 +137,7 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 处理提现请求，按照一次提现全部提出处理。
+     *
      * @param id 用户id
      */
     @Override

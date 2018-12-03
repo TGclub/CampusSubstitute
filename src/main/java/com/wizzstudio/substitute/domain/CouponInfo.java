@@ -7,9 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -25,6 +23,7 @@ import java.util.Date;
 public class CouponInfo {
     //优惠券ID
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer couponId;
 
     //最小满减金额，单位元
@@ -52,8 +51,8 @@ public class CouponInfo {
     //优惠券图片
     //该注解必须要，不然ddl-auto为validate时会报错，说数据库的blob是LongBinary，而byte[]是binary，
     // columnDefinition表示该字段在数据库中的实际类型
-    @Column(columnDefinition = "BLOB")
-    private Byte[] picture;
+    @Column
+    private byte[] picture;
 
     public CouponInfo() {
     }

@@ -3,6 +3,7 @@ package com.wizzstudio.substitute.controller;
 import com.wizzstudio.substitute.domain.AdminInfo;
 import com.wizzstudio.substitute.domain.CouponInfo;
 import com.wizzstudio.substitute.domain.Indent;
+import com.wizzstudio.substitute.dto.CouponDTO;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.service.AdminService;
 import com.wizzstudio.substitute.util.ResultUtil;
@@ -14,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -152,7 +154,7 @@ public class AdminController {
 
     /**
      * 创建新的优惠券
-     * @param couponInfo 优惠券信息
+     * @param coupon 优惠券信息
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
     @ApiOperation("创建新的优惠券")
@@ -168,8 +170,8 @@ public class AdminController {
     })
     @Secured("ROLE_ADMIN_1")
     @PostMapping("/coupon/addNew")
-    public ResponseEntity newCoupon(@RequestBody CouponInfo couponInfo) {
-        adminService.addNewCoupon(couponInfo);
+    public ResponseEntity newCoupon(CouponDTO coupon) throws IOException {
+        adminService.addNewCoupon(coupon);
         return ResultUtil.success();
     }
 

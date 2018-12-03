@@ -2,8 +2,10 @@ package com.wizzstudio.substitute.service;
 
 import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
+import com.wizzstudio.substitute.dto.CouponDTO;
 import com.wizzstudio.substitute.enums.Role;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -71,7 +73,7 @@ public interface AdminService {
      * 添加新的优惠券
      * @param coupon 优惠券信息
      */
-    void addNewCoupon(CouponInfo coupon);
+    void addNewCoupon(CouponDTO coupon) throws IOException;
 
     /**
      * 删除优惠券
