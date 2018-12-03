@@ -1,15 +1,13 @@
 package com.wizzstudio.substitute.controller;
 
 import com.wizzstudio.substitute.domain.AdminInfo;
-import com.wizzstudio.substitute.domain.CouponInfo;
-import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.dto.CouponDTO;
+import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.service.AdminService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import io.swagger.annotations.*;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -21,12 +19,12 @@ import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
 
 /**
  * Created by Kikyou on 18-11-12
  */
-@Api(value = "后台管理接口", description = "分配权限，查看统计信息， 处理应急订单和优惠券等服务")
+@Api(value = "后台管理接口", description = "分配权限，查看统计信息， 处理应急订单和优惠券等服务, 不要看它自动生成的example，是错的，" +
+        "而且swagger这东西提供的自定义接口还不起作用，醉了。example以description里的为准，")
 @RestController
 @RequestMapping("/admin")
 @Secured("ROLE_ADMIN_2")
@@ -37,14 +35,15 @@ public class AdminController {
 
     /**
      * 分配权限接口
-     * @param id 被分配管理员id
+     *
+     * @param id        被分配管理员id
      * @param privilege 被分配权限
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
     @ApiOperation("授权接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="id", value = "被分配管理员id", dataType = "int"),
-            @ApiImplicitParam(name="privilege", value = "被分配权限", dataType = "string")
+            @ApiImplicitParam(name = "id", value = "被分配管理员id", dataType = "int"),
+            @ApiImplicitParam(name = "privilege", value = "被分配权限", dataType = "string")
     })
     @GetMapping("/privilege/allocation/{id}/{privilege}")
     @Secured("ROLE_ADMIN_1")
@@ -56,19 +55,20 @@ public class AdminController {
 
     /**
      * 创建新的管理员
-     * @param info 管理员信息
+     *
+     * @param info          管理员信息
      * @param bindingResult
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
     @ApiOperation("创建新的管理员")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "adminId", value = "管理员id"),
-            @ApiImplicitParam(name="adminName", value = "管理员姓名"),
-            @ApiImplicitParam(name="adminPass", value = "密码"),
-            @ApiImplicitParam(name="adminPhone", value = "电话"),
-            @ApiImplicitParam(name="adminRole", value = "权限"),
-            @ApiImplicitParam(name="adminSchoolId", value = "负责的学校id"),
-            @ApiImplicitParam(name="isBoss", value = "是否是负责人， true 是， false 不是")}
+            @ApiImplicitParam(name = "adminName", value = "管理员姓名"),
+            @ApiImplicitParam(name = "adminPass", value = "密码"),
+            @ApiImplicitParam(name = "adminPhone", value = "电话"),
+            @ApiImplicitParam(name = "adminRole", value = "权限"),
+            @ApiImplicitParam(name = "adminSchoolId", value = "负责的学校id"),
+            @ApiImplicitParam(name = "isBoss", value = "是否是负责人， true 是， false 不是")}
     )
     @Secured("ROLE_ADMIN_1")
     @PostMapping("/create")
@@ -80,6 +80,7 @@ public class AdminController {
 
     /**
      * 查询未被接单的订单列表
+     *
      * @param principal
      * @return 订单列表
      */
@@ -93,8 +94,9 @@ public class AdminController {
 
     /**
      * 查询日期范围闭区间的每日统计信息
+     *
      * @param from 起始日期
-     * @param to 结束日趋
+     * @param to   结束日趋
      * @return 统计信息列表
      */
     @ApiOperation("查询日期范围闭区间的每日统计信息")
@@ -104,23 +106,70 @@ public class AdminController {
     })
     @Secured("ROLE_ADMIN_1")
     @GetMapping("statistics/viewConcreteInfo/{from}/{to}")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明 返回示例：{\n" +
+                    "    \"code\": 0,\n" +
+                    "    \"msg\": \"请求成功\",\n" +
+                    "    \"data\": [\n" +
+                    "        {\n" +
+                    "            \"countId\": 6,\n" +
+                    "            \"schoolId\": 1,\n" +
+                    "            \"countDate\": 6,\n" +
+                    "            \"newIndent\": 3,\n" +
+                    "            \"finishedIndent\": 4,\n" +
+                    "            \"income\": 5,\n" +
+                    "            \"loginUser\": 9\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}")
+    })
     public ResponseEntity viewConcreteInfo(@PathVariable Integer from, @PathVariable Integer to) {
         return ResultUtil.success(adminService.getConcreteCountInfo(from, to));
     }
 
     /**
      * 查询所有的紧急订单
+     *
      * @return 紧急订单列表
      */
-    @ApiOperation("查询所有的紧急订单")
+    @ApiOperation("查询所有未处理的紧急订单")
+    @ApiResponses({
+    @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明 返回示例：{\n" +
+            "    \"code\": 0,\n" +
+            "    \"msg\": \"请求成功\",\n" +
+            "    \"data\": [\n" +
+            "        {\n" +
+            "            \"indentId\": 5,\n" +
+            "            \"performerId\": null,\n" +
+            "            \"publisherId\": \"EEETEE\",\n" +
+            "            \"couponId\": null,\n" +
+            "            \"indentType\": \"HELP_SEND\",\n" +
+            "            \"requireGender\": \"NO_LIMITED\",\n" +
+            "            \"indentContent\": \"我在呢\",\n" +
+            "            \"indentPrice\": 5,\n" +
+            "            \"couponPrice\": 0,\n" +
+            "            \"totalPrice\": 0,\n" +
+            "            \"urgentType\": 1,\n" +
+            "            \"isSolved\": false,\n" +
+            "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
+            "            \"takeGoodAddress\": \"1\",\n" +
+            "            \"shippingAddressId\": 2,\n" +
+            "            \"secretText\": null,\n" +
+            "            \"goodPrice\": null,\n" +
+            "            \"createTime\": 1543373249000,\n" +
+            "            \"updateTime\": 1543816188000\n" +
+            "        }" +
+            "]" +
+            "}")})
     @Secured("ROLE_ADMIN_1")
-    @GetMapping("/urgent/indent")
+    @GetMapping("/urgent/indent/unhandled")
     public ResponseEntity viewUrgentIndent() {
         return ResultUtil.success(adminService.getUnHandledUrgentIndents());
     }
 
     /**
      * 处理紧急订单
+     *
      * @param id 订单id
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
@@ -135,10 +184,39 @@ public class AdminController {
 
     /**
      * 查询已处理的紧急订单
+     *
      * @return 已处理紧急订单列表
      */
     @ApiOperation("查询已处理的紧急订单")
     @Secured("ROLE_ADMIN_1")
+    @ApiResponses({
+    @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明 返回示例：{\n" +
+            "    \"code\": 0,\n" +
+            "    \"msg\": \"请求成功\",\n" +
+            "    \"data\": [\n" +
+            "        {\n" +
+            "            \"indentId\": 5,\n" +
+            "            \"performerId\": null,\n" +
+            "            \"publisherId\": \"EEETEE\",\n" +
+            "            \"couponId\": null,\n" +
+            "            \"indentType\": \"HELP_SEND\",\n" +
+            "            \"requireGender\": \"NO_LIMITED\",\n" +
+            "            \"indentContent\": \"我在呢\",\n" +
+            "            \"indentPrice\": 5,\n" +
+            "            \"couponPrice\": 0,\n" +
+            "            \"totalPrice\": 0,\n" +
+            "            \"urgentType\": 1,\n" +
+            "            \"isSolved\": true,\n" +
+            "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
+            "            \"takeGoodAddress\": \"1\",\n" +
+            "            \"shippingAddressId\": 2,\n" +
+            "            \"secretText\": null,\n" +
+            "            \"goodPrice\": null,\n" +
+            "            \"createTime\": 1543373249000,\n" +
+            "            \"updateTime\": 1543816188000\n" +
+            "        }" +
+            "]" +
+            "}")})
     @GetMapping("/urgent/indent/handled")
     public ResponseEntity viewHandledUrgentIndent() {
         return ResultUtil.success(adminService.getHandledUrgentIndents());
@@ -146,9 +224,26 @@ public class AdminController {
 
     /**
      * 查询所有的优惠券信息
+     *
      * @return 优惠券列表
      */
     @ApiOperation("查询所有的优惠券信息")
+    @ApiResponses({
+    @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明 返回示例：{\n" +
+            "    \"code\": 0,\n" +
+            "    \"msg\": \"请求成功\",\n" +
+            "    \"data\": [\n" +
+            "        {\n" +
+            "            \"couponId\": 3,\n" +
+            "            \"leastPrice\": 1,\n" +
+            "            \"reducePrice\": 2,\n" +
+            "            \"isDeleted\": false,\n" +
+            "            \"validTime\": 1543806535000,\n" +
+            "            \"invalidTime\": 1543806535000\n" +
+            "        }\n" +
+            "    ]\n" +
+            "}" +
+            "图片需额外向/coupon/img/{id}发起请求")})
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/coupon/viewAll")
     public ResponseEntity viewAllCoupon() {
@@ -158,19 +253,20 @@ public class AdminController {
 
     /**
      * 创建新的优惠券
+     *
      * @param coupon 优惠券信息
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
-    @ApiOperation("创建新的优惠券")
+    @ApiOperation("创建新的优惠券， 以form data的形式发送请求")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "couponId", value = "优惠券ID"),
             @ApiImplicitParam(name = "leastPrice", value = "最小满减金额，单位元"),
             @ApiImplicitParam(name = "reducePrice", value = "可减金额，单位元"),
-            @ApiImplicitParam(name = "isDeleted", value = "是否删除，0：否，1：是,默认0"),
-            @ApiImplicitParam(name = "isDeleted", value = "是否删除，0：否，1：是,默认0"),
-            @ApiImplicitParam(name = "validTime", value = "validTime"),
+            @ApiImplicitParam(name = "validTime", value = "validTime, 使用unix时间精确到ms"),
             @ApiImplicitParam(name = "invalidTime", value = "失效时间"),
             @ApiImplicitParam(name = "picture", value = "优惠券图片")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明", response = ResultDTO.class)
     })
     @Secured("ROLE_ADMIN_1")
     @PostMapping("/coupon/addNew")
@@ -179,22 +275,33 @@ public class AdminController {
         return ResultUtil.success();
     }
 
+    @ApiOperation("返回指定优惠券的图片， 例如")
+    @ApiImplicitParam(name = "id", value = "指定优惠券id", example = "localhost:2333/admin/coupon/img/3")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "200请求成功，返回二进制图片")
+
+
+    })
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/coupon/img/{id}")
-    public void getImg(@PathVariable int id, HttpServletResponse response) throws IOException{
+    public void getImg(@PathVariable int id, HttpServletResponse response) throws IOException {
         IOUtils.copy(new ByteArrayInputStream(adminService.getSpecificCoupon(id).getPicture()),
                 response.getOutputStream());
     }
 
     /**
      * 删除指定优惠券
+     *
      * @param id 被删优惠券id
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
     @ApiOperation("删除指定优惠券")
-    @ApiImplicitParam(name = "id", value = "被删优惠券id")
+    @ApiImplicitParam(name = "id", value = "被删优惠券id", example = "localhost:2333/admin/coupon/delete/1")
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/coupon/delete/{id}")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明", response = ResultDTO.class)
+    })
     public ResponseEntity deleteCoupon(@PathVariable int id) {
         adminService.deleteCoupon(id);
         return ResultUtil.success();
@@ -203,28 +310,88 @@ public class AdminController {
 
     /**
      * 查询未处理的提现请求
+     *
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
-    @ApiOperation("查询未处理的提现请求")
+    @ApiOperation("查询所有未处理的提现请求")
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/withdrawDeposit/viewUnHandled")
+    @ApiResponses({
+    @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明, 返回示例：{\n" +
+            "    \"code\": 0,\n" +
+            "    \"msg\": \"请求成功\",\n" +
+            "    \"data\": [\n" +
+            "        {\n" +
+            "            \"withdrawId\": 3,\n" +
+            "            \"userId\": \"wef\",\n" +
+            "            \"isSolved\": false,\n" +
+            "            \"createTime\": 1543298968000\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"withdrawId\": 4,\n" +
+            "            \"userId\": \"wef\",\n" +
+            "            \"isSolved\": false,\n" +
+            "            \"createTime\": 1543298974000\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"withdrawId\": 5,\n" +
+            "            \"userId\": \"wef\",\n" +
+            "            \"isSolved\": false,\n" +
+            "            \"createTime\": 1543298975000\n" +
+            "        }\n" +
+            "    ]\n" +
+            "}")})
+
     public ResponseEntity viewUnHandledWithDraw() {
         return ResultUtil.success(adminService.viewAllWithDrawRequestByStatus(false));
     }
 
     /**
      * 查询已处理的提现请求
+     *
      * @return 已处理提现请求列表
      */
     @ApiOperation("查询已处理的提现请求")
     @Secured("ROLE_ADMIN_1")
-    @GetMapping("/withdrawDeposit/viewHandled")
+    @GetMapping("/withdrawDeposit/viewHandled")@ApiResponses({
+    @ApiResponse(code = 200, message = "返回示例：" +
+            "{\n" +
+            "    \"code\": 0,\n" +
+            "    \"msg\": \"请求成功\",\n" +
+            "    \"data\": [\n" +
+            "        {\n" +
+            "            \"withdrawId\": 6,\n" +
+            "            \"userId\": \"EEETEE\",\n" +
+            "            \"isSolved\": true,\n" +
+            "            \"createTime\": 1543299099000\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"withdrawId\": 7,\n" +
+            "            \"userId\": \"EEETEE\",\n" +
+            "            \"isSolved\": true,\n" +
+            "            \"createTime\": 1543299099000\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"withdrawId\": 8,\n" +
+            "            \"userId\": \"EEETEE\",\n" +
+            "            \"isSolved\": true,\n" +
+            "            \"createTime\": 1543299101000\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"withdrawId\": 9,\n" +
+            "            \"userId\": \"EEETEE\",\n" +
+            "            \"isSolved\": true,\n" +
+            "            \"createTime\": 1543299101000\n" +
+            "        }\n" +
+            "    ]\n" +
+            "}")})
     public ResponseEntity viewHandledWithDraw() {
         return ResultUtil.success(adminService.viewAllWithDrawRequestByStatus(true));
     }
 
     /**
      * 将指定用户的余额清零
+     *
      * @param userId
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
@@ -239,31 +406,63 @@ public class AdminController {
 
     /**
      * 查询所有未处理的反馈信息
+     *
      * @return 未处理反馈信息列表
      */
     @ApiOperation("查询所有未处理的反馈信息")
     @GetMapping("/feedback/viewUnHandled")
+    @ApiResponse(code = 200, message = "返回示例：" +
+            "{\n" +
+            "    \"code\": 0,\n" +
+            "    \"msg\": \"请求成功\",\n" +
+            "    \"data\": [\n" +
+            "        {\n" +
+            "            \"feedbackId\": 2,\n" +
+            "            \"content\": \"fwe\",\n" +
+            "            \"userId\": \"1\",\n" +
+            "            \"isRead\": false,\n" +
+            "            \"createTime\": 1543298864000\n" +
+            "        }\n" +
+            "    ]\n" +
+            "}")
     public ResponseEntity viewAllUnHandledFeedBack() {
         return ResultUtil.success(adminService.getUnHandledFeedBack());
     }
 
     /**
      * 查询所有已处理的反馈信息
+     *
      * @return 已处理的反馈信息列表
      */
     @ApiOperation("查询所有已处理的反馈信息")
     @GetMapping("/feedback/viewHandled")
+    @ApiResponses({
+    @ApiResponse(code = 200, message = "返回示例：" +
+            "{\n" +
+            "    \"code\": 0,\n" +
+            "    \"msg\": \"请求成功\",\n" +
+            "    \"data\": [\n" +
+            "        {\n" +
+            "            \"feedbackId\": 1,\n" +
+            "            \"content\": \"fwe\",\n" +
+            "            \"userId\": \"1\",\n" +
+            "            \"isRead\": true,\n" +
+            "            \"createTime\": 1543298792000\n" +
+            "        }\n" +
+            "    ]\n" +
+            "}")})
     public ResponseEntity viewAllHandledFeedBack() {
         return ResultUtil.success(adminService.getHandledFeedBack());
     }
 
     /**
      * 处理指定反馈信息
+     *
      * @param id 反馈信息id
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
     @ApiOperation("处理指定反馈信息")
-    @ApiParam(name = "id",value = "反馈信息id")
+    @ApiParam(name = "id", value = "反馈信息id")
     @GetMapping("/feedback/handle/{id}")
     public ResponseEntity handledFeedBack(@PathVariable int id) {
         adminService.handleFeedBack(id);
@@ -272,6 +471,7 @@ public class AdminController {
 
     /**
      * 删除二级管理员
+     *
      * @param id 被删二级管理员id
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
@@ -286,6 +486,7 @@ public class AdminController {
 
     /**
      * 将二级管理员设为地区负责人
+     *
      * @param id 二级管理员id
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
@@ -300,7 +501,8 @@ public class AdminController {
 
     /**
      * 更改二级管理员负责学校
-     * @param id 管理员id
+     *
+     * @param id       管理员id
      * @param schoolId 学校id
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */

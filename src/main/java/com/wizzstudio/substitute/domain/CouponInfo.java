@@ -1,5 +1,6 @@
 package com.wizzstudio.substitute.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.util.serializer.Date2LongSerializer;
 import lombok.AllArgsConstructor;
@@ -52,6 +53,7 @@ public class CouponInfo {
     //该注解必须要，不然ddl-auto为validate时会报错，说数据库的blob是LongBinary，而byte[]是binary，
     // columnDefinition表示该字段在数据库中的实际类型
     @Column
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private byte[] picture;
 
     public CouponInfo() {

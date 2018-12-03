@@ -15,7 +15,6 @@ import java.util.Date;
 @Data
 public class CouponDTO implements Serializable
 {
-    private Integer couponId;
 
     //最小满减金额，单位元
     private Integer leastPrice;
