@@ -8,13 +8,17 @@ import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.service.AdminService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import io.swagger.annotations.*;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
@@ -173,6 +177,13 @@ public class AdminController {
     public ResponseEntity newCoupon(CouponDTO coupon) throws IOException {
         adminService.addNewCoupon(coupon);
         return ResultUtil.success();
+    }
+
+    @Secured("ROLE_ADMIN_1")
+    @GetMapping("/coupon/img/{id}")
+    public void getImg(@PathVariable int id, HttpServletResponse response) throws IOException{
+        IOUtils.copy(new ByteArrayInputStream(adminService.getSpecificCoupon(id).getPicture()),
+                response.getOutputStream());
     }
 
     /**

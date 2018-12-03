@@ -88,9 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/indent/**")
-                .hasAuthority("ROLE_USER")
-                .antMatchers("/admin/**")
-                .permitAll();
+                .hasAuthority("ROLE_USER");
         http
                 .logout()
                 .logoutUrl("/logout");

@@ -82,6 +82,11 @@ public class AdminServiceImpl implements AdminService {
         return indentDao.findAllByIndentStateOrderByCreateTimeDesc(IndentStateEnum.WAIT_FOR_PERFORMER);
     }
 
+    @Override
+    public CouponInfo getSpecificCoupon(int id) {
+        return couponInfoDao.findByCouponId(id);
+    }
+
     public AdminServiceImpl() {
         super();
     }

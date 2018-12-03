@@ -147,5 +147,7 @@ public interface AdminService {
      */
     List<WithdrawRequest> viewAllWithDrawRequestByStatus(boolean status);
 
+    CouponInfo getSpecificCoupon(int id);
+
 
 }
