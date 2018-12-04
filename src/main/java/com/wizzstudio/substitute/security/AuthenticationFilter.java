@@ -30,6 +30,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
     private CustomAdminDetailsService adminDetailsService;
+
     private RedisUtil util;
 
     public AuthenticationFilter(UserDetailsService userDetailsService, CustomAdminDetailsService adminDetailsService, RedisUtil util) {

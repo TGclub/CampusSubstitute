@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class UserController extends BaseController {
      * @return
      */
     @GetMapping(value = "/{userId}")
-    public ResponseEntity getUseInfo(@PathVariable String userId) {
+    public ResponseEntity getUseInfo(@PathVariable String userId, Principal principal) {
         User user = userService.findUserById(userId);
 
         if (user != null) {
