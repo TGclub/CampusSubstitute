@@ -3,13 +3,10 @@ package com.wizzstudio.substitute.service.impl;
 import com.wizzstudio.substitute.VO.IndentVO;
 import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dao.IndentDao;
-import com.wizzstudio.substitute.domain.Address;
-import com.wizzstudio.substitute.domain.School;
-import com.wizzstudio.substitute.domain.User;
+import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.enums.indent.IndentSortTypeEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
-import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.exception.CheckException;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.service.*;
@@ -22,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -40,18 +38,22 @@ public class IndentServiceImpl implements IndentService {
     SchoolService schoolService;
     @Autowired
     ScheduledServiceImpl scheduledService;
+    @Autowired
+    CouponRecordService couponRecordService;
+    @Autowired
+    CouponInfoService couponInfoService;
 
     /**
      * 将indent 封装为 indentVO
      */
-    private IndentVO indent2VO(Indent indent) throws CheckException {
+    public IndentVO indent2VO(Indent indent) throws CheckException {
         IndentVO indentVO = new IndentVO();
         BeanUtils.copyProperties(indent,indentVO);
         Address shipping = addressService.getById(indent.getShippingAddressId());
-        //检验地址信息是否有效,并进行拼装
-        if (shipping == null){
-            log.error("[获取订单信息]shippingAddressId不存在，indent={}", indent);
-            throw new CheckException("订单信息有误，取货地址信息有误");
+        //检验地址信息是否有效(1、是否存在地址信息，2、该地址信息是否属于该用户),并进行拼装
+        if (shipping == null || !shipping.getUserId().equals(indent.getPublisherId())){
+            log.error("[获取订单信息]送达地址信息有误，indent={}，shipping={}", indent, shipping);
+            throw new CheckException("订单信息有误，送达地址信息有误");
         }else {
             indentVO.setShippingAddress(shipping.getAddress());
             indentVO.setPublisherName(shipping.getUserName());
@@ -110,23 +112,55 @@ public class IndentServiceImpl implements IndentService {
      */
     @Override
     public void create(Indent indent) {
+        //1.验证参数是否有效
+        //1.1验证下单用户id是否存在
         User user = userService.findUserById(indent.getPublisherId());
         if (user == null){
-            //若用户id有误
             log.error("[创建订单]创建失败，下单用户不存在，publisherId={},indent={}", indent.getPublisherId(),indent);
             throw new SubstituteException("下单用户不存在，publisherId有误");
         }
-        Integer indentPrice = indent.getIndentPrice();
+        //1.2检验用户填入的shippingId是否存在，是否属于该用户
+        Address shipping = addressService.getById(indent.getShippingAddressId());
+        if (shipping == null || !shipping.getUserId().equals(indent.getPublisherId())) {
+            log.error("[创建订单]创建失败，送达地址信息有误，indent={}，shipping={}", indent, shipping);
+            throw new SubstituteException("订单信息有误，送达地址信息有误");
+        }
+        //1.3验证是否使用了优惠券，
+        //若使用，验证优惠券id是否有效、该用户是否领取该优惠券、该优惠券是否处于有效期、该订单是否达到最低满减额
+        indent.setCouponPrice(0);
+        if (indent.getCouponId() != null){
+            //若用户选择了优惠券
+            CouponRecord couponRecord = couponRecordService.findByOwnerAndCouponId(indent.getPublisherId(),indent.getCouponId());
+            if (couponRecord == null || couponRecord.getIsUsed() || couponRecord.getInvalidTime().before(new Date())){
+                //若该优惠券已使用、已过期、未领取
+                log.error("[创建订单]创建失败，优惠券已失效，couponId={},indent={}", indent.getCouponId(),indent);
+                throw new SubstituteException("优惠券已失效");
+            }
+            //获取优惠券信息
+            CouponInfo couponInfo = couponInfoService.findById(indent.getCouponId());
+            if (indent.getIndentPrice() < couponInfo.getLeastPrice()){
+                //若订单赏金小于最小可满减金额
+                log.error("[创建订单]创建失败，优惠券不可用，couponInfo={},indent={}", couponInfo,indent);
+                throw new SubstituteException("优惠券不可用");
+            }
+            indent.setCouponPrice(couponInfo.getReducePrice());
+            //将优惠券领取信息设置为已使用
+            couponRecord.setIsUsed(true);
+            couponRecordService.save(couponRecord);
+        }
+        //1.4 验证用户余额是否足够支付，若足够扣钱
+        int totalPrice = indent.getIndentPrice() - indent.getCouponPrice();
         BigDecimal userBalance = user.getBalance();
-        if (userBalance.compareTo(BigDecimal.valueOf(indentPrice)) < 0) {
+        if (userBalance.compareTo(BigDecimal.valueOf(totalPrice)) < 0) {
             //若用户余额不足支付订单
             log.error("[创建订单]创建失败，用户余额不足，userOpenid={},userBalance={},indentPrice={}", user.getOpenid(),
-                    userBalance, indentPrice);
+                    userBalance, totalPrice);
             throw new SubstituteException("用户余额不足");
         }
         //扣钱
-        user.setBalance(userBalance.subtract(BigDecimal.valueOf(indentPrice)));
+        user.setBalance(userBalance.subtract(BigDecimal.valueOf(totalPrice)));
         userService.saveUser(user);
+        indent.setTotalPrice(totalPrice);
         //设置订单状态
         indent.setIndentState(IndentStateEnum.WAIT_FOR_PERFORMER);
         //将订单保存到数据库中
@@ -348,11 +382,13 @@ public class IndentServiceImpl implements IndentService {
         }
         //2、退钱
         User user = userService.findUserById(indent.getPublisherId());
-        user.setBalance(user.getBalance().add(BigDecimal.valueOf(indent.getIndentPrice())));
+        //注意是退实付金额，而不是订单悬赏金，因为可能有优惠券
+        user.setBalance(user.getBalance().add(BigDecimal.valueOf(indent.getTotalPrice())));
         userService.saveUser(user);
         //3、修改订单状态
         indent.setIndentState(IndentStateEnum.CANCELED);
         indentDao.save(indent);
+        //4.从订单监控列表中删除
         scheduledService.removeIndentFromMap(indentId);
     }
 

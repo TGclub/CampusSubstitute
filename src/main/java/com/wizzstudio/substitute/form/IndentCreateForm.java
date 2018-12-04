@@ -22,13 +22,9 @@ public class IndentCreateForm {
     @NotBlank(message = "需求性别不能为空")
     private String requireGender;
 
-    //下单用户openid
+    //下单用户id
     @NotNull(message = "下单用户Id不能为空")
     private String publisherId;
-
-    //联系电话
-    @NotNull(message = "用户联系电话不能为空")
-    private Long publisherPhone;
 
     //订单内容
     @NotBlank(message = "订单内容不能为空")
@@ -36,13 +32,10 @@ public class IndentCreateForm {
 
     //订单悬赏金
     @NotNull(message = "订单悬赏金不能为空")
-    private BigDecimal indentPrice;
+    private Integer indentPrice;
 
-    //联系人姓名，订单类型非随意帮时必填
-    private String publisherName;
-
-    //取货地址ID，订单类型非随意帮时必填
-    private Integer takeGoodAddressId;
+    //取货地址，订单类型非随意帮时必填
+    private String takeGoodAddress;
 
     //送达地址ID，订单类型为帮我递时必填
     private Integer shippingAddressId;
@@ -50,9 +43,9 @@ public class IndentCreateForm {
     //物品金额，订单类型为帮我购时必填
     private BigDecimal goodPrice;
 
-    //快递公司名，订单类型为帮我递时可填
-    private String companyName;
+    //隐私消息，订单类型为帮我递时可填
+    private String secretText;
 
-    //取件码，订单类型为帮我递时可填
-    private String pickupCode;
+    //优惠券ID,可能为空
+    private Integer couponId;
 }

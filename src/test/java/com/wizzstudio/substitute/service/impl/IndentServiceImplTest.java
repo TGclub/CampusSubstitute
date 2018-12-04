@@ -1,11 +1,14 @@
 package com.wizzstudio.substitute.service.impl;
 
+import com.wizzstudio.substitute.dao.IndentDao;
 import com.wizzstudio.substitute.domain.Indent;
+import com.wizzstudio.substitute.exception.CheckException;
 import com.wizzstudio.substitute.service.IndentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
@@ -25,6 +28,10 @@ public class IndentServiceImplTest {
 
     @Autowired
     IndentService indentService;
+    @Autowired
+    IndentDao indentDao;
+    @Autowired
+    IndentServiceImpl indentServiceImpl;
 
     @Test
     public void publishedNewIndent() {
@@ -41,8 +48,10 @@ public class IndentServiceImplTest {
     public void getIndentInFuzzyMatching() {
     }
 
+    @Rollback(false)
     @Test
-    public void getUserPublishedIndent() {
+    public void Indent2VO() {
+        System.out.println(indentService.getIndentDetail(6,"8"));
     }
 
     @Test

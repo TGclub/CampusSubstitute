@@ -175,7 +175,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    @Cacheable(cacheNames = "user", key = "#id", unless = "#result==null")
+    //@Cacheable(cacheNames = "user", key = "#id", unless = "#result==null")
     public User findUserById(String id) {
         return userDao.findUserById(id);
     }

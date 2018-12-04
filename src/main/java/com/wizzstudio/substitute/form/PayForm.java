@@ -15,7 +15,7 @@ public class PayForm {
     //用户id
     @NotBlank(message = "用户id不能为空")
     private String userId;
-    //支付金额,单位：元
-    @NotNull(message = "支付金额不能为空")
+    //充值金额,单位：元
+    @NotNull(message = "充值金额不能为空")
     private BigDecimal totalFee;
 }

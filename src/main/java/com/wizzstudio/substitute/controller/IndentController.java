@@ -35,6 +35,7 @@ public class IndentController {
 
     /**
      * 验证订单 非必填参数 是否合法
+     * 这里验证的是必填参数是否已填，填写格式是否正确，service层验证的是参数对应的数据是否存在，是否属于该用户
      */
     private void checkIndentCreateForm(IndentCreateForm indentCreateForm) {
         List<Object> checkObjs = new ArrayList<>();
@@ -51,16 +52,12 @@ public class IndentController {
                     ResultEnum.PARAM_ERROR.getCode());
         } else if (indentCreateForm.getIndentType().equals(IndentTypeEnum.HELP_BUY.toString())) {
             //如果是帮我购,以下字段必填
-            checkObjs.add(indentCreateForm.getPublisherName());
-            checkObjs.add(indentCreateForm.getTakeGoodAddressId());
+            checkObjs.add(indentCreateForm.getShippingAddressId());
             checkObjs.add(indentCreateForm.getGoodPrice());
         } else if (indentCreateForm.getIndentType().equals(IndentTypeEnum.HELP_SEND.toString())) {
             //如果是帮我递,以下字段必填
-            checkObjs.add(indentCreateForm.getPublisherName());
-            checkObjs.add(indentCreateForm.getTakeGoodAddressId());
+            checkObjs.add(indentCreateForm.getTakeGoodAddress());
             checkObjs.add(indentCreateForm.getShippingAddressId());
-            checkObjs.add(indentCreateForm.getCompanyName());
-            checkObjs.add(indentCreateForm.getPickupCode());
         }
         //如果是随意帮,所有非必填字段都可不填
         //验证必填参数是否已填
@@ -206,7 +203,8 @@ public class IndentController {
 
 
     /**
-     * 获取订单详情，若请求用户不是下单人 或 接单人，则隐藏公司信息 和 取件码
+     * 获取订单详情，若请求用户不是下单人 或 接单人，则隐藏私密信息
+     * todo 这个方法执行完以后会像个神经病一样给我update一下indent
      */
     @GetMapping(value = "/detail/{indentId}/{userId}")
     public ResponseEntity getIndentInfo(@PathVariable Integer indentId, @PathVariable String userId) {

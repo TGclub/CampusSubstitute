@@ -38,7 +38,7 @@ public class IndentVO {
     private String indentContent;
 
     //订单悬赏金
-    private BigDecimal indentPrice;
+    private Integer indentPrice;
 
     //加急类型，0:不加急，1:超时 2:退单
     private Integer urgentType;
@@ -55,11 +55,8 @@ public class IndentVO {
     //联系人姓名,不能用publisherId查，因为可能不同，订单类型非随意帮时必填
     private String publisherName;
 
-    //快递公司名，仅订单类型为帮我递时非空
-    private String companyName;
-
-    //取货码，仅订单类型为帮我递时非空
-    private String pickupCode;
+    //隐私信息，仅订单类型为帮我递时非空
+    private String secretText;
 
     //物品金额，仅订单类型为帮我购时非空
     private BigDecimal goodPrice;
