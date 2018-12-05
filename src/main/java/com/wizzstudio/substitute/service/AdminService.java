@@ -127,6 +127,11 @@ public interface AdminService {
     void modifyIsBossAttribute(int secondAdminId, boolean isBoss);
 
     /**
+     * 通过学校id，获取该学校的负责人信息
+     */
+    List<AdminInfo> findAllBossBySchoolId(int schoolId);
+
+    /**
      * 删除二级管理员
      * @param adminId 被删管理员id
      */

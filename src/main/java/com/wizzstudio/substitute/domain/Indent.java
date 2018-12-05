@@ -79,7 +79,7 @@ public class Indent implements Serializable {
     private String secretText;
 
     //物品金额，仅订单类型为帮我购时非空
-    private Integer goodPrice;
+    private BigDecimal goodPrice;
 
     //创建时间
     @Column(updatable = false, insertable = false)

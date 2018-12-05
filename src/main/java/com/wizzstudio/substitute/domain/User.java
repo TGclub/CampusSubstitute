@@ -46,7 +46,7 @@ public class User implements Serializable {
     @NotNull
     private String avatar;
 
-    //学校
+    //学校Id
     private Integer schoolId;
 
     //用户性别，男：”MALE”,女：”FEMALE”,未知：”NO_LIMITED”

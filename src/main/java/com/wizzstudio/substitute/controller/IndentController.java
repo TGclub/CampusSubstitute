@@ -112,7 +112,7 @@ public class IndentController {
     /**
      * 用户接单接口
      */
-    @PostMapping("/take/indent")
+    @PostMapping("/take")
     public ResponseEntity takeIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             //表单校验有误
@@ -128,7 +128,7 @@ public class IndentController {
     /**
      * 接单人送达接口
      */
-    @PostMapping("/arrived/indent")
+    @PostMapping("/arrived")
     public ResponseEntity arrivedIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             //表单校验有误
@@ -144,7 +144,7 @@ public class IndentController {
     /**
      * 下单人完结订单 ： 开始进行分钱
      */
-    @PostMapping("/finished/indent")
+    @PostMapping("/finished")
     public ResponseEntity finishedIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             //表单校验有误
@@ -160,7 +160,7 @@ public class IndentController {
     /**
      * 下单人取消订单 ： 退钱
      */
-    @DeleteMapping("/canceled/indent")
+    @DeleteMapping("/canceled")
     public ResponseEntity canceledIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             //表单校验有误

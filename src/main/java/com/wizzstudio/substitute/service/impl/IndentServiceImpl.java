@@ -5,6 +5,7 @@ import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dao.IndentDao;
 import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.enums.GenderEnum;
+import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.enums.indent.IndentSortTypeEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.exception.CheckException;
@@ -70,6 +71,7 @@ public class IndentServiceImpl implements IndentService {
             log.error("[获取订单信息]publisherSchoolId不存在，indent={},\npublisher={}", indent, publisher);
             throw new CheckException("下单用户信息有误，请完善学校信息");
         }else {
+            indentVO.setPublisherSchoolId(publisherSchool.getId());
             indentVO.setPublisherSchool(publisherSchool.getSchoolName());
         }
         indentVO.setPublisherGender(publisher.getGender());
@@ -87,6 +89,7 @@ public class IndentServiceImpl implements IndentService {
                 log.error("[获取订单信息]performerSchoolId不存在，indent={},\nperformer={}", indent, performer);
                 throw new CheckException("接单用户信息有误，请完善学校信息");
             }else {
+                indentVO.setPerformerSchoolId(performerSchool.getId());
                 indentVO.setPerformerSchool(performerSchool.getSchoolName());
             }
             indentVO.setPerformerGender(performer.getGender());
@@ -233,7 +236,7 @@ public class IndentServiceImpl implements IndentService {
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
             log.error("【获取订单详情】获取订单详情失败，订单id不存在，indentId={}", indentId);
-            throw new SubstituteException("获取订单详情失败，订单id不存在");
+            throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
         }
         if (!userId.equals(indent.getPerformerId()) && !userId.equals(indent.getPublisherId())) {
             //如果查询用户不是送货人 或 下单人 则将隐私信息置空
@@ -252,7 +255,7 @@ public class IndentServiceImpl implements IndentService {
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
             log.error("【增加赏金】增加赏金失败，订单id不存在，indentId={}", indentId);
-            throw new SubstituteException("增加赏金失败，订单id不存在");
+            throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
         }
         if (!indent.getPublisherId().equals(userId)) {
             //若不是下单人请求接口
@@ -269,6 +272,7 @@ public class IndentServiceImpl implements IndentService {
         userService.reduceBalance(userId, new BigDecimal(1));
         //增加订单悬赏金
         indent.setIndentPrice(indent.getIndentPrice() + 1);
+        indent.setTotalPrice(indent.getTotalPrice() + 1);
         indentDao.save(indent);
     }
 
@@ -282,17 +286,18 @@ public class IndentServiceImpl implements IndentService {
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
             log.error("【接单】接单失败，订单id不存在，indentId={}", indentId);
-            throw new SubstituteException("接单失败，订单id不存在");
+            throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
         }
         if (indent.getPerformerId() != null || indent.getIndentState() != IndentStateEnum.WAIT_FOR_PERFORMER){
             log.error("【接单】接单失败，该订单状态有误，indent={}", indent);
-            throw new SubstituteException("接单失败，该订单状态有误");
+            throw new SubstituteException(ResultEnum.INDENT_STATE_ERROR);
         }
         //用户接单
         indent.setPerformerId(userId);
         indent.setIndentState(IndentStateEnum.PERFORMING);
         indentDao.save(indent);
         scheduledService.removeIndentFromMap(indentId);
+        //todo 发模板消息
     }
 
     @Override
@@ -300,7 +305,7 @@ public class IndentServiceImpl implements IndentService {
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
             log.error("【送达订单】送达订单失败，订单id不存在，indentId={}", indentId);
-            throw new SubstituteException("送达订单失败，订单id不存在");
+            throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
         }
         if (indent.getPerformerId() == null || indent.getIndentState() != IndentStateEnum.PERFORMING){
             log.error("【送达订单】送达订单失败，订单信息有误，indent={}", indent);
@@ -313,6 +318,7 @@ public class IndentServiceImpl implements IndentService {
         //该订单已送达
         indent.setIndentState(IndentStateEnum.ARRIVED);
         indentDao.save(indent);
+        //todo 发模板消息
     }
 
     @Override
@@ -321,11 +327,11 @@ public class IndentServiceImpl implements IndentService {
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
             log.error("【完结订单】完结订单失败，订单id不存在，indentId={}", indentId);
-            throw new SubstituteException("完结订单失败，订单id不存在");
+            throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
         }
         if (indent.getIndentState() == IndentStateEnum.CANCELED){
             log.error("【完结订单】完结订单失败，订单已取消，indent={}", indent);
-            throw new SubstituteException("完结订单失败，订单已取消");
+            throw new SubstituteException(ResultEnum.INDENT_STATE_ERROR);
         }
         if (!userId.equals(indent.getPublisherId())){
             log.error("【完结订单】完结订单失败，该用户非下单人，userId={}，indent={}", userId,indent);
@@ -334,7 +340,7 @@ public class IndentServiceImpl implements IndentService {
         User performer = userService.findUserById(indent.getPerformerId());
         if (performer == null){
             log.error("【完结订单】完结订单失败，该订单未被接，indent={}", userId,indent);
-            throw new SubstituteException("完结订单失败，该订单未被接");
+            throw new SubstituteException(ResultEnum.INDENT_STATE_ERROR);
         }
         //2、开始分钱
         //注意：这里不能使用new BigDecimal(double)的方法构造，会有精度缺失
@@ -362,6 +368,7 @@ public class IndentServiceImpl implements IndentService {
         //3、保存订单
         indent.setIndentState(IndentStateEnum.COMPLETED);
         indentDao.save(indent);
+        //todo 发模板消息
     }
 
     @Override
@@ -370,11 +377,11 @@ public class IndentServiceImpl implements IndentService {
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
             log.error("【取消订单】取消订单失败，订单id不存在，indentId={}", indentId);
-            throw new SubstituteException("取消订单失败，订单id不存在");
+            throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
         }
         if (indent.getIndentState() == IndentStateEnum.COMPLETED){
             log.error("【取消订单】取消订单失败，订单已完成，indent={}", indent);
-            throw new SubstituteException("取消订单失败，订单已完结");
+            throw new SubstituteException(ResultEnum.INDENT_STATE_ERROR);
         }
         if (!userId.equals(indent.getPublisherId())){
             log.error("【取消订单】取消订单失败，操作用户非下单人，userId={}，indent={}", userId,indent);
@@ -390,6 +397,7 @@ public class IndentServiceImpl implements IndentService {
         indentDao.save(indent);
         //4.从订单监控列表中删除
         scheduledService.removeIndentFromMap(indentId);
+        //todo 发模板消息、短信
     }
 
 }

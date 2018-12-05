@@ -177,6 +177,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public List<AdminInfo> findAllBossBySchoolId(int schoolId) {
+        return adminDao.findByAdminSchoolIdAndIsBoss(schoolId,true);
+    }
+
+    @Override
     public void deleteSecondAdmin(int adminId) {
         adminDao.deleteById(adminId);
     }

@@ -68,6 +68,9 @@ public class IndentVO {
     //下单人性别，男：”MALE”,女：”FEMALE”,未知：”NO_LIMITED”
     private GenderEnum publisherGender;
 
+    //下单人学校id
+    private Integer publisherSchoolId;
+
     //下单人学校名称
     private String publisherSchool;
 
@@ -79,6 +82,9 @@ public class IndentVO {
 
     //接单人性别，男：”MALE”,女：”FEMALE”,未知：”NO_LIMITED”
     private GenderEnum performerGender;
+
+    //接单人学校Id
+    private Integer performerSchoolId;
 
     //接单人学校名称
     private String performerSchool;
