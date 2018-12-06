@@ -27,6 +27,8 @@ public enum ResultEnum {
     //-104xx为金额错误
     WX_NOTIFY_MONEY_VERIFY_ERROR(-10401, "微信异步通知金额校验不通过"),
 
+    //-105xx为优惠券有关
+    COUPON_NOT_EXISTS(-10501, "优惠券不存在"),
     ;
 
     private Integer code;

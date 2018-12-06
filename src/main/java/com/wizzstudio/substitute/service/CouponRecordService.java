@@ -2,6 +2,8 @@ package com.wizzstudio.substitute.service;
 
 import com.wizzstudio.substitute.domain.CouponRecord;
 
+import java.util.List;
+
 /**
  * Created By Cx On 2018/12/4 11:15
  */
@@ -16,5 +18,15 @@ public interface CouponRecordService {
     /**
      * 更新优惠券领取信息
      */
-    void save(CouponRecord couponRecord);
+    void update(CouponRecord couponRecord);
+
+    /**
+     * 添加优惠券领取信息
+     */
+    void create(String userId,Integer couponId);
+
+    /**
+     * 获取所有该用户领取的未过期的优惠券
+     */
+    List<CouponRecord> findLiveByUserId(String userId);
 }

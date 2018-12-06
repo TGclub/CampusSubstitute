@@ -4,26 +4,23 @@ import com.alibaba.fastjson.JSON;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.exceptions.ClientException;
 import com.wizzstudio.substitute.config.AliSmsConfig;
-import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.dto.wx.WxPrePayDto;
 import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.form.PayForm;
+import com.wizzstudio.substitute.service.PayService;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.service.WxPayService;
 import com.wizzstudio.substitute.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,11 +29,13 @@ import java.util.Map;
  */
 @RestController
 @Slf4j
-@RequestMapping("/wxpay")
-public class WxPayController {
+@RequestMapping("/pay")
+public class PayController {
 
     @Autowired
     WxPayService wxPayService;
+    @Autowired
+    PayService payService;
     @Autowired
     UserService userService;
     @Autowired
@@ -49,7 +48,7 @@ public class WxPayController {
             log.error("[微信统一下单]用户不存在，userId={}", payForm.getUserId());
             throw new SubstituteException(ResultEnum.USER_NOT_EXISTS);
         }
-        return WxPrePayDto.builder().indentId(RandomUtil.genUniqueKey())
+        return WxPrePayDto.builder().indentId(RandomUtil.getUniqueKey())
                 .openid(user.getOpenid())
                 .totalFee(totalFee)
                 .clientIp(CommonUtil.getClientIp(request))
@@ -95,6 +94,15 @@ public class WxPayController {
         //修改完后返回xml告诉微信处理结果，不然微信会一直发送异步通知，则该方法会一直被调用
         System.out.println(XmlUtil.parseMap2Xml(result));
         return XmlUtil.parseMap2Xml(result);
+    }
+
+    /**
+     * 用户发起提现请求
+     */
+    @PostMapping("/withdraw/{userId}")
+    public ResponseEntity withdraw(@PathVariable String userId){
+        payService.createWithdraw(userId);
+        return ResultUtil.success();
     }
 
 

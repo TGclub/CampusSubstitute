@@ -22,6 +22,7 @@ import org.springframework.util.DigestUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -39,6 +40,8 @@ public class WxPayServiceImpl implements WxPayService {
     DepositInfoService depositInfoService;
     @Autowired
     WeChatAccountConfig weChatAccountConfig;
+    @Autowired
+    CommonCheckService commonCheckService;
 
     /**
      * 签名算法用于计算签名值
@@ -179,10 +182,14 @@ public class WxPayServiceImpl implements WxPayService {
             returnParam.put("timeStamp", String.valueOf(new Date().getTime()));
             returnParam.put("sign", getMD5Sign(returnParam));
         } else {
-            //如果交易失败
+            //如果下单失败
             log.error("[微信统一下单]统一下单错误！,return_msg={}", return_msg);
             throw new SubstituteException(return_msg, ResultEnum.INNER_ERROR.getCode());
         }
+        //存入充值信息，但此时充值未成功，待回调时校验完成才充值成功
+        DepositInfo depositInfo = DepositInfo.builder().depositOpenid(wxPrePayDto.getOpenid())
+                .depositMoney(wxPrePayDto.getTotalFee()).depositId(wxPrePayDto.getIndentId()).build();
+        depositInfoService.save(depositInfo);
         return returnParam;
     }
 
@@ -231,12 +238,19 @@ public class WxPayServiceImpl implements WxPayService {
             log.error("[微信支付]，异步通知，订单不存在,orderId={}", asyncResponse.getOutTradeNo());
             throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
         }
-        //todo 这样比较不知道对不对
-        if (asyncResponse.getTotalFee().equals(MoneyUtil.Yuan2Fen(depositInfo.getDepositMoney()))) {
-            log.error("[微信支付]，异步通知，订单金额不一致,orderId={},订单金额={},异步通知金额={}", asyncResponse.getOutTradeNo(),
-                    depositInfo.getDepositMoney(), asyncResponse.getTotalFee() / 100);
+        if (asyncResponse.getTotalFee().equals(depositInfo.getDepositMoney())) {
+            log.error("[微信支付]，异步通知，订单金额不一致,orderId={},订单金额={}分,异步通知金额={}分", asyncResponse.getOutTradeNo(),
+                    depositInfo.getDepositMoney(), asyncResponse.getTotalFee());
             throw new SubstituteException(ResultEnum.WX_NOTIFY_MONEY_VERIFY_ERROR);
         }
 
+        //todo 如果校验失败怎么办？
+        //若校验成功，充钱、充值信息改为success
+        depositInfo.setIsSuccess(true);
+        depositInfoService.save(depositInfo);
+        User user = commonCheckService.checkUserByOpenid(depositInfo.getDepositOpenid());
+        //充钱
+        user.setBalance(user.getBalance().add(MoneyUtil.Fen2Yuan(depositInfo.getDepositMoney())));
+        userService.saveUser(user);
     }
 }

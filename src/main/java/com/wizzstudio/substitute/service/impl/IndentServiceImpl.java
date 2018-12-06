@@ -43,6 +43,8 @@ public class IndentServiceImpl implements IndentService {
     CouponRecordService couponRecordService;
     @Autowired
     CouponInfoService couponInfoService;
+    @Autowired
+    CommonCheckService commonCheckService;
 
     /**
      * 将indent 封装为 indentVO
@@ -149,7 +151,7 @@ public class IndentServiceImpl implements IndentService {
             indent.setCouponPrice(couponInfo.getReducePrice());
             //将优惠券领取信息设置为已使用
             couponRecord.setIsUsed(true);
-            couponRecordService.save(couponRecord);
+            couponRecordService.update(couponRecord);
         }
         //1.4 验证用户余额是否足够支付，若足够扣钱
         int totalPrice = indent.getIndentPrice() - indent.getCouponPrice();

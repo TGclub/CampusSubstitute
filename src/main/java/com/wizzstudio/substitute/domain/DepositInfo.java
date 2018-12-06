@@ -32,8 +32,8 @@ public class DepositInfo {
     //充值用户openid
     private String depositOpenid;
 
-    //充值金额,单位：元
-    private BigDecimal depositMoney;
+    //充值金额,单位：分
+    private Integer depositMoney;
 
     //充值是否成功，0：否，1：是，默认为0
     private Boolean isSuccess;
