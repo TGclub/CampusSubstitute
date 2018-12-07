@@ -1,10 +1,12 @@
 package com.wizzstudio.substitute.controller;
 
+import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.domain.AdminInfo;
 import com.wizzstudio.substitute.dto.CouponDTO;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.service.AdminService;
+import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import io.swagger.annotations.*;
 import org.apache.commons.io.IOUtils;
@@ -19,16 +21,24 @@ import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 /**
  * Created by Kikyou on 18-11-12
  */
 @Api(value = "后台管理接口", description = "分配权限，查看统计信息， 处理应急订单和优惠券等服务, 不要看它自动生成的example，是错的，" +
-        "而且swagger这东西提供的自定义接口还不起作用，醉了。example以description里的为准，")
+        "而且swagger这东西提供的自定义接口还不起作用，醉了。example以description里的为准，另外，所有的仅返回操作结果没有具体数据的api返回体格式均为 实例：{\n" +
+        "    \"code\": 0,\n" +
+        "    \"msg\": \"请求成功\",\n" +
+        "    \"data\": null\n" +
+        "}")
 @RestController
 @RequestMapping("/admin")
 @Secured("ROLE_ADMIN_2")
 public class AdminController {
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private AdminService adminService;
@@ -343,19 +353,22 @@ public class AdminController {
             "}")})
 
     public ResponseEntity viewUnHandledWithDraw() {
-        return ResultUtil.success(adminService.viewAllWithDrawRequestByStatus(false));
+
+        List<WithdrawRequestVO> vos = adminService.viewAllWithDrawRequestByStatus(false);
+
+        return ResultUtil.success(vos);
     }
 
-    /**
+    /**`
      * 查询已处理的提现请求
      *
      * @return 已处理提现请求列表
      */
     @ApiOperation("查询已处理的提现请求")
     @Secured("ROLE_ADMIN_1")
-    @GetMapping("/withdrawDeposit/viewHandled")@ApiResponses({
-    @ApiResponse(code = 200, message = "返回示例：" +
-            "{\n" +
+    @GetMapping("/withdrawDeposit/viewHandled")
+    @ApiResponses({
+    @ApiResponse(code = 200, message = "{\n" +
             "    \"code\": 0,\n" +
             "    \"msg\": \"请求成功\",\n" +
             "    \"data\": [\n" +
@@ -363,25 +376,21 @@ public class AdminController {
             "            \"withdrawId\": 6,\n" +
             "            \"userId\": \"EEETEE\",\n" +
             "            \"isSolved\": true,\n" +
-            "            \"createTime\": 1543299099000\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"withdrawId\": 7,\n" +
-            "            \"userId\": \"EEETEE\",\n" +
-            "            \"isSolved\": true,\n" +
-            "            \"createTime\": 1543299099000\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"withdrawId\": 8,\n" +
-            "            \"userId\": \"EEETEE\",\n" +
-            "            \"isSolved\": true,\n" +
-            "            \"createTime\": 1543299101000\n" +
+            "            \"createTime\": 1544198730000,\n" +
+            "            \"phone\": 110112119,\n" +
+            "            \"balance\": 0,\n" +
+            "            \"schoolName\": \"西安邮电大学\",\n" +
+            "            \"userName\": \"twet\"\n" +
             "        },\n" +
             "        {\n" +
             "            \"withdrawId\": 9,\n" +
             "            \"userId\": \"EEETEE\",\n" +
             "            \"isSolved\": true,\n" +
-            "            \"createTime\": 1543299101000\n" +
+            "            \"createTime\": 1544198730000,\n" +
+            "            \"phone\": 110112119,\n" +
+            "            \"balance\": 0,\n" +
+            "            \"schoolName\": \"西安邮电大学\",\n" +
+            "            \"userName\": \"twet\"\n" +
             "        }\n" +
             "    ]\n" +
             "}")})
@@ -411,6 +420,7 @@ public class AdminController {
      */
     @ApiOperation("查询所有未处理的反馈信息")
     @GetMapping("/feedback/viewUnHandled")
+    @ApiResponses({
     @ApiResponse(code = 200, message = "返回示例：" +
             "{\n" +
             "    \"code\": 0,\n" +
@@ -422,11 +432,12 @@ public class AdminController {
             "            \"userId\": \"1\",\n" +
             "            \"isRead\": false,\n" +
             "            \"createTime\": 1543298864000\n" +
+            "            \"phone\": 110112119\n"+
             "        }\n" +
             "    ]\n" +
-            "}")
+            "}")})
     public ResponseEntity viewAllUnHandledFeedBack() {
-        return ResultUtil.success(adminService.getUnHandledFeedBack());
+        return ResultUtil.success(adminService.getFeedBackByState(false));
     }
 
     /**
@@ -448,11 +459,12 @@ public class AdminController {
             "            \"userId\": \"1\",\n" +
             "            \"isRead\": true,\n" +
             "            \"createTime\": 1543298792000\n" +
+            "            \"phone\": 110112119\n"+
             "        }\n" +
             "    ]\n" +
             "}")})
     public ResponseEntity viewAllHandledFeedBack() {
-        return ResultUtil.success(adminService.getHandledFeedBack());
+        return ResultUtil.success(adminService.getFeedBackByState(true));
     }
 
     /**

@@ -2,22 +2,16 @@ package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.domain.AdminInfo;
 import com.wizzstudio.substitute.domain.CountInfo;
-import com.wizzstudio.substitute.domain.CouponInfo;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.service.AdminService;
-import com.wizzstudio.substitute.util.RandomUtil;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -93,15 +87,6 @@ public class AdminServiceImplTest {
         adminService.deleteCoupon(1);
     }
 
-    @Test
-    public void getUnHandledFeedBack() {
-        adminService.getUnHandledFeedBack();
-    }
-
-    @Test
-    public void getHandledFeedBack() {
-        adminService.getHandledFeedBack();
-    }
 
     @Test
     public void handleFeedBack() {

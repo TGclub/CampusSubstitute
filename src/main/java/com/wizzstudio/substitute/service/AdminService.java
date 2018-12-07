@@ -1,5 +1,7 @@
 package com.wizzstudio.substitute.service;
 
+import com.wizzstudio.substitute.VO.FeedbackVO;
+import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
 import com.wizzstudio.substitute.dto.CouponDTO;
@@ -82,16 +84,11 @@ public interface AdminService {
     void deleteCoupon(int couponId);
 
     /**
-     * 获取所有未处理的意见反馈
+     * 根据状态获取所有未处理的意见反馈
      * @return
      */
-    List<Feedback> getUnHandledFeedBack();
+    List<FeedbackVO> getFeedBackByState(boolean status);
 
-    /**
-     * 获取所有未处理的意见反馈
-     * @return
-     */
-    List<Feedback> getHandledFeedBack();
 
     /**
      * 将反馈设置为已处理
@@ -150,7 +147,7 @@ public interface AdminService {
      * @param status true 已处理， false 未处理
      * @return
      */
-    List<WithdrawRequest> viewAllWithDrawRequestByStatus(boolean status);
+    List<WithdrawRequestVO> viewAllWithDrawRequestByStatus(boolean status);
 
     CouponInfo getSpecificCoupon(int id);
 

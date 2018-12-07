@@ -1,5 +1,7 @@
 package com.wizzstudio.substitute.service.impl;
 
+import com.wizzstudio.substitute.VO.FeedbackVO;
+import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.dao.*;
 import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +41,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private SchoolDao schoolDao;
 
     @Autowired
     private IndentDao indentDao;
@@ -64,11 +70,11 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean isValidAdmin(AdminLoginDTO loginDTO) {
-        log.info("name: " + loginDTO.getAdminName() + "," + "passwd" + loginDTO.getPassword());
+        log.info("name: " + loginDTO.getAdminName() + "," + "passwd " + loginDTO.getPassword());
         AdminInfo admin = adminDao.getAdminInfoByAdminName(loginDTO.getAdminName());
-        log.info(admin.getAdminName() + " in database" + admin.getAdminPass());
-        if (!admin.getAdminPass().equals(encoder.encode(loginDTO.getPassword()))) return false;
-        return true;
+        log.info(admin.getAdminName() + " in database " + admin.getAdminPass());
+        //return admin.getAdminPass().equals(encoder.encode(loginDTO.getPassword()));
+        return admin.getAdminPass().equals(loginDTO.getPassword());
     }
 
     @Override
@@ -124,13 +130,19 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<Feedback> getUnHandledFeedBack() {
-        return feedbackDao.findByIsRead(false);
-    }
-
-    @Override
-    public List<Feedback> getHandledFeedBack() {
-        return feedbackDao.findByIsRead(true);
+    public List<FeedbackVO> getFeedBackByState(boolean status) {
+        List<Feedback> feedbacks = feedbackDao.findByIsRead(status);
+        List<FeedbackVO> vos = new ArrayList<>();
+        feedbacks.stream().forEach(x -> {
+            FeedbackVO vo = new FeedbackVO();
+            BeanUtils.copyProperties(x, vo);
+            User user = userDao.findUserById(x.getUserId());
+            if (user != null) {
+                vo.setPhone(user.getPhone());
+            }
+            vos.add(vo);
+        });
+        return vos;
     }
 
     @Override
@@ -165,8 +177,10 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void modifySecondAdminSchool(int adminId, int schoolId) {
         AdminInfo adminInfo = adminDao.getAdminInfoByAdminId(adminId);
-        adminInfo.setAdminSchoolId(schoolId);
-        adminDao.save(adminInfo);
+        if (schoolDao.findSchoolById(schoolId) != null) {
+            adminInfo.setAdminSchoolId(schoolId);
+            adminDao.save(adminInfo);
+        }
     }
 
     @Override
@@ -178,7 +192,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<AdminInfo> findAllBossBySchoolId(int schoolId) {
-        return adminDao.findByAdminSchoolIdAndIsBoss(schoolId,true);
+        return adminDao.findByAdminSchoolIdAndIsBoss(schoolId, true);
     }
 
     @Override
@@ -199,7 +213,20 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<WithdrawRequest> viewAllWithDrawRequestByStatus(boolean status) {
-        return withdrawRequestDao.findAllByIsSolved(status);
+    public List<WithdrawRequestVO> viewAllWithDrawRequestByStatus(boolean status) {
+        List<WithdrawRequest> withdrawRequests = withdrawRequestDao.findAllByIsSolved(status);
+        List<WithdrawRequestVO> vos = new ArrayList<>();
+        withdrawRequests.stream().forEach(x -> {
+            WithdrawRequestVO withdrawRequest = new WithdrawRequestVO();
+            BeanUtils.copyProperties(x, withdrawRequest);
+            User user = userDao.findUserById(x.getUserId());
+            if (user != null) {
+                School school = schoolDao.findSchoolById(user.getSchoolId());
+                BeanUtils.copyProperties(user, withdrawRequest);
+                withdrawRequest.setSchoolName(school.getSchoolName());
+            }
+            vos.add(withdrawRequest);
+        });
+        return vos;
     }
 }
