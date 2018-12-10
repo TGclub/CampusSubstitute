@@ -1,6 +1,7 @@
 package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.service.AddressService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,7 @@ import static org.junit.Assert.*;
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
+@Slf4j
 public class AddressServiceImplTest {
 
     @Autowired
@@ -30,6 +32,7 @@ public class AddressServiceImplTest {
 
     @Test
     public void addUsualAddress() {
+        log.info("hello");
     }
 
     @Test

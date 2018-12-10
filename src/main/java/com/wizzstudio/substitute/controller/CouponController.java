@@ -1,14 +1,10 @@
 package com.wizzstudio.substitute.controller;
 
-import com.wizzstudio.substitute.domain.CouponInfo;
 import com.wizzstudio.substitute.service.CouponInfoService;
-import com.wizzstudio.substitute.service.CouponRecordService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 优惠券有关接口
