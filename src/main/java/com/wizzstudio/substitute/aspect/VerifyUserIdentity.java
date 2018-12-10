@@ -18,19 +18,18 @@ import java.nio.file.AccessDeniedException;
 @Aspect
 @Slf4j
 public class VerifyUserIdentity {
-//    @Pointcut("execution( public * com.wizzstudio.substitute.controller.UserController.*(..))")
-//    public void match() {
-//    }
-//
-//    @Before("match()")
-//    public void check(JoinPoint point) throws AccessDeniedException {
-//        String userId = ((CustomUserDetails)(SecurityContextHolder.getContext()
-//                .getAuthentication().getPrincipal())).getUsername();
-//        if (!((String)point.getArgs()[0]).equals(userId)) {
-//            log.info((String) point.getArgs()[0]);
-//            throw new AccessDeniedException("Access Denied");
-//        }
-//        log.info("passed check: "+userId);
-//    }
+    @Pointcut("execution( public * com.wizzstudio.substitute.controller.UserController.*(..))")
+    public void match() {
+    }
 
+    @Before("match()")
+    public void check(JoinPoint point) throws AccessDeniedException {
+        String userId = ((CustomUserDetails)(SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal())).getUsername();
+        if (point.getArgs()[0] instanceof String)
+        if (!((String)point.getArgs()[0]).equals(userId)) {
+            throw new AccessDeniedException("Access Denied");
+        }
+        log.info("passed check: "+userId);
+    }
 }
