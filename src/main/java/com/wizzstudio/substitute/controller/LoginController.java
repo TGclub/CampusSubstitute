@@ -29,7 +29,7 @@ public class LoginController extends BaseController {
     /**
      * 用户注册
      */
-    @PostMapping("login/user")
+    @PostMapping("/login/user")
     public ResponseEntity login(@NotNull @RequestBody WxInfo loginData, HttpServletResponse response) {
         try {
             //获取用户信息，若用户未使用过该程序，先进行注册
@@ -39,11 +39,12 @@ public class LoginController extends BaseController {
             CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
             return ResultUtil.success(user);
         } catch (WxErrorException e) {
+            log.error("【微信登录】登录失败，e={}",e);
             return ResultUtil.error();
         }
     }
 
-    @PostMapping("login/admin")
+    @PostMapping("/login/admin")
     public ResponseEntity login(@NotNull @RequestBody AdminLoginDTO loginDTO, HttpServletResponse response) {
         if (adminService.isValidAdmin(loginDTO)) {
             String cookie = CookieUtil.tokenGenerate();

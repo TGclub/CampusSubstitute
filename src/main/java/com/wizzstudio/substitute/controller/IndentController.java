@@ -204,7 +204,7 @@ public class IndentController {
 
     /**
      * 获取订单详情，若请求用户不是下单人 或 接单人，则隐藏私密信息
-     * todo 这个方法执行完以后会像个神经病一样给我update一下indent
+     * todo 这个方法执行完以后如果secretText不是null会像个神经病一样给我update一下indent将其改为null
      */
     @GetMapping(value = "/detail/{indentId}/{userId}")
     public ResponseEntity getIndentInfo(@PathVariable Integer indentId, @PathVariable String userId) {

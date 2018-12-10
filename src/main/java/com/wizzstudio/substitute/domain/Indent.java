@@ -18,7 +18,7 @@ import java.util.Date;
 @Entity
 @Data
 @DynamicInsert
-public class Indent implements Serializable {
+public class Indent {
 
     //订单id
     @Id

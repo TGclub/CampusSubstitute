@@ -57,13 +57,11 @@ public class User implements Serializable {
     /**
      * 余额
      */
-    @NotNull
     private BigDecimal balance;
 
     /**
      * 累计收入
      */
-    @NotNull
     private BigDecimal allIncome;
 
     //师傅收入：当推荐人获得的收入

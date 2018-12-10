@@ -52,9 +52,6 @@ public class IndentVO {
     //取货地址，订单类型非随意帮时必填
     private String takeGoodAddress;
 
-    //联系人姓名,不能用publisherId查，因为可能不同，订单类型非随意帮时必填
-    private String publisherName;
-
     //隐私信息，仅订单类型为帮我递时非空
     private String secretText;
 
@@ -76,6 +73,9 @@ public class IndentVO {
 
     //下单人头像URL
     private String publisherAvatar;
+
+    //联系人真实姓名,不能用publisherId查，因为可能不同，订单类型非随意帮时必填
+    private String publisherName;
 
     //下单人微信昵称
     private String publisherNickName;

@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,6 +47,8 @@ public class IndentServiceImpl implements IndentService {
     CouponInfoService couponInfoService;
     @Autowired
     CommonCheckService commonCheckService;
+    @Autowired
+    EntityManager em;
 
     /**
      * 将indent 封装为 indentVO
@@ -216,11 +220,12 @@ public class IndentServiceImpl implements IndentService {
                 log.error("[获取订单列表]获取失败，sortType有误，sortType={}", sortType);
                 throw new SubstituteException("sortType有误");
         }
-        indents.forEach(x -> {
+        List<IndentVO> indentVOS = indent2VO(indents);
+        indentVOS.forEach(x -> {
             //将隐私信息置空
             x.setSecretText(null);
         });
-        return indent2VO(indents);
+        return indentVOS;
     }
 
     @Override
@@ -240,16 +245,23 @@ public class IndentServiceImpl implements IndentService {
             log.error("【获取订单详情】获取订单详情失败，订单id不存在，indentId={}", indentId);
             throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
         }
-        if (!userId.equals(indent.getPerformerId()) && !userId.equals(indent.getPublisherId())) {
-            //如果查询用户不是送货人 或 下单人 则将隐私信息置空
-            indent.setSecretText(null);
-        }
         try {
-            return indent2VO(indent);
+            IndentVO indentVO = indent2VO(indent);
+            if (!userId.equals(indent.getPerformerId()) && !userId.equals(indent.getPublisherId())) {
+                //如果查询用户不是送货人 或 下单人 则将隐私信息置空
+                indentVO.setSecretText(null);
+            }
+            return indentVO;
         } catch (CheckException e) {
             log.error("[获取订单详情]获取失败，订单信息有误,message={},indent={}",e.getMessage(),indent);
             throw new SubstituteException(e.getMessage());
         }
+    }
+
+    public void test(){
+        Indent indent = indentDao.findByIndentId(9);
+        System.out.println("=================================test============================");
+        indent.setSecretText("你好s啊");
     }
 
     @Override

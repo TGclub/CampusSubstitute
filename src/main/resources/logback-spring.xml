@@ -5,7 +5,7 @@
         <!--layout表示展示的配置-->
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                %d - %msg%n
+                %d - %msg  %l%n
             </pattern>
         </layout>
     </appender>
@@ -26,14 +26,14 @@
         <!--输出配置-->
         <encoder>
             <pattern>
-                %-5p %d - %msg%n
+                %-5p %d - %msg  %l%n
             </pattern>
         </encoder>
 
         <!--滚动策略,使其每天产生一个日志文件-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>log/substitute/info.%d.log</fileNamePattern>
+            <fileNamePattern>log/info.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -49,14 +49,14 @@
         <!--输出配置-->
         <encoder>
             <pattern>
-                %d - %msg%n
+                %d - %msg  %l%n
             </pattern>
         </encoder>
 
         <!--滚动策略,使其每天产生一个日志文件-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>log/substitute/error.%d.log</fileNamePattern>
+            <fileNamePattern>log/error.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -81,14 +81,14 @@
         <!--输出配置-->
         <encoder>
             <pattern>
-                %d - %msg%n
+                %d - %msg  %l%n
             </pattern>
         </encoder>
 
         <!--滚动策略,使其每天产生一个日志文件-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>log/substitute/warn.%d.log</fileNamePattern>
+            <fileNamePattern>log/warn.%d.log</fileNamePattern>
         </rollingPolicy>
 
     </appender>

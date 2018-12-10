@@ -2,7 +2,6 @@ package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.dao.IndentDao;
 import com.wizzstudio.substitute.domain.Indent;
-import com.wizzstudio.substitute.exception.CheckException;
 import com.wizzstudio.substitute.service.IndentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.transaction.Transactional;
 
-import java.math.BigDecimal;
 
 import static com.wizzstudio.substitute.enums.GenderEnum.NO_LIMITED;
 import static com.wizzstudio.substitute.enums.indent.IndentTypeEnum.HELP_OTHER;
@@ -51,7 +49,11 @@ public class IndentServiceImplTest {
     @Rollback(false)
     @Test
     public void Indent2VO() {
-        System.out.println(indentService.getIndentDetail(6,"8"));
+        //todo 如果secretText不是null会在执行完(不是下面这条语句，而是所有语句执行完，即该方法执行完)以后update为null
+//        System.out.println(indentService.getIndentDetail(9,"8"));
+        indentServiceImpl.test();
+        System.out.println("what???");
+        System.out.println("xxxxxxx");
     }
 
     @Test
