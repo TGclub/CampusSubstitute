@@ -1,5 +1,7 @@
 package com.wizzstudio.substitute.controller;
 
+import com.wizzstudio.substitute.dto.AddressDTO;
+import com.wizzstudio.substitute.dto.ModifyAddressDTO;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.domain.Address;
@@ -93,9 +95,22 @@ public class UserController extends BaseController {
         }
     }
 
-    @PostMapping(value = "/address/{userId}")
-    public ResponseEntity addAddress(@PathVariable String userId, @RequestBody String address) {
+    @PostMapping(value = "/address")
+    public ResponseEntity addAddress(@RequestBody AddressDTO address, Principal principal) {
+        String userId = principal.getName();
         addressService.addUsualAddress(userId, address);
+        return ResultUtil.success();
+    }
+
+    @GetMapping(value = "/address/delete")
+    public ResponseEntity deleteAddress(Integer addressId, Principal principal) {
+        addressService.deleteAddress(addressId, principal.getName());
+        return ResultUtil.success();
+    }
+
+    @PostMapping("/address/modify")
+    public ResponseEntity modifyAddress(Integer addressId, @RequestBody ModifyAddressDTO address) {
+        addressService.modifyAddress(addressId, address);
         return ResultUtil.success();
     }
 
@@ -119,6 +134,7 @@ public class UserController extends BaseController {
         }
         return ResultUtil.success(addresses);
     }
+
 
 
 }
