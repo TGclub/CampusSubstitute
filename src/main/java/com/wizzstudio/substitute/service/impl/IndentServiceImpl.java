@@ -183,6 +183,10 @@ public class IndentServiceImpl implements IndentService {
             log.error("[获取订单列表]获取失败，sortType有误，sortType={}", sortType);
             throw new SubstituteException("sortType有误");
         }
+        if (sexType == null){
+            log.error("[获取订单列表]获取失败，sexType为空");
+            throw new SubstituteException("sexType为空");
+        }
         GenderEnum excludeGender;
         switch (sexType){
             case MALE:
