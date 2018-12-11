@@ -5,10 +5,10 @@ import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.enums.UrgentTypeEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.service.ScheduledService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  * Created by Kikyou on 18-12-2
  */
 @Service
+@Slf4j
 public class ScheduledServiceImpl implements ScheduledService {
 
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
@@ -37,6 +38,7 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     public void addIndent(int indentId) {
         indentMap.put(indentId, System.currentTimeMillis());
+        log.info("new indent was added: " + " " + indentId + " "+System.currentTimeMillis());
     }
 
     public void removeIndentFromMap(int indentId) {
@@ -45,6 +47,7 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     public void markTheOutOfTimeIndent() {
         for (Integer indentId : indentMap.keySet()) {
+            log.info("check indent state: " + indentId);
             Indent indent = indentDao.findByIndentId(indentId);
             if (!indent.getIndentState().equals(IndentStateEnum.WAIT_FOR_PERFORMER)) {
                 indentMap.remove(indentId);

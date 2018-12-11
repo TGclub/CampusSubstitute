@@ -1,5 +1,6 @@
 package com.wizzstudio.substitute.controller;
 
+import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.dto.AddressDTO;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
@@ -8,6 +9,7 @@ import com.wizzstudio.substitute.domain.School;
 import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +18,14 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.wizzstudio.substitute.enums.GenderEnum.NO_LIMITED;
+import static com.wizzstudio.substitute.enums.indent.IndentTypeEnum.HELP_OTHER;
+
 @RestController
 @RequestMapping("/user")
 @Slf4j
 @Secured("ROLE_USER")
 public class UserController extends BaseController {
-
 
     /**
      * 用户基本信息获取
@@ -31,6 +35,7 @@ public class UserController extends BaseController {
      */
     @GetMapping(value = "/{userId}")
     public ResponseEntity getUseInfo(@PathVariable String userId, Principal principal) {
+
         User user = userService.findUserById(userId);
 
         if (user != null) {
