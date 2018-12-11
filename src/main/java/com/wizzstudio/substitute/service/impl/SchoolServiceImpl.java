@@ -21,6 +21,6 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     public School getById(Integer schoolId) {
-        return schoolDao.findById(schoolId).orElse(null);
+        return schoolDao.findSchoolById(schoolId);
     }
 }
