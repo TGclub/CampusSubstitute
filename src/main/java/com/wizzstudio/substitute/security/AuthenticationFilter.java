@@ -47,9 +47,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         Cookie cookie = CookieUtil.getCookie(request);
         if (cookie != null) {
             String key = cookie.getValue();
+            log.info("key: " + key);
             log.info(key);
             if (key != null) {
                 String value = util.getCachedUserId(key);
+                log.info("value: " + value);
                 if (value != null) {
                     UserDetails userDetails;
                     if (uri.startsWith("/admin")) {

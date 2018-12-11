@@ -47,8 +47,6 @@ public class IndentServiceImpl implements IndentService {
     CouponInfoService couponInfoService;
     @Autowired
     CommonCheckService commonCheckService;
-    @Autowired
-    EntityManager em;
 
     /**
      * 将indent 封装为 indentVO
