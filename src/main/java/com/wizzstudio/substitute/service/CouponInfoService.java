@@ -18,4 +18,12 @@ public interface CouponInfoService {
      * 获取某用户所有未过期的优惠券
      */
     List<CouponInfo> findLiveByUserId(String userId);
+
+    CouponInfo getSpecificCoupon(int id);
+
+    /**
+     *返回首页轮播图中的优惠券信息
+     * @return
+     */
+    List<CouponInfo> getCouponInfo();
 }

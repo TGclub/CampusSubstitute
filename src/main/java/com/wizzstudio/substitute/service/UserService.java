@@ -1,11 +1,13 @@
 package com.wizzstudio.substitute.service;
 
+import com.wizzstudio.substitute.domain.CouponInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.dto.wx.WxInfo;
 import me.chanjar.weixin.common.error.WxErrorException;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 /**
@@ -66,4 +68,6 @@ public interface UserService {
      * @param number 减少金额量
      */
     void reduceBalance(String userId, BigDecimal number);
+
+
 }

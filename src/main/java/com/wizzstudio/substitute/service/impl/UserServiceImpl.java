@@ -3,8 +3,10 @@ package com.wizzstudio.substitute.service.impl;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.wizzstudio.substitute.dao.CouponInfoDao;
 import com.wizzstudio.substitute.dao.SchoolDao;
 import com.wizzstudio.substitute.dao.UserDao;
+import com.wizzstudio.substitute.domain.CouponInfo;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.dto.wx.WxInfo;
@@ -28,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -37,13 +40,14 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Autowired
     UserDao userDao;
-
     @Autowired
     SchoolService schoolService;
     @Autowired
     WxMaService wxService;
     @Autowired
     SchoolDao schoolDao;
+    @Autowired
+    CouponInfoDao couponInfoDao;
 
 
     @Override
@@ -191,6 +195,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         user.setBalance(user.getBalance().subtract(number));
         saveUser(user);
     }
+
 
 
 }

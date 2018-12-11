@@ -1,10 +1,12 @@
 package com.wizzstudio.substitute.util;
 
+import com.wizzstudio.substitute.constants.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.servlet.http.Cookie;
+import java.util.concurrent.TimeUnit;
 
 @Repository
 public class RedisUtil {
@@ -13,7 +15,7 @@ public class RedisUtil {
     private RedisTemplate<String, String> redisTemplate;
 
     public void storeNewCookie(String cookie, String userId) {
-        redisTemplate.opsForValue().set(cookie, userId);
+        redisTemplate.opsForValue().set(cookie, userId, Constant.TOKEN_EXPIRED, TimeUnit.SECONDS);
     }
 
     public String getCachedUserId(String cookie) {

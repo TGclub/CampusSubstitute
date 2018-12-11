@@ -1,19 +1,24 @@
 package com.wizzstudio.substitute.controller;
 
-import com.wizzstudio.substitute.domain.Indent;
+import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AddressDTO;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
-import com.wizzstudio.substitute.domain.Address;
-import com.wizzstudio.substitute.domain.School;
-import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.util.ResultUtil;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +74,8 @@ public class UserController extends BaseController {
                 .getBasicInfo(new ArrayList<UserBasicInfo>(), userId);
         return ResultUtil.success(usersInfo);
     }
+
+
 
     /**
      * 获取师傅信息

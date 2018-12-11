@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,5 +37,15 @@ public class CouponInfoServiceImpl implements CouponInfoService {
         List<CouponRecord> couponRecords = couponRecordService.findLiveByUserId(userId);
         List<Integer> couponIds = couponRecords.stream().map(CouponRecord::getCouponId).collect(Collectors.toList());
         return couponInfoDao.findAllByCouponIdIsIn(couponIds);
+    }
+
+    @Override
+    public CouponInfo getSpecificCoupon(int id) {
+        return couponInfoDao.findByCouponId(id);
+    }
+
+    @Override
+    public List<CouponInfo> getCouponInfo() {
+        return couponInfoDao.findTop5ByInvalidTimeAfterAndIsDeletedIsFalseOrderByCouponIdDesc(new Date());
     }
 }
