@@ -5,7 +5,6 @@ import com.wizzstudio.substitute.domain.Address;
 import com.wizzstudio.substitute.domain.School;
 import com.wizzstudio.substitute.domain.User;
 import com.wizzstudio.substitute.dto.AddressDTO;
-import com.wizzstudio.substitute.dto.ModifyAddressDTO;
 import com.wizzstudio.substitute.service.AddressService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -42,13 +41,13 @@ public class AddressServiceImpl extends BaseService implements AddressService {
 
     @Override
     public List<Address> getUsualAddress(String userId) {
-        return addressDao.findAddressByUserId(userId);
+        return addressDao.findAddressByUserIdAndIsDeletedIsFalse(userId);
     }
 
     @Override
     public List<Address> getAllByAddress(String address) {
         if (address == null) address = "";
-        return addressDao.findAllByAddressLike("%".concat(address).concat("%"));
+        return addressDao.findAllByAddressLikeAndIsDeletedIsFalse("%".concat(address).concat("%"));
     }
 
     /**
@@ -63,21 +62,25 @@ public class AddressServiceImpl extends BaseService implements AddressService {
     }
 
     @Override
-    public void modifyAddress(Integer addressId, ModifyAddressDTO modifyAddressDTO) {
+    public void modifyAddress(Integer addressId, String userId, AddressDTO modifyAddressDTO) {
         Address address = addressDao.findAddressById(addressId);
         if (address == null) return;
+        if (!address.getUserId().equals(userId)) throw new AccessDeniedException("Access Denied");
         if (modifyAddressDTO.getAddress() != null) address.setAddress(modifyAddressDTO.getAddress());
         if (modifyAddressDTO.getPhone() != null) address.setPhone(modifyAddressDTO.getPhone());
         if (modifyAddressDTO.getUserName() != null) address.setUserName(modifyAddressDTO.getUserName());
+        addressDao.save(address);
     }
 
     @Override
     public void deleteAddress(Integer addressId, String userId) {
         Address address = addressDao.findAddressById(addressId);
-        if (address != null)
-            if (userId.equals(address.getUserId())){
+        if (address != null) {
+            if (!address.getUserId().equals(userId)) throw new AccessDeniedException("Access Denied");
+            if (userId.equals(address.getUserId())) {
                 address.setIsDeleted(true);
-            addressDao.save(address);
+                addressDao.save(address);
+            }
         }
     }
 }

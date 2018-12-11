@@ -4,7 +4,6 @@ package com.wizzstudio.substitute.service;
 import com.wizzstudio.substitute.domain.Address;
 import com.wizzstudio.substitute.domain.School;
 import com.wizzstudio.substitute.dto.AddressDTO;
-import com.wizzstudio.substitute.dto.ModifyAddressDTO;
 
 import java.util.List;
 
@@ -41,9 +40,10 @@ public interface AddressService {
     /**
      * 修改地址
      * @param addressId
+     * @param userId
      * @param modifyAddressDTO
      */
-    void modifyAddress(Integer addressId, ModifyAddressDTO modifyAddressDTO);
+    void modifyAddress(Integer addressId, String userId, AddressDTO modifyAddressDTO);
 
     /**
      * 删除地址
