@@ -1,5 +1,7 @@
 package com.wizzstudio.substitute.VO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
@@ -53,6 +55,7 @@ public class IndentVO {
     private String takeGoodAddress;
 
     //隐私信息，仅订单类型为帮我递时非空
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String secretText;
 
     //物品金额，仅订单类型为帮我购时非空

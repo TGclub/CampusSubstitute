@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created By Cx On 2018/11/12 22:09
@@ -89,8 +91,9 @@ public class IndentController {
         newIndent.setIndentType(CommonUtil.getEnum(indentCreateForm.getIndentType(), IndentTypeEnum.class));
         newIndent.setRequireGender(CommonUtil.getEnum(indentCreateForm.getRequireGender(), GenderEnum.class));
         //下单
-        indentService.create(newIndent);
-        return ResultUtil.success();
+        Map<String,Integer> ans = new HashMap<>();
+        ans.put("indentId",indentService.create(newIndent));
+        return ResultUtil.success(ans);
     }
 
     /**

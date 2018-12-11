@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @Slf4j
-//@Secured("ROLE_USER")
+@Secured("ROLE_USER")
 public class UserController extends BaseController {
 
 

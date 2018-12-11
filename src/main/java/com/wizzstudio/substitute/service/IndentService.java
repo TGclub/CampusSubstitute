@@ -12,7 +12,7 @@ public interface IndentService {
      * 若用户余额不足，则抛异常
      * @param indent 订单信息
      */
-    void create(Indent indent);
+    Integer create(Indent indent);
 
     /**
      * 增加赏金，每次只增加一元

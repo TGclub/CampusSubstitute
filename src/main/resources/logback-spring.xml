@@ -5,7 +5,7 @@
         <!--layout表示展示的配置-->
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                %d - %msg  %c %L%n
+                %d - [%c{40}][%t:%L] %msg%n
             </pattern>
         </layout>
     </appender>
@@ -26,7 +26,7 @@
         <!--输出配置-->
         <encoder>
             <pattern>
-                %-5p %d - %msg  %c %L%n
+                [%-5p] %d - [%c{40}][%t:%L] %msg%n
             </pattern>
         </encoder>
 
@@ -49,7 +49,7 @@
         <!--输出配置-->
         <encoder>
             <pattern>
-                %d - %msg  %c %L%n
+                [%-5p] %d - [%c{40}][%t:%L] %msg%n
             </pattern>
         </encoder>
 
@@ -81,7 +81,7 @@
         <!--输出配置-->
         <encoder>
             <pattern>
-                %d - %msg  %c %L%n
+                [%-5p] %d - [%c{40}][%t:%L] %msg%n
             </pattern>
         </encoder>
 

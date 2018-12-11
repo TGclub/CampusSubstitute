@@ -117,10 +117,10 @@ public class IndentServiceImpl implements IndentService {
     }
 
     /**
-     * 创建新订单
+     * 创建新订单,返回订单id
      */
     @Override
-    public void create(Indent indent) {
+    public Integer create(Indent indent) {
         //1.验证参数是否有效
         //1.1验证下单用户id是否存在
         User user = userService.findUserById(indent.getPublisherId());
@@ -175,6 +175,7 @@ public class IndentServiceImpl implements IndentService {
         //将订单保存到数据库中
         indentDao.save(indent);
         scheduledService.addIndent(indent.getIndentId());
+        return indent.getIndentId();
     }
 
     @Override
