@@ -19,11 +19,8 @@ public interface CouponInfoService {
      */
     List<CouponInfo> findLiveByUserId(String userId);
 
-    CouponInfo getSpecificCoupon(int id);
-
     /**
-     *返回首页轮播图中的优惠券信息
-     * @return
+     * 某用户使用某优惠券
      */
-    List<CouponInfo> getCouponInfo();
+    void useCoupon(Integer couponId,String userId);
 }
