@@ -1,6 +1,5 @@
 package com.wizzstudio.substitute.controller;
 
-import com.wizzstudio.substitute.domain.CouponInfo;
 import com.wizzstudio.substitute.service.CouponInfoService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import io.swagger.annotations.ApiImplicitParam;
@@ -26,8 +25,6 @@ public class CouponController {
 
     @Autowired
     CouponInfoService couponInfoService;
-    @Autowired
-    CouponRecordService couponRecordService;
 
     /**
      * 获取某用户未过期的优惠券列表
@@ -40,9 +37,9 @@ public class CouponController {
     /**
      * 某用户领取某优惠券
      */
-    @PostMapping("/use")
-    public ResponseEntity getCoupon(@RequestBody CouponUserForm couponUserForm){
-        couponRecordService.create(couponUserForm.getUserId(),couponUserForm.getCouponId());
+    @PostMapping("/get/{userId}/{couponId}")
+    public ResponseEntity getCoupon(@PathVariable String userId,@PathVariable Integer couponId){
+        //todo
         return ResultUtil.success();
     }
 

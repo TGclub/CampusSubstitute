@@ -3,12 +3,15 @@ package com.wizzstudio.substitute.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Kikyou on 18-12-14
  */
 @Data
 public class UserCouponDTO implements Serializable {
+
+    private Integer couponId;
     //最小满减金额，单位元
     private Integer leastPrice;
 
@@ -16,10 +19,10 @@ public class UserCouponDTO implements Serializable {
     private Integer reducePrice;
 
     //validTime
-    private Long validTime;
+    private Date validTime;
 
     //失效时间
-    private Long invalidTime;
+    private Date invalidTime;
 
     private String pictureLink;
 
