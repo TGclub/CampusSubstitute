@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -39,6 +40,11 @@ public class ScheduledServiceImpl implements ScheduledService {
     public void addIndent(int indentId) {
         indentMap.put(indentId, System.currentTimeMillis());
         log.info("new indent was added: " + " " + indentId + " "+System.currentTimeMillis());
+    }
+
+    public void addIndent(int indentId, Date time) {
+        indentMap.put(indentId, time.getTime());
+        log.info("new indent was added: " + " " + indentId + " "+time.getTime());
     }
 
     public void removeIndentFromMap(int indentId) {

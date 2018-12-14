@@ -401,6 +401,16 @@ public class IndentServiceImpl implements IndentService {
             log.error("【取消订单】取消订单失败，订单已完成，indent={}", indent);
             throw new SubstituteException(ResultEnum.INDENT_STATE_ERROR);
         }
+        if (userId.equals(indent.getPerformerId())){
+            //接单人取消订单，则订单重新变为待接状态
+            log.info("【取消订单】接单人取消订单，userId={}，indent={}", userId,indent);
+            indent.setPerformerId(null);
+            indent.setIndentState(IndentStateEnum.WAIT_FOR_PERFORMER);
+            scheduledService.addIndent(indentId,indent.getCreateTime());
+            indentDao.save(indent);
+            //todo 发送模板消息给下单人、并发送短信给管理员
+            return;
+        }
         if (!userId.equals(indent.getPublisherId())){
             log.error("【取消订单】取消订单失败，操作用户非下单人，userId={}，indent={}", userId,indent);
             throw new SubstituteException("取消订单失败，操作用户无权限，非下单人");
