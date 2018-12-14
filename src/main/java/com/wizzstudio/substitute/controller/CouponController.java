@@ -1,6 +1,5 @@
 package com.wizzstudio.substitute.controller;
 
-import com.wizzstudio.substitute.domain.CouponInfo;
 import com.wizzstudio.substitute.service.CouponInfoService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import io.swagger.annotations.ApiImplicitParam;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * 优惠券有关接口
@@ -60,6 +58,6 @@ public class CouponController {
 
     @GetMapping("/list")
     public ResponseEntity getCouponList() {
-        return ResultUtil.success(couponInfoService.getCouponInfo());
+        return ResultUtil.success(couponInfoService.getRecentFiveCouponInfo());
     }
 }

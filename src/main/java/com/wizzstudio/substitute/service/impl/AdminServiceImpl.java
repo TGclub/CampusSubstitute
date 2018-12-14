@@ -5,7 +5,7 @@ import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.dao.*;
 import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
-import com.wizzstudio.substitute.dto.CouponDTO;
+import com.wizzstudio.substitute.dto.AdminCouponDTO;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.service.AdminService;
@@ -113,7 +113,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void addNewCoupon(CouponDTO newCoupon) throws IOException {
+    public void addNewCoupon(AdminCouponDTO newCoupon) throws IOException {
         CouponInfo coupon = new CouponInfo();
         coupon.setIsDeleted(false);
         coupon.setReducePrice(newCoupon.getReducePrice());

@@ -4,7 +4,7 @@ import com.wizzstudio.substitute.VO.FeedbackVO;
 import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
-import com.wizzstudio.substitute.dto.CouponDTO;
+import com.wizzstudio.substitute.dto.AdminCouponDTO;
 import com.wizzstudio.substitute.enums.Role;
 
 import java.io.IOException;
@@ -75,7 +75,7 @@ public interface AdminService {
      * 添加新的优惠券
      * @param coupon 优惠券信息
      */
-    void addNewCoupon(CouponDTO coupon) throws IOException;
+    void addNewCoupon(AdminCouponDTO coupon) throws IOException;
 
     /**
      * 删除优惠券

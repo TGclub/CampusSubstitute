@@ -13,7 +13,7 @@ import java.util.Date;
  * Created by Kikyou on 18-12-3
  */
 @Data
-public class CouponDTO implements Serializable
+public class AdminCouponDTO implements Serializable
 {
 
     //最小满减金额，单位元
@@ -30,6 +30,6 @@ public class CouponDTO implements Serializable
 
     private MultipartFile picture;
 
-    public CouponDTO() {
+    public AdminCouponDTO() {
     }
 }

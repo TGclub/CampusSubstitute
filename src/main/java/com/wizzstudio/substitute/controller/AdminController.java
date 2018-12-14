@@ -2,7 +2,7 @@ package com.wizzstudio.substitute.controller;
 
 import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.domain.AdminInfo;
-import com.wizzstudio.substitute.dto.CouponDTO;
+import com.wizzstudio.substitute.dto.AdminCouponDTO;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.service.AdminService;
@@ -280,7 +280,7 @@ public class AdminController {
     })
     @Secured("ROLE_ADMIN_1")
     @PostMapping("/coupon/addNew")
-    public ResponseEntity newCoupon(CouponDTO coupon) throws IOException {
+    public ResponseEntity newCoupon(AdminCouponDTO coupon) throws IOException {
         adminService.addNewCoupon(coupon);
         return ResultUtil.success();
     }

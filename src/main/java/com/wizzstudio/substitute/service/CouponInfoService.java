@@ -1,6 +1,7 @@
 package com.wizzstudio.substitute.service;
 
 import com.wizzstudio.substitute.domain.CouponInfo;
+import com.wizzstudio.substitute.dto.UserCouponDTO;
 
 import java.util.List;
 
@@ -25,5 +26,5 @@ public interface CouponInfoService {
      *返回首页轮播图中的优惠券信息
      * @return
      */
-    List<CouponInfo> getCouponInfo();
+    List<UserCouponDTO> getRecentFiveCouponInfo();
 }
