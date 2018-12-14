@@ -23,6 +23,6 @@ public class SubstituteApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         log.info("scheduled service: start");
-        scheduledService.checkOutOfTimeIndent();
+        scheduledService.startTask();
     }
 }

@@ -42,4 +42,6 @@ public class CountInfo {
 
     //当日登录量，不去重,默认为0(todo 先不做)
     private Integer loginUser;
+
+
 }

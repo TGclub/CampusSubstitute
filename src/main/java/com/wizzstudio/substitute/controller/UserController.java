@@ -58,8 +58,6 @@ public class UserController extends BaseController {
 
         userService.modifyUserInfo(userId, modifyUserInfoDTO);
         return ResultUtil.success();
-
-
     }
 
     /**
@@ -74,7 +72,6 @@ public class UserController extends BaseController {
                 .getBasicInfo(new ArrayList<UserBasicInfo>(), userId);
         return ResultUtil.success(usersInfo);
     }
-
 
 
     /**
