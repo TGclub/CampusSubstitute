@@ -12,6 +12,8 @@ import com.wizzstudio.substitute.exception.CheckException;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.service.*;
 import com.wizzstudio.substitute.util.CommonUtil;
+import com.wizzstudio.substitute.util.RedisUtil;
+import com.wizzstudio.substitute.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,28 +27,35 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class IndentServiceImpl implements IndentService {
 
+    private final IndentDao indentDao;
+    private final UserService userService;
+    private final AddressService addressService;
+    private final SchoolService schoolService;
+    private final ScheduledServiceImpl scheduledService;
+    private final CouponRecordService couponRecordService;
+    private final CouponInfoService couponInfoService;
+    private final CommonCheckService commonCheckService;
+    private final RedisUtil redisUtil;
+
     @Autowired
-    IndentDao indentDao;
-    @Autowired
-    UserService userService;
-    @Autowired
-    AddressService addressService;
-    @Autowired
-    SchoolService schoolService;
-    @Autowired
-    ScheduledServiceImpl scheduledService;
-    @Autowired
-    CouponRecordService couponRecordService;
-    @Autowired
-    CouponInfoService couponInfoService;
-    @Autowired
-    CommonCheckService commonCheckService;
+    public IndentServiceImpl(IndentDao indentDao, UserService userService, AddressService addressService, SchoolService schoolService, ScheduledServiceImpl scheduledService, CouponRecordService couponRecordService, CouponInfoService couponInfoService, CommonCheckService commonCheckService, RedisUtil redisUtil) {
+        this.indentDao = indentDao;
+        this.userService = userService;
+        this.addressService = addressService;
+        this.schoolService = schoolService;
+        this.scheduledService = scheduledService;
+        this.couponRecordService = couponRecordService;
+        this.couponInfoService = couponInfoService;
+        this.commonCheckService = commonCheckService;
+        this.redisUtil = redisUtil;
+    }
 
     /**
      * 将indent 封装为 indentVO
@@ -362,18 +371,29 @@ public class IndentServiceImpl implements IndentService {
         }
         //2、开始分钱
         //注意：这里不能使用new BigDecimal(double)的方法构造，会有精度缺失
-        BigDecimal companyIncome = BigDecimal.valueOf(indent.getIndentPrice() * Constant.IncomeRatio.COMPANY),
-                masterIncome = BigDecimal.valueOf(indent.getIndentPrice() * Constant.IncomeRatio.MASTER),
-                performerIncome = BigDecimal.valueOf(indent.getIndentPrice() * Constant.IncomeRatio.PERFORMER);
+        BigDecimal companyIncome = BigDecimal.valueOf(indent.getIndentPrice() * Constant.IncomeRatio.COMPANY);
+        BigDecimal masterIncome = BigDecimal.valueOf(indent.getIndentPrice() * Constant.IncomeRatio.MASTER);
+        BigDecimal performerIncome = BigDecimal.valueOf(indent.getIndentPrice() * Constant.IncomeRatio.PERFORMER);
 
         if (performer.getMasterId() != null){
-            //2.1如果用户有推荐人，给推荐人分钱
+            //2.1如果用户有推荐人，给推荐人分钱,并增加推荐人当日收益
             User master = userService.findUserById(performer.getMasterId());
             //推荐人获得奖励, 并记录
             master.setBalance(master.getBalance().add(masterIncome));
             master.setMasterIncome(master.getMasterIncome().add(masterIncome));
             master.setAllIncome(master.getAllIncome().add(masterIncome));
             userService.saveUser(master);
+            //记录推荐人当日收益
+            String key = Constant.MASTER_TODAY_INCOME.concat(master.getId());
+            String value = redisUtil.get(key);
+            if (value == null){
+                //若推荐人当日收益未记录
+                Integer restTime = Math.toIntExact((TimeUtil.getLastTime().getTime() - new Date().getTime()));
+                redisUtil.store(key,masterIncome.toString(),restTime, TimeUnit.MILLISECONDS);
+            }else {
+                //推荐人当日收益已记录
+                redisUtil.increment(key,masterIncome.doubleValue());
+            }
         }else {
             //用户没有推荐人,推荐人金额给用户
             performerIncome = performerIncome.add(masterIncome);

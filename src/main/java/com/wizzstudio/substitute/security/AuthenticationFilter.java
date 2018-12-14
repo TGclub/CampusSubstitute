@@ -50,7 +50,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             log.info("key: " + key);
             log.info(key);
             if (key != null) {
-                String value = util.getCachedUserId(key);
+                String value = util.get(key);
                 log.info("value: " + value);
                 if (value != null) {
                     UserDetails userDetails;

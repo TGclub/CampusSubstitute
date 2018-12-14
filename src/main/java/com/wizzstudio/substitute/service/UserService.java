@@ -69,5 +69,8 @@ public interface UserService {
      */
     void reduceBalance(String userId, BigDecimal number);
 
-
+    /**
+     * 获取用户当日作为推荐人的收益
+     */
+    String getMasterTodayIncome(String userId);
 }

@@ -1,5 +1,6 @@
 package com.wizzstudio.substitute.controller;
 
+import com.wizzstudio.substitute.form.CouponUserForm;
 import com.wizzstudio.substitute.form.IndentUserForm;
 import com.wizzstudio.substitute.service.CouponInfoService;
 import com.wizzstudio.substitute.service.CouponRecordService;
@@ -42,8 +43,8 @@ public class CouponController {
      * 某用户领取某优惠券
      */
     @PostMapping("/get")
-    public ResponseEntity getCoupon(@RequestBody IndentUserForm indentUserForm){
-        couponRecordService.create(indentUserForm.getUserId(),indentUserForm.getIndentId());
+    public ResponseEntity getCoupon(@RequestBody CouponUserForm couponUserForm){
+        couponRecordService.create(couponUserForm.getUserId(),couponUserForm.getCouponId());
         return ResultUtil.success();
     }
 
@@ -58,8 +59,11 @@ public class CouponController {
                 response.getOutputStream());
     }
 
+    /**
+     * 获取最近五个优惠券的信息
+     */
     @GetMapping("/list")
-    public ResponseEntity getCouponList() {
+    public ResponseEntity getCouponRecentList() {
         return ResultUtil.success(couponInfoService.getRecentFiveCouponInfo());
     }
 }

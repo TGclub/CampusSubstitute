@@ -8,8 +8,7 @@ public interface Constant {
     int INVALID_USER_ID = 40003;
     int INVALID_MSG_TYPE = 40008;
 
-    String QUERY_SUCCESSFULLY = "请求成功";
-    String QUERY_FAILED = "请求失败";
+    String MASTER_TODAY_INCOME = "master_today_income";
     String TOKEN = "token";
     String INVALID_MESSAGE = "信息有误";
 
