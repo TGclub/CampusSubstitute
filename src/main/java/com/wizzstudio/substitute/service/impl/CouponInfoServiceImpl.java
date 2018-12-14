@@ -3,16 +3,13 @@ package com.wizzstudio.substitute.service.impl;
 import com.wizzstudio.substitute.dao.CouponInfoDao;
 import com.wizzstudio.substitute.domain.CouponInfo;
 import com.wizzstudio.substitute.domain.CouponRecord;
-import com.wizzstudio.substitute.dto.UserCouponDTO;
 import com.wizzstudio.substitute.service.CouponInfoService;
 import com.wizzstudio.substitute.service.CouponRecordService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
