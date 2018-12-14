@@ -44,6 +44,8 @@ public class CouponRecordServiceImpl implements CouponRecordService {
             log.error("已领取过该优惠券，userId={}，couponId={}", userId, couponId);
             throw new SubstituteException("已领取过该优惠券");
         }
+        //校验用户是否存在
+        commonCheckService.checkUserByUserId(userId);
         //获取优惠券信息，从而获取失效时间
         CouponInfo couponInfo = commonCheckService.checkCouponInfoById(couponId);
         couponRecord = CouponRecord.builder().couponId(couponId).ownerId(userId).invalidTime(couponInfo.getInvalidTime()).build();

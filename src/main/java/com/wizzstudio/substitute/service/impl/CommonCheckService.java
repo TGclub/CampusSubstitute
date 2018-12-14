@@ -53,7 +53,7 @@ public class CommonCheckService {
     public CouponInfo checkCouponInfoById(Integer couponId){
         CouponInfo couponInfo = couponInfoService.findById(couponId);
         if (couponInfo == null){
-            log.error("用户不存在，userId={}", couponId);
+            log.error("优惠券不存在，couponId={}", couponId);
             throw new SubstituteException(ResultEnum.COUPON_NOT_EXISTS);
         }
         return couponInfo;

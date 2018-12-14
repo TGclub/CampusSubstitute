@@ -1,8 +1,10 @@
 package com.wizzstudio.substitute.controller;
 
 import com.wizzstudio.substitute.domain.CouponInfo;
+import com.wizzstudio.substitute.domain.CouponRecord;
 import com.wizzstudio.substitute.form.CouponUserForm;
 import com.wizzstudio.substitute.service.CouponInfoService;
+import com.wizzstudio.substitute.service.CouponRecordService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +30,8 @@ public class CouponController {
 
     @Autowired
     CouponInfoService couponInfoService;
+    @Autowired
+    CouponRecordService couponRecordService;
 
     /**
      * 获取某用户未过期的优惠券列表
@@ -42,7 +46,7 @@ public class CouponController {
      */
     @PostMapping("/use")
     public ResponseEntity getCoupon(@RequestBody CouponUserForm couponUserForm){
-        //todo
+        couponRecordService.create(couponUserForm.getUserId(),couponUserForm.getCouponId());
         return ResultUtil.success();
     }
 
@@ -50,8 +54,6 @@ public class CouponController {
     @ApiImplicitParam(name = "id", value = "指定优惠券id", example = "localhost:2333/admin/coupon/img/3")
     @ApiResponses({
             @ApiResponse(code = 200, message = "200请求成功，返回二进制图片")
-
-
     })
     @GetMapping("/img/{id}")
     public void getImg(@PathVariable int id, HttpServletResponse response) throws IOException {

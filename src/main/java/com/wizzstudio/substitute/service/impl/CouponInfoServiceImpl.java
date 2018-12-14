@@ -3,6 +3,7 @@ package com.wizzstudio.substitute.service.impl;
 import com.wizzstudio.substitute.dao.CouponInfoDao;
 import com.wizzstudio.substitute.domain.CouponInfo;
 import com.wizzstudio.substitute.domain.CouponRecord;
+import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.service.CouponInfoService;
 import com.wizzstudio.substitute.service.CouponRecordService;
 import lombok.extern.slf4j.Slf4j;
