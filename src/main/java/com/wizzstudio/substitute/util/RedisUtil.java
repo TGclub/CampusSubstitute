@@ -14,8 +14,15 @@ public class RedisUtil {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    public void storeNewCookie(String cookie, String userId) {
-        redisTemplate.opsForValue().set(cookie, userId, Constant.TOKEN_EXPIRED, TimeUnit.SECONDS);
+    public void storeNewCookie(String key, String value) {
+        redisTemplate.opsForValue().set(key, value, Constant.TOKEN_EXPIRED, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 存储key，value，在expire分钟后过期
+     */
+    public void storeNewCookie(String key, String value, Integer expire) {
+        redisTemplate.opsForValue().set(key, value, expire, TimeUnit.MINUTES);
     }
 
     public String getCachedUserId(String cookie) {
@@ -25,6 +32,5 @@ public class RedisUtil {
     public void delete(String key) {
         redisTemplate.delete(key);
     }
-
 
 }
