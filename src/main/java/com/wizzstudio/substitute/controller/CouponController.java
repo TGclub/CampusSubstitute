@@ -1,6 +1,8 @@
 package com.wizzstudio.substitute.controller;
 
+import com.wizzstudio.substitute.form.IndentUserForm;
 import com.wizzstudio.substitute.service.CouponInfoService;
+import com.wizzstudio.substitute.service.CouponRecordService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -25,21 +27,23 @@ public class CouponController {
 
     @Autowired
     CouponInfoService couponInfoService;
+    @Autowired
+    CouponRecordService couponRecordService;
 
     /**
-     * 获取某用户未过期的优惠券列表
+     * 获取某用户未过期和未领取的优惠券列表
      */
     @GetMapping("/list/{userId}")
     public ResponseEntity findLiveByUserId(@PathVariable String userId){
-        return ResultUtil.success(couponInfoService.findLiveByUserId(userId));
+        return ResultUtil.success(couponInfoService.findListByUserId(userId));
     }
 
     /**
      * 某用户领取某优惠券
      */
-    @PostMapping("/get/{userId}/{couponId}")
-    public ResponseEntity getCoupon(@PathVariable String userId,@PathVariable Integer couponId){
-        //todo
+    @PostMapping("/get")
+    public ResponseEntity getCoupon(@RequestBody IndentUserForm indentUserForm){
+        couponRecordService.create(indentUserForm.getUserId(),indentUserForm.getIndentId());
         return ResultUtil.success();
     }
 

@@ -27,9 +27,6 @@ public class IndentVO {
     //下单用户id
     private String publisherId;
 
-    //联系人电话,不能用publisherId查，因为可能不同
-    private Long publisherPhone;
-
     //订单类型，帮我购：HELP_BUY，帮我递：HELP_SEND，随意帮：HELP_OTHER
     private IndentTypeEnum indentType;
 
@@ -41,6 +38,12 @@ public class IndentVO {
 
     //订单悬赏金
     private Integer indentPrice;
+
+    //订单优惠额，单位元，默认0元
+    private Integer couponPrice;
+
+    //实付金额,单位元
+    private Integer totalPrice;
 
     //加急类型，0:不加急，1:超时 2:退单
     private Integer urgentType;
@@ -62,6 +65,13 @@ public class IndentVO {
     private BigDecimal goodPrice;
 
 //======================================需要自己拼接的字段========================================================
+
+    //联系人电话,不能用publisherId查，因为可能不同
+    private Long publisherPhone;
+
+    //接单人电话
+    private Long performerPhone;
+
     //送达地点，订单类型为帮我递时必填
     private String shippingAddress;
 

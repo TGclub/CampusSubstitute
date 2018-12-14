@@ -34,7 +34,6 @@ public class UserController extends BaseController {
 
     /**
      * 用户基本信息获取
-     *
      * @param userId
      * @return
      */
@@ -55,7 +54,6 @@ public class UserController extends BaseController {
      */
     @PostMapping(value = "/info/{userId}")
     public ResponseEntity modifyUserInfo(@PathVariable String userId, @RequestBody ModifyUserInfoDTO modifyUserInfoDTO) {
-
         userService.modifyUserInfo(userId, modifyUserInfoDTO);
         return ResultUtil.success();
 

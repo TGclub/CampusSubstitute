@@ -99,6 +99,7 @@ public class IndentServiceImpl implements IndentService {
             indentVO.setPerformerGender(performer.getGender());
             indentVO.setPerformerAvatar(performer.getAvatar());
             indentVO.setPerformerNickName(performer.getUserName());
+            indentVO.setPublisherPhone(performer.getPhone());
         }
         return indentVO;
     }
