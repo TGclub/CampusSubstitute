@@ -37,6 +37,8 @@ public interface IndentService {
 
     /**
      * 取消订单
+     * 接单人取消订单，订单重回待接单状态
+     * 下单人取消订单，订单取消并退钱
      */
     void canceledIndent(Integer indentId, String userId);
 

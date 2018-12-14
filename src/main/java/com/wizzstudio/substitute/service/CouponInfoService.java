@@ -1,5 +1,6 @@
 package com.wizzstudio.substitute.service;
 
+import com.wizzstudio.substitute.VO.CouponListVO;
 import com.wizzstudio.substitute.domain.CouponInfo;
 import com.wizzstudio.substitute.dto.UserCouponDTO;
 
@@ -16,9 +17,9 @@ public interface CouponInfoService {
     CouponInfo findById(Integer couponId);
 
     /**
-     * 获取某用户所有未过期的优惠券
+     * 获取某用户所有已领取未过期 / 可领取的优惠券
      */
-    List<CouponInfo> findLiveByUserId(String userId);
+    CouponListVO findListByUserId(String userId);
 
     CouponInfo getSpecificCoupon(int id);
 

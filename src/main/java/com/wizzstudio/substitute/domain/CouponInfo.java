@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicInsert;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 优惠券信息
@@ -57,5 +58,18 @@ public class CouponInfo {
     private byte[] picture;
 
     public CouponInfo() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CouponInfo)) return false;
+        CouponInfo that = (CouponInfo) o;
+        return Objects.equals(couponId, that.couponId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(couponId);
     }
 }

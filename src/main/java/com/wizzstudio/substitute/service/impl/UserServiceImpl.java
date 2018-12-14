@@ -3,6 +3,7 @@ package com.wizzstudio.substitute.service.impl;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dao.CouponInfoDao;
 import com.wizzstudio.substitute.dao.SchoolDao;
 import com.wizzstudio.substitute.dao.UserDao;
@@ -17,6 +18,7 @@ import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.service.SchoolService;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.RandomUtil;
+import com.wizzstudio.substitute.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.BeanUtils;
@@ -48,6 +50,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     SchoolDao schoolDao;
     @Autowired
     CouponInfoDao couponInfoDao;
+    @Autowired
+    RedisUtil redisUtil;
 
 
     @Override
@@ -196,6 +200,11 @@ public class UserServiceImpl extends BaseService implements UserService {
         saveUser(user);
     }
 
+    @Override
+    public String getMasterTodayIncome(String userId) {
+        String ans = redisUtil.get(Constant.MASTER_TODAY_INCOME.concat(userId));
+        return ans == null ?  "0" : ans;
+    }
 
 
 }

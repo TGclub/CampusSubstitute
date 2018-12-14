@@ -1,26 +1,40 @@
 package com.wizzstudio.substitute.util;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 /**
- * Created by Kikyou on 18-12-14
+ * Created By Cx On 2018/12/15 0:17
  */
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
 public class RedisUtilTest {
 
     @Autowired
-    private RedisUtil redisUtil;
+    RedisUtil redisUtil;
+
+    @Before
+    public void out(){
+        System.out.println("============================================================");
+    }
 
     @Test
-    public void storeNewCookie() {
-        redisUtil.storeNewCookie("efwftest","EEETEE");
+    public void store(){
+        redisUtil.store("3","44",8888);
+        redisUtil.increment("3",22.5);
+    }
+
+    @Test
+    public void store2(){
+
     }
 
 }

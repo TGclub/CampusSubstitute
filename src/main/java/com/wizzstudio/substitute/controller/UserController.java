@@ -21,7 +21,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.wizzstudio.substitute.enums.GenderEnum.NO_LIMITED;
 import static com.wizzstudio.substitute.enums.indent.IndentTypeEnum.HELP_OTHER;
@@ -34,15 +36,12 @@ public class UserController extends BaseController {
 
     /**
      * 用户基本信息获取
-     *
      * @param userId
      * @return
      */
     @GetMapping(value = "/{userId}")
     public ResponseEntity getUseInfo(@PathVariable String userId, Principal principal) {
-
         User user = userService.findUserById(userId);
-
         if (user != null) {
             return ResultUtil.success(user);
         } else {
@@ -51,20 +50,26 @@ public class UserController extends BaseController {
     }
 
     /**
+     * 获取用户当日作为推荐人的收益
+     */
+    @GetMapping("/income/master/{userId}")
+    public ResponseEntity getMasterTodayIncome(@PathVariable String userId) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("masterIncome",userService.getMasterTodayIncome(userId));
+        return ResultUtil.success(map);
+    }
+
+    /**
      * 修改用户信息
      */
     @PostMapping(value = "/info/{userId}")
     public ResponseEntity modifyUserInfo(@PathVariable String userId, @RequestBody ModifyUserInfoDTO modifyUserInfoDTO) {
-
         userService.modifyUserInfo(userId, modifyUserInfoDTO);
         return ResultUtil.success();
     }
 
     /**
      * 获取徒弟信息
-     *
-     * @param userId
-     * @return
      */
     @GetMapping(value = "/apprentices/{userId}")
     public ResponseEntity getAllApprenticesInfo(@PathVariable String userId) {
@@ -73,12 +78,8 @@ public class UserController extends BaseController {
         return ResultUtil.success(usersInfo);
     }
 
-
     /**
      * 获取师傅信息
-     *
-     * @param userId
-     * @return
      */
     @GetMapping(value = "/master/{userId}")
     public ResponseEntity getMasterInfo(@PathVariable String userId) {
@@ -89,10 +90,6 @@ public class UserController extends BaseController {
 
     /**
      * 添加师傅
-     *
-     * @param userId
-     * @param masterId
-     * @return
      */
     @PostMapping(value = "/master/{userId}/{masterId}")
     public ResponseEntity addMaster(@PathVariable String userId, @PathVariable String masterId) {
@@ -131,7 +128,6 @@ public class UserController extends BaseController {
     /**
      * 获取所有常用地址列表, 当key不为空的时候按关键词进行模糊匹配
      */
-
     @GetMapping(value = "/addresses/{userId}")
     public ResponseEntity getAllAddress(@PathVariable String userId, String key) {
         List<Address> addresses;

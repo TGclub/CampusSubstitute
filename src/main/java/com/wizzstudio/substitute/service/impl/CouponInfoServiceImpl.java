@@ -1,5 +1,6 @@
 package com.wizzstudio.substitute.service.impl;
 
+import com.wizzstudio.substitute.VO.CouponListVO;
 import com.wizzstudio.substitute.dao.CouponInfoDao;
 import com.wizzstudio.substitute.domain.CouponInfo;
 import com.wizzstudio.substitute.domain.CouponRecord;
@@ -36,10 +37,18 @@ public class CouponInfoServiceImpl implements CouponInfoService {
     }
 
     @Override
-    public List<CouponInfo> findLiveByUserId(String userId) {
+    public CouponListVO findListByUserId(String userId) {
+        CouponListVO couponListVO = new CouponListVO();
+        //获取已领取可用优惠券
         List<CouponRecord> couponRecords = couponRecordService.findLiveByUserId(userId);
         List<Integer> couponIds = couponRecords.stream().map(CouponRecord::getCouponId).collect(Collectors.toList());
-        return couponInfoDao.findAllByCouponIdIsIn(couponIds);
+        List<CouponInfo> liveCouponInfos = couponInfoDao.findAllByCouponIdIsIn(couponIds);
+        couponListVO.setLiveCoupons(liveCouponInfos);
+        //获取未领取但可领取的优惠券
+        List<CouponInfo> couponInfos = couponInfoDao.findAllLive();
+        couponInfos.removeAll(liveCouponInfos);
+        couponListVO.setGetCoupons(couponInfos);
+        return couponListVO;
     }
 
     @Override

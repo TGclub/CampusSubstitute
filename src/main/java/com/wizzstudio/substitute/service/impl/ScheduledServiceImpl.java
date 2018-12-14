@@ -68,6 +68,11 @@ public class ScheduledServiceImpl implements ScheduledService {
         log.info("new indent was added: " + " " + indentId + " " + System.currentTimeMillis());
     }
 
+    public void addIndent(int indentId, Date time) {
+        indentMap.put(indentId, time.getTime());
+        log.info("new indent was added: " + " " + indentId + " "+time.getTime());
+    }
+
     public void removeIndentFromMap(int indentId) {
         indentMap.remove(indentId);
     }

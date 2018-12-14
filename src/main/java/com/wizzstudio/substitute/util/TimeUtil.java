@@ -1,5 +1,10 @@
 package com.wizzstudio.substitute.util;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
+
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -41,6 +46,36 @@ public class TimeUtil {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         Date date = new Date(s);
         return simpleDateFormat.format(date);
+    }
+
+    /**
+     * 获取当日23：59：59的时间
+     */
+    public static Date getLastTime(){
+        String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd 23:59:59");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return format.parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 获取当日00：00：00的时间
+     */
+    public static Date getFirstTime(){
+        String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd 00:00:00");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return format.parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println();
     }
 
 }

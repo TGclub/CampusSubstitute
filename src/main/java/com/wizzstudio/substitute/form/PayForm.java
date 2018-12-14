@@ -2,6 +2,8 @@ package com.wizzstudio.substitute.form;
 
 import lombok.Data;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -17,5 +19,6 @@ public class PayForm {
     private String userId;
     //充值金额,单位：元
     @NotNull(message = "充值金额不能为空")
+    @DecimalMin(value = "0.01")
     private BigDecimal totalFee;
 }

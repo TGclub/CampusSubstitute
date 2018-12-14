@@ -18,13 +18,30 @@ public class RedisUtil {
         redisTemplate.opsForValue().set(cookie, userId, Constant.TOKEN_EXPIRED, TimeUnit.SECONDS);
     }
 
-    public String getCachedUserId(String cookie) {
-        return redisTemplate.opsForValue().get(cookie);
+    /**
+     * 存储key，value，在expire分钟后过期
+     */
+    public void store(String key, String value, Integer expire) {
+        redisTemplate.opsForValue().set(key, value, expire, TimeUnit.MINUTES);
+    }
+
+    /**
+     * 存储key，value，在expire分钟后过期
+     */
+    public void store(String key, String value, Integer expire, TimeUnit timeUnit) {
+        redisTemplate.opsForValue().set(key, value, expire, timeUnit);
+    }
+
+    public void increment(String key, Double value) {
+        redisTemplate.opsForValue().increment(key,value);
+    }
+
+    public String get(String key) {
+        return redisTemplate.opsForValue().get(key);
     }
 
     public void delete(String key) {
         redisTemplate.delete(key);
     }
-
 
 }
