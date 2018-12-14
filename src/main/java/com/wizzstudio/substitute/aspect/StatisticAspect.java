@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -49,6 +50,11 @@ public class StatisticAspect {
 
     }
 
+    @Pointcut("execution(private * com.wizzstudio.substitute.service.impl.IndentServiceImpl.companyIncome())")
+    public void companyIndent() {
+
+    }
+
     @After("loginBehavior()")
     public void addUserLoginCount(JoinPoint joinPoint) {
         if (joinPoint.getArgs()[0] instanceof WxInfo) {
@@ -71,10 +77,16 @@ public class StatisticAspect {
         if (indentId != null) {
             Indent indent = indentDao.findByIndentId(indentId);
             if (indent == null) return;
-            Integer turnover = indent.getIndentPrice();
-            scheduledService.update(schoolId, CountInfoTypeEnum.INCOME, turnover);
             scheduledService.update(schoolId, CountInfoTypeEnum.FINISHED_INDENT, 1);
         }
+    }
+
+    @Before("companyIndent()")
+    public void addCompanyIncome(JoinPoint joinPoint) {
+        Integer schoolId = getSchoolId();
+        if (schoolId == null) return;
+        scheduledService.update(schoolId, CountInfoTypeEnum.INCOME, joinPoint.getArgs()[0]);
+
     }
 
     public Integer getSchoolId() {

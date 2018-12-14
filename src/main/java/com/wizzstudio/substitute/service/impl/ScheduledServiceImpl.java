@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Kikyou on 18-12-2
@@ -31,18 +32,23 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     private Map<Integer, Long> indentMap = new ConcurrentHashMap<>();
 
+    private AtomicInteger mToday = new AtomicInteger(Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date())));
+
     @Autowired
     private IndentDao indentDao;
 
     @Autowired
     private CountInfoDao countInfoDao;
 
-    private static HashMap<Integer, CountInfo> schoolIdCountInfoMap = new HashMap<>();
+    // key: school id
+    // value: count info
+    private static Map<Integer, CountInfo> schoolIdCountInfoMap = new ConcurrentHashMap<>();
 
     public void startTask() {
         checkOutOfTimeIndent();
         beginStatistics();
     }
+
     @Override
     public void checkOutOfTimeIndent() {
         executorService.schedule(() -> {
@@ -50,11 +56,13 @@ public class ScheduledServiceImpl implements ScheduledService {
         }, 3, TimeUnit.MINUTES);
     }
 
+    //execute ration: 30MinPerTimes
     public void beginStatistics() {
         executorService.scheduleAtFixedRate(() -> {
             saveEveryDaysCount();
         }, 0, 30, TimeUnit.MINUTES);
     }
+
     public void addIndent(int indentId) {
         indentMap.put(indentId, System.currentTimeMillis());
         log.info("new indent was added: " + " " + indentId + " " + System.currentTimeMillis());
@@ -85,30 +93,41 @@ public class ScheduledServiceImpl implements ScheduledService {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("HH");
         if (Integer.valueOf(format.format(date)) == 0) {
-            for (Integer i:schoolIdCountInfoMap.keySet()) {
+            for (Integer i : schoolIdCountInfoMap.keySet()) {
                 countInfoDao.save(schoolIdCountInfoMap.get(i));
             }
         }
-        schoolIdCountInfoMap = new HashMap<>();
+        //execute this code to replace the old when a new day comming
+        schoolIdCountInfoMap = new ConcurrentHashMap<>();
     }
 
+    public void replaceOldMap() {
+        saveEveryDaysCount();
+    }
+
+    // this method has a lot of room for improvement
     @Override
     public synchronized void update(Integer schoolId, CountInfoTypeEnum type, Object value) {
-        if (!schoolIdCountInfoMap.keySet().contains(schoolId)) schoolIdCountInfoMap.put(schoolId, new CountInfo(0,schoolId,Integer.
-                valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date())),0,0,new BigDecimal(0), 0));
+        Integer today = Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date()));
+        if (!today.equals(mToday.get())) {
+            mToday.set(today);// compareAndSet may better
+            replaceOldMap();
+        }
+        if (!schoolIdCountInfoMap.keySet().contains(schoolId))
+            schoolIdCountInfoMap.put(schoolId, new CountInfo(0, schoolId, today, 0, 0, new BigDecimal(0), 0));
         CountInfo countInfo = schoolIdCountInfoMap.get(schoolId);
         switch (type) {
             case INCOME:
-                countInfo.setIncome(countInfo.getIncome().add((BigDecimal)value));
+                countInfo.setIncome(countInfo.getIncome().add((BigDecimal) value));
                 break;
             case NEW_INDENT:
-                countInfo.setNewIndent(countInfo.getNewIndent() + (Integer)value);
+                countInfo.setNewIndent(countInfo.getNewIndent() + (Integer) value);
                 break;
             case LOGIN_USER:
-                countInfo.setLoginUser(countInfo.getLoginUser() + (Integer)value);
+                countInfo.setLoginUser(countInfo.getLoginUser() + (Integer) value);
                 break;
             case FINISHED_INDENT:
-                countInfo.setFinishedIndent(countInfo.getFinishedIndent() + (Integer)value);
+                countInfo.setFinishedIndent(countInfo.getFinishedIndent() + (Integer) value);
                 break;
             default:
                 break;

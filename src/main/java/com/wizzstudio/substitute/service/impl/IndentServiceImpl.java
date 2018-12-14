@@ -386,6 +386,16 @@ public class IndentServiceImpl implements IndentService {
         indent.setIndentState(IndentStateEnum.COMPLETED);
         indentDao.save(indent);
         //todo 发模板消息
+
+        companyIncome(companyIncome);
+    }
+
+    /**
+     * 用来最大限度的减少对 public void finishedIndent(Integer indentId, String userId)方法的侵入
+     * @param companyIncome
+     */
+    public void companyIncome(BigDecimal companyIncome) {
+
     }
 
     @Override
