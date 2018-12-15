@@ -1,5 +1,6 @@
-package com.wizzstudio.substitute.enums;
+package com.wizzstudio.substitute.enums.indent;
 
+import com.wizzstudio.substitute.enums.CodeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
