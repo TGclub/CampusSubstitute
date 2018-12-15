@@ -36,8 +36,7 @@ public class StatisticAspect {
     @Autowired
     private IndentDao indentDao;
 
-    @Pointcut("execution(public * com.wizzstudio.substitute.controller.LoginController.login(..)) && " +
-            "args(com.wizzstudio.substitute.dto.wx, javax.servlet.http)")
+    @Pointcut("execution(public * com.wizzstudio.substitute.controller.LoginController.login(..))")
     public void loginBehavior() {
     }
 
