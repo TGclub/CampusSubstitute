@@ -24,8 +24,13 @@ public class VerifyUserIdentity {
 
     @Before("match()")
     public void check(JoinPoint point) throws AccessDeniedException {
-        String userId = ((CustomUserDetails)(SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal())).getUsername();
+        String userId;
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof CustomUserDetails) {
+            userId = ((CustomUserDetails) (SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal())).getUsername();
+        } else {
+            throw new AccessDeniedException("Access Denied");
+        }
         if (point.getArgs()[0] instanceof String)
         if (!((String)point.getArgs()[0]).equals(userId)) {
             throw new AccessDeniedException("Access Denied");

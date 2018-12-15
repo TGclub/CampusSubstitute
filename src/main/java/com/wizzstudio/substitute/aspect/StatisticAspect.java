@@ -55,7 +55,7 @@ public class StatisticAspect {
 
     }
 
-    @After("loginBehavior()")
+    @Before("loginBehavior()")
     public void addUserLoginCount(JoinPoint joinPoint) {
         if (joinPoint.getArgs()[0] instanceof WxInfo) {
             Integer schoolId = getSchoolId();
@@ -89,7 +89,13 @@ public class StatisticAspect {
     }
 
     public Integer getSchoolId() {
-        String userId = ((CustomUserDetails) (SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
+        String userId;
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof CustomUserDetails) {
+            userId = ((CustomUserDetails) (SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal())).getUsername();
+        } else {
+            throw new AccessDeniedException("Access Denied");
+        }
         if (userId == null) throw new AccessDeniedException("Access Denied");
         User user = userDao.findUserById(userId);
         if (user == null) throw new AccessDeniedException("Access Denied");
