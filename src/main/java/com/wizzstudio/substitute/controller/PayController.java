@@ -85,8 +85,8 @@ public class PayController {
      * @return 返回xml，提醒微信已接收并处理该回调结果，否则会一直回调
      * 注意：方法名不能叫notify，否则会报错：无法覆盖java.lang.Object中的notify()
      */
-    @GetMapping("/notify")
-    public String wxNotify(String notifyData) {
+    @PostMapping("/notify")
+    public String wxNotify(@RequestBody String notifyData) {
         Map<String, String> result = new HashMap<>();
         result.put("return_code", "SUCCESS");
         result.put("return_msg", "OK");

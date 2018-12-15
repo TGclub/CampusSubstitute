@@ -62,6 +62,8 @@ public class WxPayServiceImpl implements WxPayService {
         Collections.sort(fieldNames);
         //拼接成字符串stringA
         for (String fieldName : fieldNames) {
+            //如果map中有key 或 sign，跳过
+            if (fieldName.equals("key") || fieldName.equals("sign")) continue;
             sbA.append(fieldName.concat("=").concat(fieldMap.get(fieldName)).concat("&"));
         }
         //最后加上key
@@ -151,7 +153,6 @@ public class WxPayServiceImpl implements WxPayService {
 
         //todo，封装参数为xml
         String xml = XmlUtil.payInfoToXML(wxPrePayInfo);
-        log.info(xml);
         xml = xml.replace("__", "_").replace("<![CDATA[1]]>", "1");
         log.info(xml);
 
@@ -238,7 +239,7 @@ public class WxPayServiceImpl implements WxPayService {
             log.error("[微信支付]，异步通知，订单不存在,orderId={}", asyncResponse.getOutTradeNo());
             throw new SubstituteException(ResultEnum.INDENT_NOT_EXISTS);
         }
-        if (asyncResponse.getTotalFee().equals(depositInfo.getDepositMoney())) {
+        if (!asyncResponse.getTotalFee().equals(depositInfo.getDepositMoney())) {
             log.error("[微信支付]，异步通知，订单金额不一致,orderId={},订单金额={}分,异步通知金额={}分", asyncResponse.getOutTradeNo(),
                     depositInfo.getDepositMoney(), asyncResponse.getTotalFee());
             throw new SubstituteException(ResultEnum.WX_NOTIFY_MONEY_VERIFY_ERROR);

@@ -3,12 +3,9 @@ package com.wizzstudio.substitute.dao;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.domain.Indent;
-import com.wizzstudio.substitute.enums.UrgentTypeEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Column;
 import java.util.List;
 
 @Repository

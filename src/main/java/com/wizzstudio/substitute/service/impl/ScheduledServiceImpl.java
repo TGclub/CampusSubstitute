@@ -5,7 +5,7 @@ import com.wizzstudio.substitute.dao.IndentDao;
 import com.wizzstudio.substitute.domain.CountInfo;
 import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.enums.CountInfoTypeEnum;
-import com.wizzstudio.substitute.enums.UrgentTypeEnum;
+import com.wizzstudio.substitute.enums.indent.UrgentTypeEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.service.ScheduledService;
 import lombok.extern.slf4j.Slf4j;

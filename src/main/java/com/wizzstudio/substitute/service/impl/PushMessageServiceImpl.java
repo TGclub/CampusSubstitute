@@ -41,13 +41,34 @@ public class PushMessageServiceImpl implements PushMessageService {
 
     //todo 未完成
     @Override
-    public void sendTemplateMsg(String userOpenid, String formId) {
+    public void sendTemplateMsg(String userOpenid, String formId, Integer indentId) {
+
+    }
+
+    //todo 未完成
+    @Override
+    public void sendPhoneMsg(String userId,Integer urgentCode) {
+
+    }
+
+
+    /**
+     * 发送指定微信模板消息给指定用户
+     * @param openid 用户openid
+     * @param formId 表单提交id
+     * @param templateId 模板消息id
+     * @param paramList 参数列表（"需符合第N个参数的key叫keywordN"）
+     */
+    private void sendTemplateMsg(String openid,String formId,String templateId,List<String> paramList){
         WxMaMsgService msgService = wxMaService.getMsgService();
         WxMaTemplateMessage templateMessage = new WxMaTemplateMessage();
-        templateMessage.setToUser(userOpenid);
+        templateMessage.setToUser(openid);
         templateMessage.setFormId(formId);
-//        templateMessage.setTemplateId();
-//        templateMessage.addData();
+        templateMessage.setTemplateId(templateId);
+        for (int i = 0; i < paramList.size(); i++){
+            String key = "keyword"+(i+1);
+            templateMessage.addData(new WxMaTemplateMessage.Data(key,paramList.get(i)));
+        }
         try {
             msgService.sendTemplateMsg(templateMessage);
         } catch (WxErrorException e) {
@@ -55,32 +76,31 @@ public class PushMessageServiceImpl implements PushMessageService {
         }
     }
 
-    //todo 未完成
-    @Override
-    public void sendPhoneMsg2Boss(int schoolId, int msgType) {
+    /**
+     * 给指定电话用户发送指定模板消息
+     * @param templateCode 短信模板ID
+     * @param phone 发送用户电话，若有多个用户，用逗号隔开，如："1234,2234"
+     * @param paramList 短信模板参数列表(注意，模板消息设置时，变量要用{param1}、{param2}……{paramN})
+     */
+    private void sendMsg(String templateCode, String phone,List<String> paramList) {
         //组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
         //必填:短信签名名称-可在短信控制台中找到
-        request.setSignName("testCx");
+        request.setSignName("bangbang");
         //必填:短信模板ID-可在短信控制台中找到
-        request.setTemplateCode("SMS_150865237");
+        request.setTemplateCode(templateCode);
         //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${param1},您的验证码为${param2}"时,此处的值为
         Map<String, String> params = new HashMap<>();
-        params.put("param1", "test1");
-        params.put("param2", "test2");
+        for (int i = 0; i < paramList.size(); i++){
+            params.put("param"+(i+1), paramList.get(i));
+        }
         request.setTemplateParam(JSON.toJSON(params).toString());
-        //添加发送对象电话
-        List<AdminInfo> adminInfos = adminService.findAllBossBySchoolId(schoolId);
-        StringBuilder sb = new StringBuilder();
-        adminInfos.forEach(x -> {
-            sb.append(x.getAdminPhone()).append(",");
-        });
         //必填:,短信接收号码,支持以逗号分隔的形式进行批量调用，批量上限为1000个手机号码
-        request.setPhoneNumbers(sb.toString().substring(0,sb.toString().length()-1));
+        request.setPhoneNumbers(phone);
         try {
             SmsUtil.sendSms(request, aliSmsConfig);
         } catch (ClientException e) {
-            log.error("出错了");
+            log.error("[发送短信]出错了，templateCode={},phone={},e={}",templateCode,phone,e);
         }
     }
 }
