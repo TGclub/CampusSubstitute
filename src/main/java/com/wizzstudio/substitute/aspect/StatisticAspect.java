@@ -36,22 +36,22 @@ public class StatisticAspect {
     @Autowired
     private IndentDao indentDao;
 
-    @Pointcut("execution(public * com.wizzstudio.substitute.controller.LoginController.login())")
+    @Pointcut("execution(public * com.wizzstudio.substitute.controller.LoginController.login(..))")
     public void loginBehavior() {
     }
 
-    @Pointcut("execution(public * com.wizzstudio.substitute.controller.IndentController.publishNewIndent())")
+    @Pointcut("execution(public * com.wizzstudio.substitute.controller.IndentController.publishNewIndent(..))")
     public void newIndentBehavior() {
 
     }
 
-    @Pointcut("execution(public * com.wizzstudio.substitute.controller.IndentController.arrivedIndent())")
+    @Pointcut("execution(public * com.wizzstudio.substitute.controller.IndentController.arrivedIndent(..))")
     public void indentAlmostBehavior() {
 
     }
 
-    @Pointcut("execution(private * com.wizzstudio.substitute.service.impl.IndentServiceImpl.companyIncome())")
-    public void companyIndent() {
+    @Pointcut("execution(public * com.wizzstudio.substitute.service.impl.IndentServiceImpl.companyIncome(..))")
+    public void companyIncomeBehavior() {
 
     }
 
@@ -81,7 +81,7 @@ public class StatisticAspect {
         }
     }
 
-    @Before("companyIndent()")
+    @Before("companyIncomeBehavior()")
     public void addCompanyIncome(JoinPoint joinPoint) {
         Integer schoolId = getSchoolId();
         if (schoolId == null) return;
