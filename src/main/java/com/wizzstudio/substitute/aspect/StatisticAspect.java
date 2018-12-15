@@ -36,7 +36,8 @@ public class StatisticAspect {
     @Autowired
     private IndentDao indentDao;
 
-    @Pointcut("execution(public * com.wizzstudio.substitute.controller.LoginController.login(..))")
+    @Pointcut("execution(public * com.wizzstudio.substitute.controller.LoginController.login(..)) && " +
+            "args(com.wizzstudio.substitute.dto.wx, javax.servlet.http)")
     public void loginBehavior() {
     }
 
@@ -86,7 +87,6 @@ public class StatisticAspect {
         Integer schoolId = getSchoolId();
         if (schoolId == null) return;
         scheduledService.update(schoolId, CountInfoTypeEnum.INCOME, joinPoint.getArgs()[0]);
-
     }
 
     public Integer getSchoolId() {

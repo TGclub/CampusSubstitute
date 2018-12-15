@@ -32,7 +32,8 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     private Map<Integer, Long> indentMap = new ConcurrentHashMap<>();
 
-    private AtomicInteger mToday = new AtomicInteger(Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date())));
+    private AtomicInteger mToday = new AtomicInteger(Integer.valueOf(new SimpleDateFormat("yyyyMMdd")
+            .format(new Date())));
 
     @Autowired
     private IndentDao indentDao;
@@ -96,7 +97,7 @@ public class ScheduledServiceImpl implements ScheduledService {
     @Override
     public void saveEveryDaysCount() {
         Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("HH");
+        SimpleDateFormat format = new SimpleDateFormat("HHmm");
         if (Integer.valueOf(format.format(date)) == 0) {
             for (Integer i : schoolIdCountInfoMap.keySet()) {
                 countInfoDao.save(schoolIdCountInfoMap.get(i));
@@ -104,6 +105,7 @@ public class ScheduledServiceImpl implements ScheduledService {
         }
         //execute this code to replace the old when a new day comming
         schoolIdCountInfoMap = new ConcurrentHashMap<>();
+        mToday.set(Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date())));
     }
 
     public void replaceOldMap() {
