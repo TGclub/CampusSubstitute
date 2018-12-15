@@ -73,8 +73,8 @@ public class AdminServiceImpl implements AdminService {
         log.info("name: " + loginDTO.getAdminName() + "," + "passwd " + loginDTO.getPassword());
         AdminInfo admin = adminDao.getAdminInfoByAdminName(loginDTO.getAdminName());
         log.info(admin.getAdminName() + " in database " + admin.getAdminPass());
-        //return admin.getAdminPass().equals(encoder.encode(loginDTO.getPassword()));
-        return admin.getAdminPass().equals(loginDTO.getPassword());
+        return admin.getAdminPass().equals(encoder.encode(loginDTO.getPassword()));
+        //return admin.getAdminPass().equals(loginDTO.getPassword());
     }
 
     @Override
@@ -133,7 +133,7 @@ public class AdminServiceImpl implements AdminService {
     public List<FeedbackVO> getFeedBackByState(boolean status) {
         List<Feedback> feedbacks = feedbackDao.findByIsRead(status);
         List<FeedbackVO> vos = new ArrayList<>();
-        feedbacks.stream().forEach(x -> {
+        feedbacks.forEach(x -> {
             FeedbackVO vo = new FeedbackVO();
             BeanUtils.copyProperties(x, vo);
             User user = userDao.findUserById(x.getUserId());
@@ -163,7 +163,7 @@ public class AdminServiceImpl implements AdminService {
         user.setBalance(new BigDecimal(0));
         userDao.save(user);
         List<WithdrawRequest> withdrawRequests = withdrawRequestDao.findAllByUserId(id);
-        withdrawRequests.stream().forEach(r -> {
+        withdrawRequests.forEach(r -> {
             r.setIsSolved(true);
             withdrawRequestDao.save(r);
         });
@@ -216,7 +216,7 @@ public class AdminServiceImpl implements AdminService {
     public List<WithdrawRequestVO> viewAllWithDrawRequestByStatus(boolean status) {
         List<WithdrawRequest> withdrawRequests = withdrawRequestDao.findAllByIsSolved(status);
         List<WithdrawRequestVO> vos = new ArrayList<>();
-        withdrawRequests.stream().forEach(x -> {
+        withdrawRequests.forEach(x -> {
             WithdrawRequestVO withdrawRequest = new WithdrawRequestVO();
             BeanUtils.copyProperties(x, withdrawRequest);
             User user = userDao.findUserById(x.getUserId());
