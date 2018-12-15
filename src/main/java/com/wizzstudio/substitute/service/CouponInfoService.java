@@ -27,4 +27,9 @@ public interface CouponInfoService {
      *返回首页轮播图中的优惠券信息
      */
     List<UserCouponDTO> getRecentFiveCouponInfo();
+
+    /**
+     * 通过优惠券id获取某优惠券信息
+     */
+    CouponInfo findByCouponId(Integer couponId);
 }

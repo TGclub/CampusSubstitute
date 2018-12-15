@@ -40,6 +40,14 @@ public class CouponController {
     }
 
     /**
+     * 通过couponId获取优惠券信息
+     */
+    @GetMapping("/info/{couponId}")
+    public ResponseEntity getOneByCouponId(@PathVariable Integer couponId){
+        return ResultUtil.success(couponInfoService.findByCouponId(couponId));
+    }
+
+    /**
      * 某用户领取某优惠券
      */
     @PostMapping("/get")

@@ -71,4 +71,9 @@ public class CouponInfoServiceImpl implements CouponInfoService {
         });
         return userCouponDTOS;
     }
+
+    @Override
+    public CouponInfo findByCouponId(Integer couponId) {
+        return couponInfoDao.findByCouponId(couponId);
+    }
 }
