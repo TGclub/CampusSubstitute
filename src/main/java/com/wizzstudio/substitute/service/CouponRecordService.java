@@ -29,4 +29,9 @@ public interface CouponRecordService {
      * 获取所有该用户领取的未过期的优惠券
      */
     List<CouponRecord> findLiveByUserId(String userId);
+
+    /**
+     * 获取所有该用户领取的所有优惠券
+     */
+    List<CouponRecord> findGetByUserId(String userId);
 }

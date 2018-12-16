@@ -19,6 +19,12 @@ public interface CouponRecordDao extends JpaRepository<CouponRecord, Integer> {
     CouponRecord findByCouponIdAndOwnerId(Integer couponId,String ownerId);
 
     /**
+     * 获取指定用户已领取的所有优惠券
+     */
+    @Query("select c from CouponRecord c where c.ownerId = ?1 and c.invalidTime > current_date ")
+    List<CouponRecord> findGetByUserId(String userId);
+
+    /**
      * 获取指定用户已领取的未过期优惠券
      */
     @Query("select c from CouponRecord c where c.isUsed = false and c.ownerId = ?1 and c.invalidTime > current_date ")

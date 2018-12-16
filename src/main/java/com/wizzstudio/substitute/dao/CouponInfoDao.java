@@ -23,9 +23,10 @@ public interface CouponInfoDao extends JpaRepository<CouponInfo, Integer> {
 
     /**
      * 获取所有可领取的优惠券
+     * @param couponId 该集合为已领取的优惠券id集合
      */
-    @Query("select c from CouponInfo c where c.invalidTime > current_date and c.isDeleted = false ")
-    List<CouponInfo> findAllLive();
+    @Query("select c from CouponInfo c where c.invalidTime > current_date and c.isDeleted = false and c.couponId not in ?1")
+    List<CouponInfo> findAllGet(List<Integer> couponId);
 
     List<CouponInfo> findTop5ByInvalidTimeAfterAndIsDeletedIsFalseOrderByCouponIdDesc(Date date);
 }

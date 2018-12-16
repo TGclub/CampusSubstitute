@@ -28,7 +28,7 @@ public interface AddressService {
      */
     List<Address> getUsualAddress(String userId);
 
-    List<Address> getAllByAddress(String address);
+    List<Address> getAllByAddress(String userId,String address);
 
     /**
      * 修改地址

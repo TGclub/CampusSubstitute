@@ -126,7 +126,7 @@ public class UserController extends BaseController {
     public ResponseEntity getAllAddress(@PathVariable String userId, String key) {
         List<Address> addresses;
         if (key != null) {
-            addresses = addressService.getAllByAddress(key);
+            addresses = addressService.getAllByAddress(userId,key);
         } else {
             addresses = addressService.getUsualAddress(userId);
         }

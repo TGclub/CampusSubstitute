@@ -45,9 +45,9 @@ public class AddressServiceImpl extends BaseService implements AddressService {
     }
 
     @Override
-    public List<Address> getAllByAddress(String address) {
+    public List<Address> getAllByAddress(String userId, String address) {
         if (address == null) address = "";
-        return addressDao.findAllByAddressLikeAndIsDeletedIsFalse("%".concat(address).concat("%"));
+        return addressDao.findAllByUserIdAndAddressLikeAndIsDeletedIsFalse(userId, "%".concat(address).concat("%"));
     }
 
     @Override

@@ -13,5 +13,5 @@ public interface AddressDao extends JpaRepository<Address, Integer> {
     List<Address> findAddressByUserIdAndIsDeletedIsFalse(String userId);
 
     //通过address模糊查询
-    List<Address> findAllByAddressLikeAndIsDeletedIsFalse(String address);
+    List<Address> findAllByUserIdAndAddressLikeAndIsDeletedIsFalse(String userId, String address);
 }
