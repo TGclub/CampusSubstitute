@@ -31,13 +31,6 @@ public interface AddressService {
     List<Address> getAllByAddress(String address);
 
     /**
-     * 通过关键字获取学校
-     * @param school 学校名称
-     * @return
-     */
-    List<School> getSchoolInFuzzyMatching(String school);
-
-    /**
      * 修改地址
      * @param addressId
      * @param userId

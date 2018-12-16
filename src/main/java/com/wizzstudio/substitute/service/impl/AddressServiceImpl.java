@@ -50,17 +50,6 @@ public class AddressServiceImpl extends BaseService implements AddressService {
         return addressDao.findAllByAddressLikeAndIsDeletedIsFalse("%".concat(address).concat("%"));
     }
 
-    /**
-     * 采取简单粗暴的模糊匹配
-     *
-     * @param school 学校名称
-     * @return
-     */
-    @Override
-    public List<School> getSchoolInFuzzyMatching(String school) {
-        return schoolDao.findBySchoolNameLike("%" + school + "%");
-    }
-
     @Override
     public void modifyAddress(Integer addressId, String userId, AddressDTO modifyAddressDTO) {
         Address address = addressDao.findAddressById(addressId);

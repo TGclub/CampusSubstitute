@@ -119,12 +119,6 @@ public class UserController extends BaseController {
         return ResultUtil.success();
     }
 
-    @GetMapping(value = "/school")
-    public ResponseEntity getSchool(String key) {
-        List<School> schools = addressService.getSchoolInFuzzyMatching(key);
-        return ResultUtil.success(schools);
-    }
-
     /**
      * 获取所有常用地址列表, 当key不为空的时候按关键词进行模糊匹配
      */
