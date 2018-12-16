@@ -42,7 +42,7 @@ public class CouponInfoServiceImpl implements CouponInfoService {
         //获取已领取可用优惠券
         List<CouponRecord> couponRecords = couponRecordService.findLiveByUserId(userId);
         List<Integer> couponIds = couponRecords.stream().map(CouponRecord::getCouponId).collect(Collectors.toList());
-        List<CouponInfo> liveCouponInfos = couponInfoDao.findAllByCouponIdIsIn(couponIds);
+        List<CouponInfo> liveCouponInfos = couponInfoDao.findAllByCouponIdIsInAndIsDeletedIsFalse(couponIds);
         couponListVO.setLiveCoupons(liveCouponInfos);
         //获取未领取但可领取的优惠券
         List<CouponInfo> couponInfos = couponInfoDao.findAllLive();
