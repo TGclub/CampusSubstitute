@@ -20,6 +20,6 @@ public class StatisticAspectTest {
 
     @Test
     public void testLoginCount(){
-        loginController.login(new WxInfo(), new MockHttpServletResponse());
+
     }
 }

@@ -115,6 +115,7 @@ public class ScheduledServiceImpl implements ScheduledService {
     // this method has a lot of room for improvement
     @Override
     public synchronized void update(Integer schoolId, CountInfoTypeEnum type, Object value) {
+        if (schoolId == null) return;
         Integer today = Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date()));
         if (!today.equals(mToday.get())) {
             mToday.set(today);// compareAndSet may better
