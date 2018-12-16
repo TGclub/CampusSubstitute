@@ -11,10 +11,7 @@ import com.wizzstudio.substitute.security.CustomUserDetails;
 import com.wizzstudio.substitute.service.impl.ScheduledServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,7 +52,7 @@ public class StatisticAspect {
 
     }
 
-    @Before("loginBehavior()")
+    @AfterReturning("loginBehavior()")
     public void addUserLoginCount(JoinPoint joinPoint) {
         if (joinPoint.getArgs()[0] instanceof WxInfo) {
             Integer schoolId = getSchoolId();
@@ -90,10 +87,12 @@ public class StatisticAspect {
 
     public Integer getSchoolId() {
         String userId;
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof CustomUserDetails) {
+        try {
             userId = ((CustomUserDetails) (SecurityContextHolder.getContext()
                     .getAuthentication().getPrincipal())).getUsername();
-        } else {
+        } catch (Exception e) {
+            log.error("Exception Happend");
+            e.printStackTrace();
             throw new AccessDeniedException("Access Denied");
         }
         if (userId == null) throw new AccessDeniedException("Access Denied");

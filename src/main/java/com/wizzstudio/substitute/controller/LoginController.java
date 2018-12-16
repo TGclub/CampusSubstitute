@@ -4,6 +4,8 @@ import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
 import com.wizzstudio.substitute.dto.wx.WxInfo;
 import com.wizzstudio.substitute.domain.User;
+import com.wizzstudio.substitute.security.CustomUserDetails;
+import com.wizzstudio.substitute.security.service.CustomUserDetailsService;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.CookieUtil;
 import com.wizzstudio.substitute.util.ResultUtil;
@@ -11,6 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -26,20 +33,29 @@ public class LoginController extends BaseController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+
     /**
      * 用户注册
      */
     @PostMapping("/login/user")
-    public ResponseEntity login(@NotNull @RequestBody WxInfo loginData, HttpServletResponse response) {
+    public ResponseEntity login(@NotNull @RequestBody WxInfo loginData, HttpServletResponse response, HttpServletRequest request) {
         try {
             //获取用户信息，若用户未使用过该程序，先进行注册
             User user = userService.userLogin(loginData);
             String cookie = CookieUtil.tokenGenerate();
             redisUtil.storeNewCookie(cookie, user.getId());
             CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getId());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                    null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             return ResultUtil.success(user);
-        } catch (WxErrorException e) {
+        } catch (WxErrorException | NullPointerException e) {
             log.error("【微信登录】登录失败，e={}",e);
+            e.printStackTrace();
             return ResultUtil.error();
         }
     }
