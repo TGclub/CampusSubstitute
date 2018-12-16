@@ -73,7 +73,7 @@ public class AdminServiceImpl implements AdminService {
         log.info("name: " + loginDTO.getAdminName() + "," + "passwd " + loginDTO.getPassword());
         AdminInfo admin = adminDao.getAdminInfoByAdminName(loginDTO.getAdminName());
         log.info(admin.getAdminName() + " in database " + admin.getAdminPass());
-        return admin.getAdminPass().equals(encoder.encode(loginDTO.getPassword()));
+        return encoder.matches(loginDTO.getPassword(),admin.getAdminPass());
         //return admin.getAdminPass().equals(loginDTO.getPassword());
     }
 

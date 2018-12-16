@@ -71,6 +71,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         AuthenticationFilter filter = new AuthenticationFilter(userDetailsService, adminDetailsService, redisUtil);
 
         http
+                .cors();
+        http
                 .csrf()
                 .disable()
                 .exceptionHandling()

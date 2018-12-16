@@ -35,6 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @Secured("ROLE_ADMIN_2")
+@CrossOrigin
 public class AdminController {
 
     @Autowired
