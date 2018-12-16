@@ -57,4 +57,10 @@ public class CouponRecordServiceImpl implements CouponRecordService {
         commonCheckService.checkUserByUserId(userId);
         return couponRecordDao.findLiveByUserId(userId);
     }
+
+    @Override
+    public List<CouponRecord> findGetByUserId(String userId) {
+        commonCheckService.checkUserByUserId(userId);
+        return couponRecordDao.findGetByUserId(userId);
+    }
 }

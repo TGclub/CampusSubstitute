@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created By Cx On 2018/11/27 13:16
  */
@@ -22,5 +24,16 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public School getById(Integer schoolId) {
         return schoolDao.findSchoolById(schoolId);
+    }
+
+    /**
+     * 采取简单粗暴的模糊匹配
+     *
+     * @param school 学校名称
+     * @return
+     */
+    @Override
+    public List<School> getSchoolInFuzzyMatching(String school) {
+        return schoolDao.findBySchoolNameLike("%" + school + "%");
     }
 }

@@ -28,14 +28,7 @@ public interface AddressService {
      */
     List<Address> getUsualAddress(String userId);
 
-    List<Address> getAllByAddress(String address);
-
-    /**
-     * 通过关键字获取学校
-     * @param school 学校名称
-     * @return
-     */
-    List<School> getSchoolInFuzzyMatching(String school);
+    List<Address> getAllByAddress(String userId,String address);
 
     /**
      * 修改地址

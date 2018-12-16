@@ -15,6 +15,7 @@ import javax.validation.constraints.*;
 public class AdminInfo {
     //管理员Id
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer adminId;
     //管理员电话
     @Column

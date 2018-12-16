@@ -8,6 +8,7 @@ import com.wizzstudio.substitute.enums.GenderEnum;
 import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.enums.indent.IndentSortTypeEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
+import com.wizzstudio.substitute.enums.indent.IndentTypeEnum;
 import com.wizzstudio.substitute.exception.CheckException;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.service.*;
@@ -136,11 +137,13 @@ public class IndentServiceImpl implements IndentService {
             log.error("[创建订单]创建失败，下单用户不存在，publisherId={},indent={}", indent.getPublisherId(),indent);
             throw new SubstituteException("下单用户不存在，publisherId有误");
         }
-        //1.2检验用户填入的shippingId是否存在，是否属于该用户
-        Address shipping = addressService.getById(indent.getShippingAddressId());
-        if (shipping == null || !shipping.getUserId().equals(indent.getPublisherId())) {
-            log.error("[创建订单]创建失败，送达地址信息有误，indent={}，shipping={}", indent, shipping);
-            throw new SubstituteException("订单信息有误，送达地址信息有误");
+        //1.2若不是随意帮，检验用户填入的shippingId是否存在，是否属于该用户
+        if (!indent.getIndentType().equals(IndentTypeEnum.HELP_OTHER)){
+            Address shipping = addressService.getById(indent.getShippingAddressId());
+            if (shipping == null || !shipping.getUserId().equals(indent.getPublisherId())) {
+                log.error("[创建订单]创建失败，送达地址信息有误，indent={}，shipping={}", indent, shipping);
+                throw new SubstituteException("订单信息有误，送达地址信息有误");
+            }
         }
         //1.3验证是否使用了优惠券，
         //若使用，验证优惠券id是否有效、该用户是否领取该优惠券、该优惠券是否处于有效期、该订单是否达到最低满减额
