@@ -133,5 +133,4 @@ public class UserController extends BaseController {
         return ResultUtil.success(addresses);
     }
 
-
 }

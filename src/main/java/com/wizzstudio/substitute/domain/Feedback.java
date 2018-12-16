@@ -8,9 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -27,6 +25,7 @@ public class Feedback {
 
     //反馈id
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer feedbackId;
 
     //反馈信息

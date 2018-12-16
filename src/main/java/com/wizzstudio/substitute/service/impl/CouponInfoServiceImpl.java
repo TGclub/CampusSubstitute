@@ -55,7 +55,13 @@ public class CouponInfoServiceImpl implements CouponInfoService {
         //获取该用户已领取的优惠券Id
         List<Integer> couponGetIds = couponRecords.stream().map(CouponRecord::getCouponId).collect(Collectors.toList());
         //获取该用户所有可领取优惠券
-        List<CouponInfo> couponInfos = couponInfoDao.findAllGet();
+        List<CouponInfo> couponInfos;
+        if (couponGetIds.size() == 0){
+            couponInfos = couponInfoDao.findAllGet();
+        }
+        else {
+            couponInfos = couponInfoDao.findAllGetExcept(couponGetIds);
+        }
         couponListVO.setGetCoupons(couponInfos);
         return couponListVO;
     }
