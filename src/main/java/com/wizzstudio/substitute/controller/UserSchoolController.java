@@ -27,10 +27,11 @@ public class UserSchoolController {
     SchoolService schoolService;
 
     /**
-     * 通过关键字模糊匹配学校列表
+     * 通过关键字模糊匹配学校列表, 如果关键字为空则返回所有学校
      */
     @GetMapping
     public ResponseEntity getSchool(String key) {
+        if (key == null) return ResultUtil.success(schoolService.getSchoolInFuzzyMatching("%"));
         return ResultUtil.success(schoolService.getSchoolInFuzzyMatching(key));
     }
 

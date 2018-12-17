@@ -31,7 +31,7 @@ import java.util.List;
         "    \"code\": 0,\n" +
         "    \"msg\": \"请求成功\",\n" +
         "    \"data\": null\n" +
-        "}")
+        "},\n另二级管理员仅拥有查看和处理反馈信息的权限")
 @RestController
 @RequestMapping("/admin")
 @Secured("ROLE_ADMIN_2")
@@ -328,27 +328,29 @@ public class AdminController {
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/withdrawDeposit/viewUnHandled")
     @ApiResponses({
-    @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明, 返回示例：{\n" +
+    @ApiResponse(code = 200, message = "{\n" +
             "    \"code\": 0,\n" +
             "    \"msg\": \"请求成功\",\n" +
             "    \"data\": [\n" +
             "        {\n" +
-            "            \"withdrawId\": 3,\n" +
-            "            \"userId\": \"wef\",\n" +
+            "            \"withdrawId\": 6,\n" +
+            "            \"userId\": \"EEETEE\",\n" +
             "            \"isSolved\": false,\n" +
-            "            \"createTime\": 1543298968000\n" +
+            "            \"createTime\": 1544198730000,\n" +
+            "            \"phone\": 110112119,\n" +
+            "            \"balance\": 0,\n" +
+            "            \"schoolName\": \"西安邮电大学\",\n" +
+            "            \"userName\": \"twet\"\n" +
             "        },\n" +
             "        {\n" +
-            "            \"withdrawId\": 4,\n" +
-            "            \"userId\": \"wef\",\n" +
+            "            \"withdrawId\": 9,\n" +
+            "            \"userId\": \"EEETEE\",\n" +
             "            \"isSolved\": false,\n" +
-            "            \"createTime\": 1543298974000\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"withdrawId\": 5,\n" +
-            "            \"userId\": \"wef\",\n" +
-            "            \"isSolved\": false,\n" +
-            "            \"createTime\": 1543298975000\n" +
+            "            \"createTime\": 1544198730000,\n" +
+            "            \"phone\": 110112119,\n" +
+            "            \"balance\": 0,\n" +
+            "            \"schoolName\": \"西安邮电大学\",\n" +
+            "            \"userName\": \"twet\"\n" +
             "        }\n" +
             "    ]\n" +
             "}")})
