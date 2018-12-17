@@ -28,6 +28,7 @@ import java.io.IOException;
 
 @RestController
 @Slf4j
+@CrossOrigin(origins = {"http://localhost:8080"})
 public class LoginController extends BaseController {
 
     @Autowired
@@ -66,7 +67,8 @@ public class LoginController extends BaseController {
             String cookie = CookieUtil.tokenGenerate();
             redisUtil.storeNewCookie(cookie, loginDTO.getAdminName());
             CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
-            return ResultUtil.success();
+            response.setHeader("TOKEN", cookie);
+            return ResultUtil.success("token="+cookie);
         }
         return ResultUtil.error();
     }

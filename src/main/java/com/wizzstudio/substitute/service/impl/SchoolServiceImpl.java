@@ -36,4 +36,5 @@ public class SchoolServiceImpl implements SchoolService {
     public List<School> getSchoolInFuzzyMatching(String school) {
         return schoolDao.findBySchoolNameLike("%" + school + "%");
     }
+
 }

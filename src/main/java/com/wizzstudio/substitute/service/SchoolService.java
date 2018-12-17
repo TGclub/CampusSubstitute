@@ -21,4 +21,5 @@ public interface SchoolService {
      * @return
      */
     List<School> getSchoolInFuzzyMatching(String school);
+
 }

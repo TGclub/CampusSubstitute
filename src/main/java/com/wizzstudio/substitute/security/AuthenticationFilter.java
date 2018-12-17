@@ -45,6 +45,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI().toString();
         log.info("processing authentication for '{}'", uri);
         Cookie cookie = CookieUtil.getCookie(request);
+        String token = request.getHeader("TOKEN");
         if (cookie != null) {
             String key = cookie.getValue();
             log.info("key: " + key);
@@ -67,6 +68,20 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                         log.info("authorized user '{}', setting security context", userDetails.getUsername());
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
+                }
+            }
+        } else if (token != null && uri.startsWith("/admin")) {
+            log.error("login by TOKEN header: " + token);
+            String value = util.get(token);
+            log.info("value: " + value);
+            if (value != null) {
+                UserDetails userDetails = adminDetailsService.loadUserByUsername(value);
+                if (userDetails != null) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                            null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    log.info("authorized user '{}', setting security context", userDetails.getUsername());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
         }
