@@ -42,6 +42,7 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     @Autowired
     private CountInfoDao countInfoDao;
+
     @Autowired
     private PushMessageService pushMessageService;
 
@@ -75,7 +76,7 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     public void addIndent(int indentId, Date time) {
         indentMap.put(indentId, time.getTime());
-        log.info("new indent was added: " + " " + indentId + " "+time.getTime());
+        log.info("new indent was added: " + " " + indentId + " " + time.getTime());
     }
 
     public void removeIndentFromMap(int indentId) {
@@ -93,7 +94,7 @@ public class ScheduledServiceImpl implements ScheduledService {
             if (System.currentTimeMillis() - indentMap.get(indentId) > 3600000) {
                 indent.setUrgentType(UrgentTypeEnum.OVERTIME.getCode());
                 //发送短信给下单者--cx
-                pushMessageService.sendPhoneMsg(indent.getPublisherId(),UrgentTypeEnum.OVERTIME);
+                pushMessageService.sendPhoneMsg(indent.getPublisherId(), UrgentTypeEnum.OVERTIME);
                 indentDao.save(indent);
                 indentMap.remove(indentId);
             }
@@ -102,17 +103,17 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     @Override
     public void saveEveryDaysCount() {
-        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("HHmm");
-        if (Integer.valueOf(format.format(date)) == 0) {// means a new new day has come, so store the data of last day
+        Date time = new Date();
+        Integer today = Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(time));
+        SimpleDateFormat format = new SimpleDateFormat("HH");
+        if (!today.equals(mToday.get())) {// means a new new day has come, so store the data of last day
             for (Integer i : schoolIdCountInfoMap.keySet()) {
                 countInfoDao.save(schoolIdCountInfoMap.get(i));
             }
             //execute this code to replace the old when a new day coming
             schoolIdCountInfoMap = new ConcurrentHashMap<>();
-            mToday.set(Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date())));
+            mToday.set(Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(time)));
         }
-
     }
 
     public void replaceOldMap() {
