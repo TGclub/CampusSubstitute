@@ -105,7 +105,7 @@ public class PushMessageServiceImpl implements PushMessageService {
     }
 
     @Override
-    public void sendPhoneMsg(String userId,UrgentTypeEnum urgentType) {
+    public void sendPhoneMsg2User(String userId,UrgentTypeEnum urgentType) {
         try {
             User user = userService.findUserById(userId);
             String phone = String.valueOf(user.getPhone()), name = user.getUserName(),templateCode;
@@ -130,6 +130,11 @@ public class PushMessageServiceImpl implements PushMessageService {
         } catch (ClientException e) {
             log.error("[发送短信]出错了，e={}",e);
         } catch (Exception ignored){}
+    }
+
+    @Override
+    public void sendPhoneMsg2Admin(String adminId, UrgentTypeEnum urgentTypeEnum) {
+
     }
 
 
