@@ -1,6 +1,7 @@
 package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.VO.FeedbackVO;
+import com.wizzstudio.substitute.VO.UrgentIndentVO;
 import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.dao.*;
 import com.wizzstudio.substitute.domain.*;
@@ -73,7 +74,7 @@ public class AdminServiceImpl implements AdminService {
         log.info("name: " + loginDTO.getAdminName() + "," + "passwd " + loginDTO.getPassword());
         AdminInfo admin = adminDao.getAdminInfoByAdminName(loginDTO.getAdminName());
         log.info(admin.getAdminName() + " in database " + admin.getAdminPass());
-        return encoder.matches(loginDTO.getPassword(),admin.getAdminPass());
+        return encoder.matches(loginDTO.getPassword(), admin.getAdminPass());
         //return admin.getAdminPass().equals(loginDTO.getPassword());
     }
 
@@ -98,13 +99,24 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<Indent> getUnHandledUrgentIndents() {
-        return indentDao.findAllByIsSolvedAndUrgentTypeGreaterThanOrderByCreateTimeDesc(false, 0);
-    }
-
-    @Override
-    public List<Indent> getHandledUrgentIndents() {
-        return indentDao.findAllByIsSolvedAndUrgentTypeGreaterThanOrderByCreateTimeDesc(true, 0);
+    public List<UrgentIndentVO> getUrgentIndentsByHandledState(Boolean isHandled) {
+        List<Indent> indents = indentDao.findAllByIsSolvedAndUrgentTypeGreaterThanOrderByCreateTimeDesc(isHandled, 0);
+        List<UrgentIndentVO> vos = new ArrayList<>();
+        indents.forEach(x -> {
+            UrgentIndentVO urgentIndentVO = new UrgentIndentVO();
+            BeanUtils.copyProperties(x, urgentIndentVO);
+            User user = userDao.findUserById(x.getPublisherId());
+            if (user != null) {
+                urgentIndentVO.setTrueName(user.getTrueName());
+                urgentIndentVO.setUserName(user.getUserName());
+                urgentIndentVO.setPhone(user.getPhone());
+                School school = schoolDao.findSchoolById(user.getSchoolId());
+                if (school != null && school.getSchoolName() != null)
+                    urgentIndentVO.setSchool(school.getSchoolName());
+                vos.add(urgentIndentVO);
+            }
+        });
+        return vos;
     }
 
     @Override

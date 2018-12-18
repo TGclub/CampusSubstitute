@@ -66,15 +66,6 @@ public class AdminServiceImplTest {
         adminService.getUnPickedIndent();
     }
 
-    @Test
-    public void getUnHandledUrgentIndents() {
-        adminService.getUnHandledUrgentIndents();
-    }
-
-    @Test
-    public void getHandledUrgentIndents() {
-        adminService.getHandledUrgentIndents();
-    }
 
     @Test
     public void getAllCoupon() {

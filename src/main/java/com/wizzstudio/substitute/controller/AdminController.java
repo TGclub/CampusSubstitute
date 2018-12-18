@@ -6,6 +6,7 @@ import com.wizzstudio.substitute.dto.AdminCouponDTO;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.service.AdminService;
+import com.wizzstudio.substitute.service.SchoolService;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import io.swagger.annotations.*;
@@ -37,6 +38,9 @@ import java.util.List;
 @Secured("ROLE_ADMIN_2")
 @CrossOrigin(origins = "http://localhost:8080")
 public class AdminController {
+
+    @Autowired
+    private SchoolService schoolService;
 
     @Autowired
     private UserService userService;
@@ -145,10 +149,35 @@ public class AdminController {
      */
     @ApiOperation("查询所有未处理的紧急订单")
     @ApiResponses({
-    @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明 返回示例：{\n" +
+    @ApiResponse(code = 200, message = "{\n" +
             "    \"code\": 0,\n" +
             "    \"msg\": \"请求成功\",\n" +
             "    \"data\": [\n" +
+            "        {\n" +
+            "            \"indentId\": 29,\n" +
+            "            \"performerId\": \"XB4lFU\",\n" +
+            "            \"publisherId\": \"XZQ7ja\",\n" +
+            "            \"couponId\": null,\n" +
+            "            \"indentType\": \"HELP_SEND\",\n" +
+            "            \"requireGender\": \"MALE\",\n" +
+            "            \"indentContent\": \"qwe\",\n" +
+            "            \"indentPrice\": 23,\n" +
+            "            \"couponPrice\": 0,\n" +
+            "            \"totalPrice\": 23,\n" +
+            "            \"urgentType\": 1,\n" +
+            "            \"isSolved\": false,\n" +
+            "            \"indentState\": \"CANCELED\",\n" +
+            "            \"takeGoodAddress\": \"qwddde\",\n" +
+            "            \"shippingAddressId\": 18,\n" +
+            "            \"secretText\": \"快递号101010\",\n" +
+            "            \"goodPrice\": null,\n" +
+            "            \"createTime\": \"2018-12-14T11:45:41.000+0000\",\n" +
+            "            \"updateTime\": \"2018-12-18T01:25:43.000+0000\",\n" +
+            "            \"userName\": \"Kiris\",\n" +
+            "            \"trueName\": \"张俊\",\n" +
+            "            \"phone\": null,\n" +
+            "            \"school\": \"西安邮电大学\"\n" +
+            "        },\n" +
             "        {\n" +
             "            \"indentId\": 5,\n" +
             "            \"performerId\": null,\n" +
@@ -167,15 +196,44 @@ public class AdminController {
             "            \"shippingAddressId\": 2,\n" +
             "            \"secretText\": null,\n" +
             "            \"goodPrice\": null,\n" +
-            "            \"createTime\": 1543373249000,\n" +
-            "            \"updateTime\": 1543816188000\n" +
-            "        }" +
-            "]" +
+            "            \"createTime\": \"2018-11-28T02:47:29.000+0000\",\n" +
+            "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
+            "            \"userName\": \"twet\",\n" +
+            "            \"trueName\": null,\n" +
+            "            \"phone\": 110112119,\n" +
+            "            \"school\": \"西安邮电大学\"\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"indentId\": 4,\n" +
+            "            \"performerId\": \"6gxVye\",\n" +
+            "            \"publisherId\": \"EEETEE\",\n" +
+            "            \"couponId\": null,\n" +
+            "            \"indentType\": \"HELP_OTHER\",\n" +
+            "            \"requireGender\": \"NO_LIMITED\",\n" +
+            "            \"indentContent\": \"我在呢\",\n" +
+            "            \"indentPrice\": 4,\n" +
+            "            \"couponPrice\": 0,\n" +
+            "            \"totalPrice\": 0,\n" +
+            "            \"urgentType\": 1,\n" +
+            "            \"isSolved\": false,\n" +
+            "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
+            "            \"takeGoodAddress\": null,\n" +
+            "            \"shippingAddressId\": 2,\n" +
+            "            \"secretText\": null,\n" +
+            "            \"goodPrice\": null,\n" +
+            "            \"createTime\": \"2018-11-10T13:45:15.000+0000\",\n" +
+            "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
+            "            \"userName\": \"twet\",\n" +
+            "            \"trueName\": null,\n" +
+            "            \"phone\": 110112119,\n" +
+            "            \"school\": \"西安邮电大学\"\n" +
+            "        }\n" +
+            "    ]\n" +
             "}")})
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/urgent/indent/unhandled")
     public ResponseEntity viewUrgentIndent() {
-        return ResultUtil.success(adminService.getUnHandledUrgentIndents());
+        return ResultUtil.success(adminService.getUrgentIndentsByHandledState(false));
     }
 
     /**
@@ -201,10 +259,35 @@ public class AdminController {
     @ApiOperation("查询已处理的紧急订单")
     @Secured("ROLE_ADMIN_1")
     @ApiResponses({
-    @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明 返回示例：{\n" +
+    @ApiResponse(code = 200, message = "{\n" +
             "    \"code\": 0,\n" +
             "    \"msg\": \"请求成功\",\n" +
             "    \"data\": [\n" +
+            "        {\n" +
+            "            \"indentId\": 29,\n" +
+            "            \"performerId\": \"XB4lFU\",\n" +
+            "            \"publisherId\": \"XZQ7ja\",\n" +
+            "            \"couponId\": null,\n" +
+            "            \"indentType\": \"HELP_SEND\",\n" +
+            "            \"requireGender\": \"MALE\",\n" +
+            "            \"indentContent\": \"qwe\",\n" +
+            "            \"indentPrice\": 23,\n" +
+            "            \"couponPrice\": 0,\n" +
+            "            \"totalPrice\": 23,\n" +
+            "            \"urgentType\": 1,\n" +
+            "            \"isSolved\": false,\n" +
+            "            \"indentState\": \"CANCELED\",\n" +
+            "            \"takeGoodAddress\": \"qwddde\",\n" +
+            "            \"shippingAddressId\": 18,\n" +
+            "            \"secretText\": \"快递号101010\",\n" +
+            "            \"goodPrice\": null,\n" +
+            "            \"createTime\": \"2018-12-14T11:45:41.000+0000\",\n" +
+            "            \"updateTime\": \"2018-12-18T01:25:43.000+0000\",\n" +
+            "            \"userName\": \"Kiris\",\n" +
+            "            \"trueName\": \"张俊\",\n" +
+            "            \"phone\": null,\n" +
+            "            \"school\": \"西安邮电大学\"\n" +
+            "        },\n" +
             "        {\n" +
             "            \"indentId\": 5,\n" +
             "            \"performerId\": null,\n" +
@@ -217,20 +300,49 @@ public class AdminController {
             "            \"couponPrice\": 0,\n" +
             "            \"totalPrice\": 0,\n" +
             "            \"urgentType\": 1,\n" +
-            "            \"isSolved\": true,\n" +
+            "            \"isSolved\": false,\n" +
             "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
             "            \"takeGoodAddress\": \"1\",\n" +
             "            \"shippingAddressId\": 2,\n" +
             "            \"secretText\": null,\n" +
             "            \"goodPrice\": null,\n" +
-            "            \"createTime\": 1543373249000,\n" +
-            "            \"updateTime\": 1543816188000\n" +
-            "        }" +
-            "]" +
+            "            \"createTime\": \"2018-11-28T02:47:29.000+0000\",\n" +
+            "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
+            "            \"userName\": \"twet\",\n" +
+            "            \"trueName\": null,\n" +
+            "            \"phone\": 110112119,\n" +
+            "            \"school\": \"西安邮电大学\"\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"indentId\": 4,\n" +
+            "            \"performerId\": \"6gxVye\",\n" +
+            "            \"publisherId\": \"EEETEE\",\n" +
+            "            \"couponId\": null,\n" +
+            "            \"indentType\": \"HELP_OTHER\",\n" +
+            "            \"requireGender\": \"NO_LIMITED\",\n" +
+            "            \"indentContent\": \"我在呢\",\n" +
+            "            \"indentPrice\": 4,\n" +
+            "            \"couponPrice\": 0,\n" +
+            "            \"totalPrice\": 0,\n" +
+            "            \"urgentType\": 1,\n" +
+            "            \"isSolved\": false,\n" +
+            "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
+            "            \"takeGoodAddress\": null,\n" +
+            "            \"shippingAddressId\": 2,\n" +
+            "            \"secretText\": null,\n" +
+            "            \"goodPrice\": null,\n" +
+            "            \"createTime\": \"2018-11-10T13:45:15.000+0000\",\n" +
+            "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
+            "            \"userName\": \"twet\",\n" +
+            "            \"trueName\": null,\n" +
+            "            \"phone\": 110112119,\n" +
+            "            \"school\": \"西安邮电大学\"\n" +
+            "        }\n" +
+            "    ]\n" +
             "}")})
     @GetMapping("/urgent/indent/handled")
     public ResponseEntity viewHandledUrgentIndent() {
-        return ResultUtil.success(adminService.getHandledUrgentIndents());
+        return ResultUtil.success(adminService.getUrgentIndentsByHandledState(true));
     }
 
     /**
@@ -561,6 +673,15 @@ public class AdminController {
     @GetMapping("/list")
     public ResponseEntity getAdminList() {
         return ResultUtil.success(adminService.getAllAdminInfo());
+    }
+
+    /**
+     * 通过关键字模糊匹配学校列表, 如果关键字为空则返回所有学校
+     */
+    @GetMapping("/school")
+    public ResponseEntity getSchool(String key) {
+        if (key == null) return ResultUtil.success(schoolService.getSchoolInFuzzyMatching("%"));
+        return ResultUtil.success(schoolService.getSchoolInFuzzyMatching(key));
     }
 
 

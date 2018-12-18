@@ -1,6 +1,7 @@
 package com.wizzstudio.substitute.service;
 
 import com.wizzstudio.substitute.VO.FeedbackVO;
+import com.wizzstudio.substitute.VO.UrgentIndentVO;
 import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
@@ -51,13 +52,8 @@ public interface AdminService {
      * 获取未处理的紧急订单
      * @return 订单列表
      */
-    List<Indent> getUnHandledUrgentIndents();
+    List<UrgentIndentVO> getUrgentIndentsByHandledState(Boolean isHandled);
 
-    /**
-     * 获取已处理的紧急订单
-     * @return 订单列表
-     */
-    List<Indent> getHandledUrgentIndents();
 
     /**
      * 获取所有的优惠券信息
