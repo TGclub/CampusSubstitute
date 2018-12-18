@@ -9,6 +9,7 @@ import com.wizzstudio.substitute.enums.ResultEnum;
 import com.wizzstudio.substitute.enums.indent.IndentSortTypeEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.enums.indent.IndentTypeEnum;
+import com.wizzstudio.substitute.enums.indent.UrgentTypeEnum;
 import com.wizzstudio.substitute.exception.CheckException;
 import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.service.*;
@@ -32,29 +33,24 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class IndentServiceImpl implements IndentService {
-
-    private final IndentDao indentDao;
-    private final UserService userService;
-    private final AddressService addressService;
-    private final SchoolService schoolService;
-    private final ScheduledServiceImpl scheduledService;
-    private final CouponRecordService couponRecordService;
-    private final CouponInfoService couponInfoService;
-    private final CommonCheckService commonCheckService;
-    private final RedisUtil redisUtil;
-
     @Autowired
-    public IndentServiceImpl(IndentDao indentDao, UserService userService, AddressService addressService, SchoolService schoolService, ScheduledServiceImpl scheduledService, CouponRecordService couponRecordService, CouponInfoService couponInfoService, CommonCheckService commonCheckService, RedisUtil redisUtil) {
-        this.indentDao = indentDao;
-        this.userService = userService;
-        this.addressService = addressService;
-        this.schoolService = schoolService;
-        this.scheduledService = scheduledService;
-        this.couponRecordService = couponRecordService;
-        this.couponInfoService = couponInfoService;
-        this.commonCheckService = commonCheckService;
-        this.redisUtil = redisUtil;
-    }
+    private IndentDao indentDao;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AddressService addressService;
+    @Autowired
+    private SchoolService schoolService;
+    @Autowired
+    private ScheduledServiceImpl scheduledService;
+    @Autowired
+    private CouponRecordService couponRecordService;
+    @Autowired
+    private CouponInfoService couponInfoService;
+    @Autowired
+    private RedisUtil redisUtil;
+    @Autowired
+    PushMessageService pushMessageService;
 
     /**
      * 将indent 封装为 indentVO
@@ -305,7 +301,7 @@ public class IndentServiceImpl implements IndentService {
     }
 
     @Override
-    public void takeIndent(Integer indentId, String userId) {
+    public void takeIndent(Integer indentId, String userId, String formId) {
         User user = userService.findUserById(userId);
         if (user == null){
             log.error("【接单】接单失败，用户不存在，userId={}", userId);
@@ -325,11 +321,12 @@ public class IndentServiceImpl implements IndentService {
         indent.setIndentState(IndentStateEnum.PERFORMING);
         indentDao.save(indent);
         scheduledService.removeIndentFromMap(indentId);
-        //todo 发模板消息
+        //发模板消息
+        pushMessageService.sendTemplateMsg(indent,formId);
     }
 
     @Override
-    public void arrivedIndent(Integer indentId, String userId) {
+    public void arrivedIndent(Integer indentId, String userId, String formId) {
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
             log.error("【送达订单】送达订单失败，订单id不存在，indentId={}", indentId);
@@ -346,7 +343,8 @@ public class IndentServiceImpl implements IndentService {
         //该订单已送达
         indent.setIndentState(IndentStateEnum.ARRIVED);
         indentDao.save(indent);
-        //todo 发模板消息
+        //发模板消息
+        pushMessageService.sendTemplateMsg(indent,formId);
     }
 
     /**
@@ -354,7 +352,7 @@ public class IndentServiceImpl implements IndentService {
      * 为返回值——Kikyou
      */
     @Override
-    public BigDecimal finishedIndent(Integer indentId, String userId) {
+    public BigDecimal finishedIndent(Integer indentId, String userId, String formId) {
         //1、校验参数是否正确,订单状态是否正确
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
@@ -407,19 +405,18 @@ public class IndentServiceImpl implements IndentService {
         performer.setBalance(performer.getBalance().add(performerIncome));
         performer.setAllIncome(performer.getAllIncome().add(performerIncome));
         userService.saveUser(performer);
-        //2.3 todo 记录公司收益到count表中
         //3、保存订单
         indent.setIndentState(IndentStateEnum.COMPLETED);
         indentDao.save(indent);
-        //todo 发模板消息
-
+        //发模板消息
+        pushMessageService.sendTemplateMsg(indent,formId);
         return companyIncome;
     }
 
 
 
     @Override
-    public void canceledIndent(Integer indentId, String userId) {
+    public void canceledIndent(Integer indentId, String userId, String formId) {
         //1、校验参数是否正确,订单状态是否正确
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
@@ -437,7 +434,9 @@ public class IndentServiceImpl implements IndentService {
             indent.setIndentState(IndentStateEnum.WAIT_FOR_PERFORMER);
             scheduledService.addIndent(indentId,indent.getCreateTime());
             indentDao.save(indent);
-            //todo 发送模板消息给下单人、并发送短信给管理员
+            //发送模板消息给下单人、并发送短信给下单人
+            pushMessageService.sendTemplateMsg(indent,formId);
+            pushMessageService.sendPhoneMsg(indent.getPublisherId(), UrgentTypeEnum.CANCEL);
             return;
         }
         if (!userId.equals(indent.getPublisherId())){
@@ -454,7 +453,9 @@ public class IndentServiceImpl implements IndentService {
         indentDao.save(indent);
         //4.从订单监控列表中删除
         scheduledService.removeIndentFromMap(indentId);
-        //todo 发模板消息、短信
+        //发模板消息、短信
+        pushMessageService.sendTemplateMsg(indent,formId);
+        pushMessageService.sendPhoneMsg(indent.getPerformerId(), UrgentTypeEnum.CANCEL);
     }
 
 }

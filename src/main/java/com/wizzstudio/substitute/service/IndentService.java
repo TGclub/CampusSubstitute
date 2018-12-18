@@ -24,12 +24,12 @@ public interface IndentService {
     /**
      * 用户接单接口
      */
-    void takeIndent(Integer indentId, String userId);
+    void takeIndent(Integer indentId, String userId, String formId);
 
     /**
      * 接单人送达接口
      */
-    void arrivedIndent(Integer indentId, String userId);
+    void arrivedIndent(Integer indentId, String userId, String formId);
 
     /**
      * 完结订单
@@ -37,14 +37,14 @@ public interface IndentService {
      * 鉴于添加一个返回值并没有影响任何逻辑代码，且可以大大的方便用aop获得企业收入，
      * 故添加companyIncome局部变量为返回值——Kikyou
      */
-    BigDecimal finishedIndent(Integer indentId, String userId);
+    BigDecimal finishedIndent(Integer indentId, String userId, String formId);
 
     /**
      * 取消订单
      * 接单人取消订单，订单重回待接单状态
      * 下单人取消订单，订单取消并退钱
      */
-    void canceledIndent(Integer indentId, String userId);
+    void canceledIndent(Integer indentId, String userId, String formId);
 
     /**
      * 获取用户已发布的订单

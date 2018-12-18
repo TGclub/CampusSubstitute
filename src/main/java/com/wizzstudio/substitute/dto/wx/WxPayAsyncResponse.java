@@ -80,7 +80,7 @@ public class WxPayAsyncResponse {
     @Element(name = "fee_type", required = false)
     private String feeType;
 
-    //todo 订单现金支付金额，单位分(微信接口文档中给的是int类型)
+    //订单现金支付金额，单位分(微信接口文档中给的是int类型，但实测String能跑通)
     @Element(name = "cash_fee", required = false)
     private String cashFee;
 
@@ -88,7 +88,7 @@ public class WxPayAsyncResponse {
     @Element(name = "cash_fee_type", required = false)
     private String cashFeeType;
 
-    //todo 代金券金额<=订单金额，订单金额-代金券金额=现金支付金额，单位分(微信接口文档中给的是int类型)
+    //代金券金额<=订单金额，订单金额-代金券金额=现金支付金额，单位分(微信接口文档中给的是int类型，但实测String能跑通)
     @Element(name = "coupon_fee", required = false)
     private String couponFee;
 
@@ -113,8 +113,8 @@ public class WxPayAsyncResponse {
     private String timeEnd;
 
     //todo 微信接口文档中没有该字段
-    @Element(name = "mweb_url", required = false)
-    private String mwebUrl;
+//    @Element(name = "mweb_url", required = false)
+//    private String mwebUrl;
 
     /**
      * 支付优惠时多返回字段

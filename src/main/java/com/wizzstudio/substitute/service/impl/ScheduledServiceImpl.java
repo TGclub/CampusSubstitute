@@ -7,6 +7,7 @@ import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.enums.CountInfoTypeEnum;
 import com.wizzstudio.substitute.enums.indent.UrgentTypeEnum;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
+import com.wizzstudio.substitute.service.PushMessageService;
 import com.wizzstudio.substitute.service.ScheduledService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,8 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     @Autowired
     private CountInfoDao countInfoDao;
+    @Autowired
+    private PushMessageService pushMessageService;
 
     // key: school id
     // value: count info
@@ -89,6 +92,8 @@ public class ScheduledServiceImpl implements ScheduledService {
             }
             if (System.currentTimeMillis() - indentMap.get(indentId) > 3600000) {
                 indent.setUrgentType(UrgentTypeEnum.OVERTIME.getCode());
+                //发送短信给下单者--cx
+                pushMessageService.sendPhoneMsg(indent.getPublisherId(),UrgentTypeEnum.OVERTIME);
                 indentDao.save(indent);
                 indentMap.remove(indentId);
             }

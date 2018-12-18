@@ -18,4 +18,6 @@ public class IndentUserForm {
     //用户id
     @NotBlank(message = "用户id不能为空")
     private String userId;
+
+    private String formId;
 }

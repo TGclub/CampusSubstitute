@@ -3,6 +3,7 @@ package com.wizzstudio.substitute.domain;
 import com.wizzstudio.substitute.enums.Role;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -12,6 +13,7 @@ import javax.validation.constraints.*;
  */
 @Entity
 @Data
+@DynamicInsert
 public class AdminInfo {
     //管理员Id
     @Id
