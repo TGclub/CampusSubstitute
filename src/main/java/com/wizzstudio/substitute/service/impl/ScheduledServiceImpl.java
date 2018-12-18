@@ -112,7 +112,7 @@ public class ScheduledServiceImpl implements ScheduledService {
             }
             //execute this code to replace the old when a new day coming
             schoolIdCountInfoMap = new ConcurrentHashMap<>();
-            mToday.set(Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(time)));
+            mToday.set(today);
         }
     }
 
