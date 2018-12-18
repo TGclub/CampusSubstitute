@@ -59,14 +59,16 @@ public class IndentServiceImpl implements IndentService {
         IndentVO indentVO = new IndentVO();
         BeanUtils.copyProperties(indent,indentVO);
         Address shipping = addressService.getById(indent.getShippingAddressId());
-        //检验地址信息是否有效(1、是否存在地址信息，2、该地址信息是否属于该用户),并进行拼装
-        if (shipping == null || !shipping.getUserId().equals(indent.getPublisherId())){
-            log.error("[获取订单信息]送达地址信息有误，indent={}，shipping={}", indent, shipping);
-            throw new CheckException("订单信息有误，送达地址信息有误");
-        }else {
-            indentVO.setShippingAddress(shipping.getAddress());
-            indentVO.setPublisherName(shipping.getUserName());
-            indentVO.setPublisherPhone(shipping.getPhone());
+        if (indent.getIndentType() != IndentTypeEnum.HELP_OTHER){
+            //检验地址信息是否有效(1、是否存在地址信息，2、该地址信息是否属于该用户),并进行拼装
+            if (shipping == null || !shipping.getUserId().equals(indent.getPublisherId())){
+                log.error("[获取订单信息]送达地址信息有误，indent={}，shipping={}", indent, shipping);
+                throw new CheckException("订单信息有误，送达地址信息有误");
+            }else {
+                indentVO.setShippingAddress(shipping.getAddress());
+                indentVO.setPublisherName(shipping.getUserName());
+                indentVO.setPublisherPhone(shipping.getPhone());
+            }
         }
         //检验下单用户信息是否有效，并拼装
         User publisher = userService.findUserById(indent.getPublisherId());

@@ -3,17 +3,23 @@ package com.wizzstudio.substitute.dto;
 import com.wizzstudio.substitute.enums.GenderEnum;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
 @Data
-public class ModifyUserInfoDTO implements Serializable {
+public class ModifyUserInfoDTO {
 
-    private static final long serialVersionUID = -6191983979387003051L;
+    @NotBlank(message = "用户名不能为空")
     private String userName;
+    @NotBlank
     private String trueName;
-    private Long phoneNumber;
-    private Integer school;
+    @NotNull
+    private Long phone;
+    @NotNull
+    private Integer schoolId;
+    @NotNull
     private GenderEnum gender;
 
 

@@ -57,10 +57,4 @@ public class BaseController {
         return ResultUtil.error(Constant.SYSTEM_BUSY_CODE, e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity handleNPE(Exception e) {
-        log.error(e.getMessage());
-        return ResultUtil.error(Constant.SYSTEM_BUSY_CODE,null, HttpStatus.NOT_FOUND);
-    }
-
 }
