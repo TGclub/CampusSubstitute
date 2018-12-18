@@ -17,7 +17,7 @@ public interface PushMessageService {
     /**
      * 发送短信给下单人
      * @param userId     用户id
-     * @param urgentCode  与UrgentTypeEnum一一对应
+     * @param urgentType  紧急状态
      */
     void sendPhoneMsg(String userId, UrgentTypeEnum urgentType);
 }

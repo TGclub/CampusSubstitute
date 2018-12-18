@@ -106,7 +106,7 @@ public class PayController {
     }
 
 
-    //todo 用于测试短信发送
+    //用于测试短信发送
     @GetMapping("/test")
     public ResponseEntity testSms() {
         //组装请求对象-具体描述见控制台-文档部分内容

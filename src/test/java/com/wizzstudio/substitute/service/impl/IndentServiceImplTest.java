@@ -49,7 +49,6 @@ public class IndentServiceImplTest {
     @Rollback(false)
     @Test
     public void Indent2VO() {
-        //todo 如果secretText不是null会在执行完(不是下面这条语句，而是所有语句执行完，即该方法执行完)以后update为null
 //        System.out.println(indentService.getIndentDetail(9,"8"));
         indentServiceImpl.test();
         System.out.println("what???");

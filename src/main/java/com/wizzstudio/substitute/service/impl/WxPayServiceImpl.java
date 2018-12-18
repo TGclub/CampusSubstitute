@@ -93,7 +93,7 @@ public class WxPayServiceImpl implements WxPayService {
                 //todo 是否可删,默认即为MD5
                 .sign_type("MD5")
                 //todo 是否可删
-                .attach("支付测试4luluteam")
+                .attach("支付测试")
                 //todo 是否可删
                 .limit_pay("no_credit")
                 .build();

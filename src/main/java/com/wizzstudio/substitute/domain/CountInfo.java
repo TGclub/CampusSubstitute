@@ -43,7 +43,7 @@ public class CountInfo {
     //当日收益额，单位：元，默认为0.00
     private BigDecimal income;
 
-    //当日登录量，不去重,默认为0(todo 先不做)
+    //当日登录量，不去重,默认为0(先不做)
     private Integer loginUser;
 
 

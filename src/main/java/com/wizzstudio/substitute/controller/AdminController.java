@@ -2,6 +2,7 @@ package com.wizzstudio.substitute.controller;
 
 import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.domain.AdminInfo;
+import com.wizzstudio.substitute.domain.WithdrawRequest;
 import com.wizzstudio.substitute.dto.AdminCouponDTO;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.enums.Role;
@@ -683,6 +684,5 @@ public class AdminController {
         if (key == null) return ResultUtil.success(schoolService.getSchoolInFuzzyMatching("%"));
         return ResultUtil.success(schoolService.getSchoolInFuzzyMatching(key));
     }
-
 
 }

@@ -124,7 +124,11 @@ public class IndentController {
                     : bindingResult.getFieldError().getDefaultMessage();
             throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
         }
-        indentService.takeIndent(indentUserForm.getIndentId(), indentUserForm.getUserId());
+        if (indentUserForm.getFormId() == null){
+            log.error("[接单]参数不正确，indentCreateForm={}", indentUserForm);
+            throw new SubstituteException("formId为空");
+        }
+        indentService.takeIndent(indentUserForm.getIndentId(), indentUserForm.getUserId(), indentUserForm.getFormId());
         return ResultUtil.success();
     }
 
@@ -140,7 +144,11 @@ public class IndentController {
                     : bindingResult.getFieldError().getDefaultMessage();
             throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
         }
-        indentService.arrivedIndent(indentUserForm.getIndentId(), indentUserForm.getUserId());
+        if (indentUserForm.getFormId() == null){
+            log.error("[接单]参数不正确，indentCreateForm={}", indentUserForm);
+            throw new SubstituteException("formId为空");
+        }
+        indentService.arrivedIndent(indentUserForm.getIndentId(), indentUserForm.getUserId(), indentUserForm.getFormId());
         return ResultUtil.success();
     }
 
@@ -156,7 +164,7 @@ public class IndentController {
                     : bindingResult.getFieldError().getDefaultMessage();
             throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
         }
-        indentService.finishedIndent(indentUserForm.getIndentId(), indentUserForm.getUserId());
+        indentService.finishedIndent(indentUserForm.getIndentId(), indentUserForm.getUserId(), indentUserForm.getFormId());
         return ResultUtil.success();
     }
 
@@ -172,7 +180,7 @@ public class IndentController {
                     : bindingResult.getFieldError().getDefaultMessage();
             throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
         }
-        indentService.canceledIndent(indentUserForm.getIndentId(), indentUserForm.getUserId());
+        indentService.canceledIndent(indentUserForm.getIndentId(), indentUserForm.getUserId(), indentUserForm.getFormId());
         return ResultUtil.success();
     }
 
@@ -207,7 +215,6 @@ public class IndentController {
 
     /**
      * 获取订单详情，若请求用户不是下单人 或 接单人，则隐藏私密信息
-     * todo 这个方法执行完以后如果secretText不是null会像个神经病一样给我update一下indent将其改为null
      */
     @GetMapping(value = "/detail")
     public ResponseEntity getIndentInfo(Integer indentId, String userId) {

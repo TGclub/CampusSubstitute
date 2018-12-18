@@ -84,6 +84,14 @@ public class PushMessageServiceImpl implements PushMessageService {
                 userId = indent.getPerformerId();
                 templateId = "AT0257";
                 break;
+            case PERFORMING:
+                params.add("您的任务已经被接取喽～(≧∇≦)/");
+                params.add("订单已被接");
+                params.add(date);
+                params.add("您的订单正在奔向您～");
+                userId = indent.getPublisherId();
+                templateId = "AT0328";
+                break;
             default:
                 log.error("[微信消息推送]发送失败，订单状态有误，indent={}",indent);
                 return;

@@ -49,7 +49,7 @@ public class XmlUtil {
      * XStream会很玄学的将字段中的_更改为__,所以需要replace
      */
     public static String payInfoToXML(WxPrePayInfo wxPrePayInfo) {
-        //todo 按官方文档，这里只需要进行简单的XML转换，不需要在每个字段值上都套上<![CDATA[xxxx]]>，所以按理不用特定XStream
+        //按官方文档，这里只需要进行简单的XML转换，但在每个字段值上都套上<![CDATA[xxxx]]>更安全，且能跑通
         //XStream xStream = new XStream();
         xstream.alias("xml", wxPrePayInfo.getClass());
         return xstream.toXML(wxPrePayInfo).replace("__", "_");
