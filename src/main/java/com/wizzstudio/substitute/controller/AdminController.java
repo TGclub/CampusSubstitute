@@ -232,8 +232,8 @@ public class AdminController {
             "}")})
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/urgent/indent/unhandled")
-    public ResponseEntity viewUrgentIndent() {
-        return ResultUtil.success(adminService.getUrgentIndentsByHandledState(false));
+    public ResponseEntity viewUrgentIndent(Integer schoolId) {
+        return ResultUtil.success(adminService.getUrgentIndentsByHandledState(false, schoolId   ));
     }
 
     /**
@@ -341,8 +341,8 @@ public class AdminController {
             "    ]\n" +
             "}")})
     @GetMapping("/urgent/indent/handled")
-    public ResponseEntity viewHandledUrgentIndent() {
-        return ResultUtil.success(adminService.getUrgentIndentsByHandledState(true));
+    public ResponseEntity viewHandledUrgentIndent(Integer schoolId) {
+        return ResultUtil.success(adminService.getUrgentIndentsByHandledState(true, schoolId));
     }
 
     /**

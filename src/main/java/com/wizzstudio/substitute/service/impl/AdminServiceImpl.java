@@ -1,6 +1,7 @@
 package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.VO.FeedbackVO;
+import com.wizzstudio.substitute.VO.UnPickedIndentVO;
 import com.wizzstudio.substitute.VO.UrgentIndentVO;
 import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.dao.*;
@@ -85,8 +86,19 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<Indent> getUnPickedIndent() {
-        return indentDao.findAllByIndentStateOrderByCreateTimeDesc(IndentStateEnum.WAIT_FOR_PERFORMER);
+    public List<UnPickedIndentVO> getUnPickedIndent() {
+        List<Indent> indents = indentDao.findAllByIndentStateOrderByCreateTimeDesc(IndentStateEnum.WAIT_FOR_PERFORMER);
+        List<UnPickedIndentVO> vos = new ArrayList<>();
+        indents.forEach(x -> {
+            UnPickedIndentVO vo = new UnPickedIndentVO();
+            BeanUtils.copyProperties(x, vo);
+            User user = userDao.findUserById(x.getPublisherId());
+            if (user != null) {
+                vo.setSchoolId(user.getSchoolId());
+            }
+            vos.add(vo);
+        });
+        return vos;
     }
 
     @Override
@@ -99,7 +111,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<UrgentIndentVO> getUrgentIndentsByHandledState(Boolean isHandled) {
+    public List<UrgentIndentVO> getUrgentIndentsByHandledState(Boolean isHandled, Integer schoolId) {
         List<Indent> indents = indentDao.findAllByIsSolvedAndUrgentTypeGreaterThanOrderByCreateTimeDesc(isHandled, 0);
         List<UrgentIndentVO> vos = new ArrayList<>();
         indents.forEach(x -> {
@@ -113,7 +125,13 @@ public class AdminServiceImpl implements AdminService {
                 School school = schoolDao.findSchoolById(user.getSchoolId());
                 if (school != null && school.getSchoolName() != null)
                     urgentIndentVO.setSchool(school.getSchoolName());
-                vos.add(urgentIndentVO);
+                if (schoolId != null) {
+                    if (user.getSchoolId().equals(schoolId)) {
+                        vos.add(urgentIndentVO);
+                    }
+                } else {
+                    vos.add(urgentIndentVO);
+                }
             }
         });
         return vos;
@@ -132,7 +150,7 @@ public class AdminServiceImpl implements AdminService {
         coupon.setValidTime(new Date(newCoupon.getValidTime()));
         coupon.setInvalidTime(new Date(newCoupon.getInvalidTime()));
         coupon.setLeastPrice(newCoupon.getLeastPrice());
-        coupon.setPicture(newCoupon.getPicture().getBytes());
+        coupon.setPicture(newCoupon.getFile().getBytes());
         couponInfoDao.save(coupon);
     }
 

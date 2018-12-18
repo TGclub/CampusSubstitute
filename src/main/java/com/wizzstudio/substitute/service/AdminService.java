@@ -1,6 +1,7 @@
 package com.wizzstudio.substitute.service;
 
 import com.wizzstudio.substitute.VO.FeedbackVO;
+import com.wizzstudio.substitute.VO.UnPickedIndentVO;
 import com.wizzstudio.substitute.VO.UrgentIndentVO;
 import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.domain.*;
@@ -46,13 +47,13 @@ public interface AdminService {
      * 获取未被接单的订单
      * @return 订单信息
      */
-    List<Indent> getUnPickedIndent();
+    List<UnPickedIndentVO> getUnPickedIndent();
 
     /**
      * 获取未处理的紧急订单
      * @return 订单列表
      */
-    List<UrgentIndentVO> getUrgentIndentsByHandledState(Boolean isHandled);
+    List<UrgentIndentVO> getUrgentIndentsByHandledState(Boolean isHandled, Integer schoolId);
 
 
     /**

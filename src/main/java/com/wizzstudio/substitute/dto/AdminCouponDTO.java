@@ -28,7 +28,7 @@ public class AdminCouponDTO implements Serializable
     //失效时间
     private Long invalidTime;
 
-    private MultipartFile picture;
+    private MultipartFile file;
 
     public AdminCouponDTO() {
     }
