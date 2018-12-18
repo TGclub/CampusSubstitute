@@ -164,6 +164,10 @@ public class IndentController {
                     : bindingResult.getFieldError().getDefaultMessage();
             throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
         }
+        if (indentUserForm.getFormId() == null){
+            log.error("[接单]参数不正确，indentCreateForm={}", indentUserForm);
+            throw new SubstituteException("formId为空");
+        }
         indentService.finishedIndent(indentUserForm.getIndentId(), indentUserForm.getUserId(), indentUserForm.getFormId());
         return ResultUtil.success();
     }
@@ -179,6 +183,10 @@ public class IndentController {
             String msg = bindingResult.getFieldError() == null ? ResultEnum.PARAM_ERROR.getMsg()
                     : bindingResult.getFieldError().getDefaultMessage();
             throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
+        }
+        if (indentUserForm.getFormId() == null){
+            log.error("[接单]参数不正确，indentCreateForm={}", indentUserForm);
+            throw new SubstituteException("formId为空");
         }
         indentService.canceledIndent(indentUserForm.getIndentId(), indentUserForm.getUserId(), indentUserForm.getFormId());
         return ResultUtil.success();

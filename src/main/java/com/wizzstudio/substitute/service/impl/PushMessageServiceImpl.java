@@ -43,7 +43,7 @@ public class PushMessageServiceImpl implements PushMessageService {
 
     //todo 未完成
     @Override
-    public void sendTemplateMsg(Indent indent, String formId) {
+    public void sendTemplateMsg(Indent indent, String formId){
         IndentStateEnum indentState = indent.getIndentState();
         List<String> params = new ArrayList<>();
         String userId,templateId,date = TimeUtil.getFormatTime(new Date(),"yyyy-MM-dd HH:mm:ss");
@@ -55,7 +55,7 @@ public class PushMessageServiceImpl implements PushMessageService {
                 params.add(date);
                 params.add("很多人都是你生命中的过客，总有一个人在等你");
                 userId = indent.getPublisherId();
-                templateId = "AT2329";
+                templateId = "-_wlctvQjdRVNM-oBjQuSSPuEVJXQ9YeSJ86MksxUdo";
                 break;
             //已送达，给下单人发消息
             case ARRIVED:
@@ -64,7 +64,7 @@ public class PushMessageServiceImpl implements PushMessageService {
                 params.add(date);
                 params.add("帮我看看来的是帅气的小哥哥还是漂亮的小姐姐～(￣▽￣～)~");
                 userId = indent.getPublisherId();
-                templateId = "AT1897";
+                templateId = "t0bQ-DRbY1JcGiz0IwiulOP6hP_GGPuuVQ64D56hDqg";
                 break;
             //订单取消，说明接单人被取消订单
             case CANCELED:
@@ -73,7 +73,7 @@ public class PushMessageServiceImpl implements PushMessageService {
                 params.add(date);
                 params.add("很多人都是你生命中的过客，总有一个人在等你");
                 userId = indent.getPerformerId();
-                templateId = "AT2329";
+                templateId = "-_wlctvQjdRVNM-oBjQuSSPuEVJXQ9YeSJ86MksxUdo";
                 break;
             //完成订单，给接单人发消息
             case COMPLETED:
@@ -82,7 +82,7 @@ public class PushMessageServiceImpl implements PushMessageService {
                 params.add(date);
                 params.add("您刚刚不只是完成了一个订单，更是开始了一段缘份(｡･ω･｡)ﾉ♡");
                 userId = indent.getPerformerId();
-                templateId = "AT0257";
+                templateId = "2dOr4-NZv7nJ8ps2hcUhAmJx-vpVipuaTQrQ8CFk3eU";
                 break;
             case PERFORMING:
                 params.add("您的任务已经被接取喽～(≧∇≦)/");
@@ -90,46 +90,46 @@ public class PushMessageServiceImpl implements PushMessageService {
                 params.add(date);
                 params.add("您的订单正在奔向您～");
                 userId = indent.getPublisherId();
-                templateId = "AT0328";
+                templateId = "eAJcNvlLEMQ2YNlWOTCC3KACAoFGYpGF0Jh5kSosqwE";
                 break;
             default:
                 log.error("[微信消息推送]发送失败，订单状态有误，indent={}",indent);
                 return;
         }
-        String openid = userService.findUserById(userId).getOpenid();
         try {
+            String openid = userService.findUserById(userId).getOpenid();
             sendTemplateMsg(openid,formId,templateId,params);
         } catch (WxErrorException e) {
             log.error("[微信消息推送]推送失败，e={}",e);
-        }
+        }catch (Exception ignored){}
     }
 
     @Override
     public void sendPhoneMsg(String userId,UrgentTypeEnum urgentType) {
-        User user = userService.findUserById(userId);
-        String phone = String.valueOf(user.getPhone()), name = user.getUserName(),templateCode;
-        String date = TimeUtil.getFormatTime(new Date(),"yyyy-MM-dd HH:mm:ss");
-        List<String> params = new ArrayList<>();
-        params.add(name);
-        params.add(date);
-        switch (urgentType){
-            //todo 未完成 超时
-            case OVERTIME:
-                templateCode = "x";
-                break;
-            //退单
-            case CANCEL:
-                templateCode = "x";
-                break;
-            default:
-                log.error("[发送短信]出错了，urgentType={}",urgentType);
-                return;
-        }
         try {
+            User user = userService.findUserById(userId);
+            String phone = String.valueOf(user.getPhone()), name = user.getUserName(),templateCode;
+            String date = TimeUtil.getFormatTime(new Date(),"yyyy-MM-dd HH:mm:ss");
+            List<String> params = new ArrayList<>();
+            params.add(name);
+            params.add(date);
+            switch (urgentType){
+                //todo 未完成 超时
+                case OVERTIME:
+                    templateCode = "x";
+                    break;
+                //退单
+                case CANCEL:
+                    templateCode = "x";
+                    break;
+                default:
+                    log.error("[发送短信]出错了，urgentType={}",urgentType);
+                    return;
+            }
             sendMsg(templateCode,phone,params);
         } catch (ClientException e) {
-            log.error("[发送短信]出错了，templateCode={},phone={},e={}",templateCode,phone,e);
-        }
+            log.error("[发送短信]出错了，e={}",e);
+        } catch (Exception ignored){}
     }
 
 

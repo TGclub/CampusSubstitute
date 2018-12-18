@@ -46,8 +46,8 @@ class UserControllerTest {
         ModifyUserInfoDTO basicInfo = new ModifyUserInfoDTO();
         basicInfo.setTrueName("TEST");
         basicInfo.setGender(GenderEnum.MALE);
-        basicInfo.setPhoneNumber(12345L);
-        basicInfo.setSchool(1);
+        basicInfo.setPhone(12345L);
+        basicInfo.setSchoolId(1);
         basicInfo.setUserName("TEST");
         RequestBody body = RequestBody.create(JSON_TYPE, JSONObject.toJSONString(basicInfo));
         Request request = new Request.Builder()

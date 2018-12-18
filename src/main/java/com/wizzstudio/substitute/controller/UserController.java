@@ -4,6 +4,7 @@ import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AddressDTO;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
+import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.util.ResultUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +65,10 @@ public class UserController extends BaseController {
      * 修改用户信息
      */
     @PostMapping(value = "/info/{userId}")
-    public ResponseEntity modifyUserInfo(@PathVariable String userId, @RequestBody ModifyUserInfoDTO modifyUserInfoDTO) {
+    public ResponseEntity modifyUserInfo(@PathVariable String userId, @RequestBody ModifyUserInfoDTO modifyUserInfoDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            return ResultUtil.error("参数不全");
+        }
         userService.modifyUserInfo(userId, modifyUserInfoDTO);
         return ResultUtil.success();
     }

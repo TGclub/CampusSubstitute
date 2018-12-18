@@ -71,8 +71,8 @@ public class UserServiceImplTest {
         user.setGender(GenderEnum.FEMALE);
         user.setSchoolId(333);
         GenderEnum gender = newInfo.getGender();
-        Integer school = newInfo.getSchool();
-        Long phoneNumber = newInfo.getPhoneNumber();
+        Integer school = newInfo.getSchoolId();
+        Long phoneNumber = newInfo.getPhone();
         String trueName = newInfo.getTrueName();
         String userName = newInfo.getUserName();
         if (gender != null) user.setGender(gender);
