@@ -23,4 +23,9 @@ public interface AdminDao extends JpaRepository<AdminInfo, Integer> {
      */
     List<AdminInfo> findByAdminSchoolIdAndIsBoss(int schoolId, boolean isBoss);
 
+    /**
+     * 通过学校id 获取所有二级管理员
+     */
+    List<AdminInfo> findByAdminSchoolIdAndAdminRoleIs(int schoolId,Role role);
+
 }

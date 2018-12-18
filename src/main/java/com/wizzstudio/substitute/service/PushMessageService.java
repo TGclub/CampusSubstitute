@@ -15,9 +15,11 @@ public interface PushMessageService {
     void sendTemplateMsg(Indent indent, String formId);
 
     /**
-     * 发送短信给下单人
+     * 发送短信给用户
      * @param userId     用户id
      * @param urgentType  紧急状态
      */
-    void sendPhoneMsg(String userId, UrgentTypeEnum urgentType);
+    void sendPhoneMsg2User(String userId, UrgentTypeEnum urgentType);
+
+    void sendPhoneMsg2Admin(String adminId,UrgentTypeEnum urgentTypeEnum);
 }

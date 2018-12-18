@@ -438,7 +438,7 @@ public class IndentServiceImpl implements IndentService {
             indentDao.save(indent);
             //发送模板消息给下单人、并发送短信给下单人
             pushMessageService.sendTemplateMsg(indent,formId);
-            pushMessageService.sendPhoneMsg(indent.getPublisherId(), UrgentTypeEnum.CANCEL);
+            pushMessageService.sendPhoneMsg2User(indent.getPublisherId(), UrgentTypeEnum.CANCEL);
             return;
         }
         if (!userId.equals(indent.getPublisherId())){
@@ -457,7 +457,7 @@ public class IndentServiceImpl implements IndentService {
         scheduledService.removeIndentFromMap(indentId);
         //发模板消息、短信
         pushMessageService.sendTemplateMsg(indent,formId);
-        pushMessageService.sendPhoneMsg(indent.getPerformerId(), UrgentTypeEnum.CANCEL);
+        pushMessageService.sendPhoneMsg2User(indent.getPerformerId(), UrgentTypeEnum.CANCEL);
     }
 
 }

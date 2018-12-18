@@ -1,5 +1,6 @@
 package com.wizzstudio.substitute.dao;
 
+import com.wizzstudio.substitute.enums.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class AdminDaoTest {
 
     @Test
     public void getAdminInfoByAdminId() {
+        System.out.println(adminDao.findByAdminSchoolIdAndAdminRoleIs(2, Role.ROLE_ADMIN_2));
     }
 
     @Test
