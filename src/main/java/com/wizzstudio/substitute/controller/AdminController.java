@@ -35,6 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @Secured("ROLE_ADMIN_2")
+@CrossOrigin(origins = "http://localhost:8080")
 public class AdminController {
 
     @Autowired
@@ -530,6 +531,36 @@ public class AdminController {
     public ResponseEntity setSchoolId(@PathVariable int id, @PathVariable int schoolId) {
         adminService.modifySecondAdminSchool(id, schoolId);
         return ResultUtil.success();
+    }
+
+    @ApiOperation("查询所有管理员信息")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "{\n" +
+                    "    \"code\": 0,\n" +
+                    "    \"msg\": \"请求成功\",\n" +
+                    "    \"data\": [\n" +
+                    "        {\n" +
+                    "            \"adminId\": -2140936994,\n" +
+                    "            \"adminPhone\": 12434454,\n" +
+                    "            \"adminName\": \"GZHXMV\",\n" +
+                    "            \"adminPass\": \"$2a$10$SuUZpzqDXK8Q6P8AbMFv7u8oKRVVEpUt/50aD6xnXMugH/9OL2.3i\",\n" +
+                    "            \"adminRole\": \"ROLE_ADMIN_2\",\n" +
+                    "            \"isBoss\": false,\n" +
+                    "            \"adminSchoolId\": 2\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"adminId\": -2116578769,\n" +
+                    "            \"adminPhone\": 12434454,\n" +
+                    "            \"adminName\": \"HgShrm\",\n" +
+                    "            \"adminPass\": \"$2a$10$ypNhx/o4/cZ4eMjHZT84GOtmsY5MeNrBtFNfDb5wCpjkFWiblukRy\",\n" +
+                    "            \"adminRole\": \"ROLE_ADMIN_2\",\n" +
+                    "            \"isBoss\": false,\n" +
+                    "            \"adminSchoolId\": 2\n" +
+                    "        }]}")})
+    @Secured("ROLE_ADMIN_1")
+    @GetMapping("/list")
+    public ResponseEntity getAdminList() {
+        return ResultUtil.success(adminService.getAllAdminInfo());
     }
 
 

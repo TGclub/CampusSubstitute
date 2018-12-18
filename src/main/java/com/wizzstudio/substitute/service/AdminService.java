@@ -151,5 +151,5 @@ public interface AdminService {
 
     CouponInfo getSpecificCoupon(int id);
 
-
+    List<AdminInfo> getAllAdminInfo();
 }

@@ -229,4 +229,9 @@ public class AdminServiceImpl implements AdminService {
         });
         return vos;
     }
+
+    @Override
+    public List<AdminInfo> getAllAdminInfo() {
+        return adminDao.findAll();
+    }
 }

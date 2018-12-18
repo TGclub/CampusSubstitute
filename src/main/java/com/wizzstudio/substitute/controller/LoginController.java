@@ -60,6 +60,7 @@ public class LoginController extends BaseController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/login/admin")
     public ResponseEntity login(@NotNull @RequestBody AdminLoginDTO loginDTO, HttpServletResponse response) {
         if (adminService.isValidAdmin(loginDTO)) {
