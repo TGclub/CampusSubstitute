@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Service
 @Slf4j
+//todo: frequently scheduled persistence behavior to promise the current data will be store no matter when the application shutdown
 public class ScheduledServiceImpl implements ScheduledService {
 
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);

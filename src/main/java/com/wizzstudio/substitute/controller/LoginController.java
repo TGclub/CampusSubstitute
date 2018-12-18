@@ -28,7 +28,6 @@ import java.io.IOException;
 
 @RestController
 @Slf4j
-@CrossOrigin(origins = {"http://localhost:8080"})
 public class LoginController extends BaseController {
 
     @Autowired
