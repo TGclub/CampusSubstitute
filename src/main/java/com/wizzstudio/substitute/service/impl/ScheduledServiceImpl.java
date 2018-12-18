@@ -94,7 +94,7 @@ public class ScheduledServiceImpl implements ScheduledService {
             if (System.currentTimeMillis() - indentMap.get(indentId) > 3600000) {
                 indent.setUrgentType(UrgentTypeEnum.OVERTIME.getCode());
                 //发送短信给下单者--cx
-                pushMessageService.sendPhoneMsg2User(indent.getPublisherId(),UrgentTypeEnum.OVERTIME);
+                pushMessageService.sendPhoneMsg2User(indent.getPublisherId(), UrgentTypeEnum.OVERTIME);
                 indentDao.save(indent);
                 indentMap.remove(indentId);
             }
@@ -135,19 +135,22 @@ public class ScheduledServiceImpl implements ScheduledService {
         switch (type) {
             case INCOME:
                 countInfo.setIncome(countInfo.getIncome().add((BigDecimal) value));
+                log.info(today + ": " + schoolId + " company income increased" + "-----" + (BigDecimal) value);
                 break;
             case NEW_INDENT:
                 countInfo.setNewIndent(countInfo.getNewIndent() + (Integer) value);
+                log.info(today + ": " + schoolId + " new indent number increased" + "-----" + (Integer) value);
                 break;
             case LOGIN_USER:
                 countInfo.setLoginUser(countInfo.getLoginUser() + (Integer) value);
+                log.info(today + ": " + schoolId + " login user number increased" + "-----" + (Integer) value);
                 break;
             case FINISHED_INDENT:
                 countInfo.setFinishedIndent(countInfo.getFinishedIndent() + (Integer) value);
+                log.info(today + ": " + schoolId + " finished indent number increased" + "-----" + (Integer) value);
                 break;
             default:
                 break;
-
         }
     }
 }
