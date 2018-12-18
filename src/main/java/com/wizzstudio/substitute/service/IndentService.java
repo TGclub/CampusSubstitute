@@ -4,6 +4,7 @@ import com.wizzstudio.substitute.VO.IndentVO;
 import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.enums.GenderEnum;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IndentService {
@@ -32,8 +33,11 @@ public interface IndentService {
 
     /**
      * 完结订单
+     *
+     * 鉴于添加一个返回值并没有影响任何逻辑代码，且可以大大的方便用aop获得企业收入，
+     * 故添加companyIncome局部变量为返回值——Kikyou
      */
-    void finishedIndent(Integer indentId, String userId);
+    BigDecimal finishedIndent(Integer indentId, String userId);
 
     /**
      * 取消订单

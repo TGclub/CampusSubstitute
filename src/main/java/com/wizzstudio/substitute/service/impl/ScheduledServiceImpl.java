@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Service
 @Slf4j
+//todo: frequently scheduled persistence behavior to promise the current data will be store no matter when the application shutdown
 public class ScheduledServiceImpl implements ScheduledService {
 
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
@@ -98,14 +99,15 @@ public class ScheduledServiceImpl implements ScheduledService {
     public void saveEveryDaysCount() {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("HHmm");
-        if (Integer.valueOf(format.format(date)) == 0) {
+        if (Integer.valueOf(format.format(date)) == 0) {// means a new new day has come, so store the data of last day
             for (Integer i : schoolIdCountInfoMap.keySet()) {
                 countInfoDao.save(schoolIdCountInfoMap.get(i));
             }
+            //execute this code to replace the old when a new day coming
+            schoolIdCountInfoMap = new ConcurrentHashMap<>();
+            mToday.set(Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date())));
         }
-        //execute this code to replace the old when a new day comming
-        schoolIdCountInfoMap = new ConcurrentHashMap<>();
-        mToday.set(Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date())));
+
     }
 
     public void replaceOldMap() {
@@ -117,7 +119,7 @@ public class ScheduledServiceImpl implements ScheduledService {
     public synchronized void update(Integer schoolId, CountInfoTypeEnum type, Object value) {
         if (schoolId == null) return;
         Integer today = Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date()));
-        if (!today.equals(mToday.get())) {
+        if (!today.equals(mToday.get())) {// means a new day has come but map not got refreshed yet
             mToday.set(today);// compareAndSet may better
             replaceOldMap();
         }

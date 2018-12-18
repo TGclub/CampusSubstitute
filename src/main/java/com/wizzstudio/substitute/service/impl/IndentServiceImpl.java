@@ -349,8 +349,12 @@ public class IndentServiceImpl implements IndentService {
         //todo 发模板消息
     }
 
+    /**
+     * 鉴于添加一个返回值并没有影响任何逻辑代码，且可以大大的方便用aop获得企业收入，故添加companyIncome局部变量
+     * 为返回值——Kikyou
+     */
     @Override
-    public void finishedIndent(Integer indentId, String userId) {
+    public BigDecimal finishedIndent(Integer indentId, String userId) {
         //1、校验参数是否正确,订单状态是否正确
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
@@ -409,16 +413,10 @@ public class IndentServiceImpl implements IndentService {
         indentDao.save(indent);
         //todo 发模板消息
 
-        companyIncome(companyIncome);
+        return companyIncome;
     }
 
-    /**
-     * 用来最大限度的减少对 public void finishedIndent(Integer indentId, String userId)方法的侵入
-     * @param companyIncome
-     */
-    public void companyIncome(BigDecimal companyIncome) {
 
-    }
 
     @Override
     public void canceledIndent(Integer indentId, String userId) {

@@ -48,10 +48,6 @@ public class StatisticAspect {
 
     }
 
-    @Pointcut("execution(public * com.wizzstudio.substitute.service.impl.IndentServiceImpl.companyIncome(..))")
-    public void companyIncomeBehavior() {
-
-    }
 
     @AfterReturning("loginBehavior()")
     public void addUserLoginCount(JoinPoint joinPoint) {
@@ -61,13 +57,13 @@ public class StatisticAspect {
         }
     }
 
-    @After("newIndentBehavior()")
+    @AfterReturning("newIndentBehavior()")
     public void addNewIndentCount() {
         Integer schoolId = getSchoolId();
         scheduledService.update(schoolId, CountInfoTypeEnum.NEW_INDENT, 1);
     }
 
-    @After("indentAlmostBehavior()")
+    @AfterReturning("indentAlmostBehavior()")
     public void addNewPrice(JoinPoint joinPoint) {
         Integer schoolId = getSchoolId();
         IndentUserForm indentUserForm = (IndentUserForm) (joinPoint.getArgs()[0]);
@@ -79,11 +75,11 @@ public class StatisticAspect {
         }
     }
 
-    @Before("companyIncomeBehavior()")
-    public void addCompanyIncome(JoinPoint joinPoint) {
+    @AfterReturning(value = "execution(public * com.wizzstudio.substitute.service.impl.IndentServiceImpl.finishedIndent(..))", returning = "companyIncome")
+    public void addCompanyIncome(JoinPoint joinPoint, Object companyIncome) {
         Integer schoolId = getSchoolId();
         if (schoolId == null) return;
-        scheduledService.update(schoolId, CountInfoTypeEnum.INCOME, joinPoint.getArgs()[0]);
+        scheduledService.update(schoolId, CountInfoTypeEnum.INCOME, companyIncome);
     }
 
     public Integer getSchoolId() {
