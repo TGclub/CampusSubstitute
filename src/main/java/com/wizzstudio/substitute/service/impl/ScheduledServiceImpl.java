@@ -93,9 +93,9 @@ public class ScheduledServiceImpl implements ScheduledService {
             }
             if (System.currentTimeMillis() - indentMap.get(indentId) > 3600000) {
                 indent.setUrgentType(UrgentTypeEnum.OVERTIME.getCode());
+                indentDao.save(indent);
                 //发送短信给下单者--cx
                 pushMessageService.sendPhoneMsg2Admin(indent);
-                indentDao.save(indent);
                 indentMap.remove(indentId);
             }
         }

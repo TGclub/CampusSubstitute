@@ -114,7 +114,7 @@ public class PushMessageServiceImpl implements PushMessageService {
         try {
             IndentStateEnum indentState = indent.getIndentState();
             String userId1, userId2,phone,templateCode;
-            String date = TimeUtil.getFormatTime(new Date(),"MM月dd日 HH:mm");
+            String date = TimeUtil.getFormatTime(indent.getCreateTime(),"MM月dd日 HH:mm");
             List<String> params = new ArrayList<>();
             //todo templateCode
             switch (indentState){
@@ -154,15 +154,15 @@ public class PushMessageServiceImpl implements PushMessageService {
     @Override
     public void sendPhoneMsg2Admin(Indent indent) {
         try {
+            String phone = "",templateCode;
+            //发送短信给所有该区域的二级管理员
             User user = userService.findUserById(indent.getPublisherId());
             List<AdminInfo> adminInfos = adminService.getAllAdminInfoBySchoolIdAndRole(user.getSchoolId(), Role.ROLE_ADMIN_2);
-            String phone = "",templateCode;
-            //发送短信给所有管理员
             for (AdminInfo adminInfo : adminInfos){
                 phone += adminInfo.getAdminPhone() + ",";
             }
             phone = phone.substring(0,phone.length()-1);
-            String date = TimeUtil.getFormatTime(new Date(),"MM月dd日 HH:mm");
+            String date = TimeUtil.getFormatTime(indent.getCreateTime(),"MM月dd日 HH:mm");
             List<String> params = new ArrayList<>();
             params.add(user.getUserName());
             params.add(date);
