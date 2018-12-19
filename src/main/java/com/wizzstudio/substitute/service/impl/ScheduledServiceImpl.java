@@ -112,7 +112,7 @@ public class ScheduledServiceImpl implements ScheduledService {
             }
             //execute this code to replace the old when a new day coming
             schoolIdCountInfoMap = new ConcurrentHashMap<>();
-            mToday.set(Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(time)));
+            mToday.set(today);
         }
     }
 
@@ -135,19 +135,22 @@ public class ScheduledServiceImpl implements ScheduledService {
         switch (type) {
             case INCOME:
                 countInfo.setIncome(countInfo.getIncome().add((BigDecimal) value));
+                log.info(today + ": " + schoolId + " company income increased" + "-----" + (BigDecimal) value);
                 break;
             case NEW_INDENT:
                 countInfo.setNewIndent(countInfo.getNewIndent() + (Integer) value);
+                log.info(today + ": " + schoolId + " new indent number increased" + "-----" + (Integer) value);
                 break;
             case LOGIN_USER:
                 countInfo.setLoginUser(countInfo.getLoginUser() + (Integer) value);
+                log.info(today + ": " + schoolId + " login user number increased" + "-----" + (Integer) value);
                 break;
             case FINISHED_INDENT:
                 countInfo.setFinishedIndent(countInfo.getFinishedIndent() + (Integer) value);
+                log.info(today + ": " + schoolId + " finished indent number increased" + "-----" + (Integer) value);
                 break;
             default:
                 break;
-
         }
     }
 }
