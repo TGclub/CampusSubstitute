@@ -264,4 +264,9 @@ public class AdminServiceImpl implements AdminService {
     public List<AdminInfo> getAllAdminInfo() {
         return adminDao.findAll();
     }
+
+    @Override
+    public List<AdminInfo> getAllAdminInfoBySchoolIdAndRole(Integer schoolId,Role role) {
+        return adminDao.findByAdminSchoolIdAndAdminRoleIs(schoolId,role);
+    }
 }

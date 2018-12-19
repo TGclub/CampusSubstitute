@@ -323,8 +323,10 @@ public class IndentServiceImpl implements IndentService {
         indent.setIndentState(IndentStateEnum.PERFORMING);
         indentDao.save(indent);
         scheduledService.removeIndentFromMap(indentId);
+        //发短信给下单人
+        pushMessageService.sendPhoneMsg2User(indent);
         //发模板消息
-        pushMessageService.sendTemplateMsg(indent,formId);
+//        pushMessageService.sendTemplateMsg(indent,formId);
     }
 
     @Override
@@ -346,7 +348,7 @@ public class IndentServiceImpl implements IndentService {
         indent.setIndentState(IndentStateEnum.ARRIVED);
         indentDao.save(indent);
         //发模板消息
-        pushMessageService.sendTemplateMsg(indent,formId);
+//        pushMessageService.sendTemplateMsg(indent,formId);
     }
 
     /**
@@ -411,7 +413,7 @@ public class IndentServiceImpl implements IndentService {
         indent.setIndentState(IndentStateEnum.COMPLETED);
         indentDao.save(indent);
         //发模板消息
-        pushMessageService.sendTemplateMsg(indent,formId);
+//        pushMessageService.sendTemplateMsg(indent,formId);
         return companyIncome;
     }
 
@@ -434,11 +436,13 @@ public class IndentServiceImpl implements IndentService {
             log.info("【取消订单】接单人取消订单，userId={}，indent={}", userId,indent);
             indent.setPerformerId(null);
             indent.setIndentState(IndentStateEnum.WAIT_FOR_PERFORMER);
+            indent.setUrgentType(UrgentTypeEnum.CANCEL.getCode());
             scheduledService.addIndent(indentId,indent.getCreateTime());
             indentDao.save(indent);
             //发送模板消息给下单人、并发送短信给下单人
-            pushMessageService.sendTemplateMsg(indent,formId);
-            pushMessageService.sendPhoneMsg2User(indent.getPublisherId(), UrgentTypeEnum.CANCEL);
+//            pushMessageService.sendTemplateMsg(indent,formId);
+            pushMessageService.sendPhoneMsg2User(indent);
+            pushMessageService.sendPhoneMsg2Admin(indent);
             return;
         }
         if (!userId.equals(indent.getPublisherId())){
@@ -456,8 +460,7 @@ public class IndentServiceImpl implements IndentService {
         //4.从订单监控列表中删除
         scheduledService.removeIndentFromMap(indentId);
         //发模板消息、短信
-        pushMessageService.sendTemplateMsg(indent,formId);
-        pushMessageService.sendPhoneMsg2User(indent.getPerformerId(), UrgentTypeEnum.CANCEL);
+//        pushMessageService.sendTemplateMsg(indent,formId);
     }
 
 }

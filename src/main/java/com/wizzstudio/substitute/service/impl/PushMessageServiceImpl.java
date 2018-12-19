@@ -7,13 +7,16 @@ import com.alibaba.fastjson.JSON;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.exceptions.ClientException;
 import com.wizzstudio.substitute.config.AliSmsConfig;
+import com.wizzstudio.substitute.domain.AdminInfo;
 import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.domain.User;
+import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.enums.indent.UrgentTypeEnum;
 import com.wizzstudio.substitute.service.AdminService;
 import com.wizzstudio.substitute.service.PushMessageService;
 import com.wizzstudio.substitute.service.UserService;
+import com.wizzstudio.substitute.util.CommonUtil;
 import com.wizzstudio.substitute.util.SmsUtil;
 import com.wizzstudio.substitute.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
+import static com.wizzstudio.substitute.enums.indent.UrgentTypeEnum.OVERTIME;
 
 /**
  * Created By Cx On 2018/11/29 14:47
@@ -105,16 +110,70 @@ public class PushMessageServiceImpl implements PushMessageService {
     }
 
     @Override
-    public void sendPhoneMsg2User(String userId,UrgentTypeEnum urgentType) {
+    public void sendPhoneMsg2User(Indent indent) {
         try {
-            User user = userService.findUserById(userId);
-            String phone = String.valueOf(user.getPhone()), name = user.getUserName(),templateCode;
-            String date = TimeUtil.getFormatTime(new Date(),"yyyy-MM-dd HH:mm:ss");
+            IndentStateEnum indentState = indent.getIndentState();
+            String userId1, userId2,phone,templateCode;
+            String date = TimeUtil.getFormatTime(new Date(),"MM月dd日 HH:mm");
             List<String> params = new ArrayList<>();
-            params.add(name);
+            //todo templateCode
+            switch (indentState){
+                //待接单，说明下单人被取消订单
+                case WAIT_FOR_PERFORMER:
+                    userId1 = indent.getPublisherId();
+                    userId2 = indent.getPerformerId();
+                    templateCode = "-_wlctvQjdRVNM-oBjQuSSPuEVJXQ9YeSJ86MksxUdo";
+                    break;
+                //订单取消，说明接单人被取消订单
+                case CANCELED:
+                    userId1 = indent.getPerformerId();
+                    userId2 = indent.getPublisherId();
+                    templateCode = "-_wlctvQjdRVNM-oBjQuSSPuEVJXQ9YeSJ86MksxUdo";
+                    break;
+                //订单被接，告诉下单人
+                case PERFORMING:
+                    userId1 = indent.getPublisherId();
+                    userId2 = indent.getPerformerId();
+                    templateCode = "eAJcNvlLEMQ2YNlWOTCC3KACAoFGYpGF0Jh5kSosqwE";
+                    break;
+                default:
+                    log.error("[微信消息推送]发送失败，订单状态有误，indent={}",indent);
+                    return;
+            }
+            User user = userService.findUserById(userId1);
+            phone = String.valueOf(user.getPhone());
+            params.add(user.getUserName());
             params.add(date);
+            params.add(userService.findUserById(userId2).getUserName());
+            sendMsg(templateCode,phone,params);
+        } catch (ClientException e) {
+            log.error("[发送短信]出错了，e={}",e);
+        } catch (Exception ignored){}
+    }
+
+    @Override
+    public void sendPhoneMsg2Admin(Indent indent) {
+        try {
+            User user = userService.findUserById(indent.getPublisherId());
+            List<AdminInfo> adminInfos = adminService.getAllAdminInfoBySchoolIdAndRole(user.getSchoolId(), Role.ROLE_ADMIN_2);
+            String phone = "",templateCode;
+            //发送短信给所有管理员
+            for (AdminInfo adminInfo : adminInfos){
+                phone += adminInfo.getAdminPhone() + ",";
+            }
+            phone = phone.substring(0,phone.length()-1);
+            String date = TimeUtil.getFormatTime(new Date(),"MM月dd日 HH:mm");
+            List<String> params = new ArrayList<>();
+            params.add(user.getUserName());
+            params.add(date);
+            UrgentTypeEnum urgentType = CommonUtil.getEnum(indent.getUrgentType(),UrgentTypeEnum.class);
+            if (urgentType == null){
+                log.error("[发送短信]出错了，urgentType={}",indent.getUrgentType());
+                return;
+            }
+            //todo templateCode
             switch (urgentType){
-                //todo 未完成 超时
+                //超时
                 case OVERTIME:
                     templateCode = "x";
                     break;
@@ -130,11 +189,6 @@ public class PushMessageServiceImpl implements PushMessageService {
         } catch (ClientException e) {
             log.error("[发送短信]出错了，e={}",e);
         } catch (Exception ignored){}
-    }
-
-    @Override
-    public void sendPhoneMsg2Admin(String adminId, UrgentTypeEnum urgentTypeEnum) {
-
     }
 
 

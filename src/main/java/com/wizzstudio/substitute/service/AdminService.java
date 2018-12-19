@@ -149,4 +149,6 @@ public interface AdminService {
     CouponInfo getSpecificCoupon(int id);
 
     List<AdminInfo> getAllAdminInfo();
+
+    List<AdminInfo> getAllAdminInfoBySchoolIdAndRole(Integer schoolId,Role role);
 }
