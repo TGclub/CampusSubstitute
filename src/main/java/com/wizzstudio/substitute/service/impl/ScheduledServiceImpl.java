@@ -67,7 +67,7 @@ public class ScheduledServiceImpl implements ScheduledService {
     public void beginStatistics() {
         executorService.scheduleAtFixedRate(() -> {
             saveEveryDaysCount();
-        }, 0, 30, TimeUnit.MINUTES);
+        }, 0, 1, TimeUnit.HOURS);
     }
 
     public void addIndent(int indentId) {
