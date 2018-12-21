@@ -303,12 +303,7 @@ public class IndentServiceImpl implements IndentService {
     }
 
     @Override
-    public void takeIndent(Integer indentId, String userId, String formId) {
-        User user = userService.findUserById(userId);
-        if (user == null){
-            log.error("【接单】接单失败，用户不存在，userId={}", userId);
-            throw new SubstituteException("接单失败，用户不存在");
-        }
+    public void takeIndent(Integer indentId, String userId) {
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
             log.error("【接单】接单失败，订单id不存在，indentId={}", indentId);
@@ -317,6 +312,15 @@ public class IndentServiceImpl implements IndentService {
         if (indent.getPerformerId() != null || indent.getIndentState() != IndentStateEnum.WAIT_FOR_PERFORMER){
             log.error("【接单】接单失败，该订单状态有误，indent={}", indent);
             throw new SubstituteException(ResultEnum.INDENT_STATE_ERROR);
+        }
+        if (indent.getPublisherId().equals(userId)){
+            log.error("[接单]接单失败，不能接自己订单，indent={},userId={}",indent,userId);
+            throw new SubstituteException("不能接自己的订单");
+        }
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            log.error("【接单】接单失败，用户不存在，userId={}", userId);
+            throw new SubstituteException("接单失败，用户不存在");
         }
         //用户接单
         indent.setPerformerId(userId);
@@ -330,7 +334,7 @@ public class IndentServiceImpl implements IndentService {
     }
 
     @Override
-    public void arrivedIndent(Integer indentId, String userId, String formId) {
+    public void arrivedIndent(Integer indentId, String userId) {
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
             log.error("【送达订单】送达订单失败，订单id不存在，indentId={}", indentId);
@@ -356,7 +360,7 @@ public class IndentServiceImpl implements IndentService {
      * 为返回值——Kikyou
      */
     @Override
-    public BigDecimal finishedIndent(Integer indentId, String userId, String formId) {
+    public BigDecimal finishedIndent(Integer indentId, String userId) {
         //1、校验参数是否正确,订单状态是否正确
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){
@@ -420,7 +424,7 @@ public class IndentServiceImpl implements IndentService {
 
 
     @Override
-    public void canceledIndent(Integer indentId, String userId, String formId) {
+    public void canceledIndent(Integer indentId, String userId) {
         //1、校验参数是否正确,订单状态是否正确
         Indent indent = indentDao.findByIndentId(indentId);
         if (indent == null){

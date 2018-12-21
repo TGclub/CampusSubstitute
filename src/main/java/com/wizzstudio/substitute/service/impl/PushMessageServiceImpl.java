@@ -46,7 +46,6 @@ public class PushMessageServiceImpl implements PushMessageService {
     @Autowired
     UserService userService;
 
-    //todo 未完成
     @Override
     public void sendTemplateMsg(Indent indent, String formId){
         IndentStateEnum indentState = indent.getIndentState();
