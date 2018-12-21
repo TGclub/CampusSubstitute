@@ -107,7 +107,7 @@ public class ScheduledServiceImpl implements ScheduledService {
         Date time = new Date();
         Integer today = Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(time));
         SimpleDateFormat format = new SimpleDateFormat("HH");
-        if (Integer.valueOf(format.format(today)).equals(0)) {// means a new new day has come, so store the data of last day
+        if (Integer.valueOf(format.format(today)).equals(0) && !today.equals(mToday.get())) {// means a new new day has come, so store the data of last day
             for (Integer i : schoolIdCountInfoMap.keySet()) {
                 countInfoDao.save(schoolIdCountInfoMap.get(i));
                 log.info("schoolId:" + i + " of " + today + "stored");
@@ -128,7 +128,6 @@ public class ScheduledServiceImpl implements ScheduledService {
         if (schoolId == null) return;
         Integer today = Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(new Date()));
         if (!today.equals(mToday.get())) {// means a new day has come but map not got refreshed yet
-            mToday.set(today);// compareAndSet may better
             replaceOldMap();
         }
         if (!schoolIdCountInfoMap.keySet().contains(schoolId))
