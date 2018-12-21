@@ -104,6 +104,7 @@ public class ScheduledServiceImpl implements ScheduledService {
 
     @Override
     public void saveEveryDaysCount() {
+        log.info("saveEveryDaysCount method invoked");
         Date time = new Date();
         Integer today = Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(time));
         SimpleDateFormat format = new SimpleDateFormat("HH");
@@ -115,6 +116,12 @@ public class ScheduledServiceImpl implements ScheduledService {
             //execute this code to replace the old when a new day coming
             schoolIdCountInfoMap.clear();
             mToday.set(today);
+        }
+        // below is used to get concrete information for debug
+        for (Integer i: schoolIdCountInfoMap.keySet()) {
+            CountInfo info = schoolIdCountInfoMap.get(i);
+            log.info("statistic data in map: school id + " + i + " income: " + info.getIncome() + " login user: " +
+                    info.getLoginUser() + " new indent: " + info.getNewIndent() + " finished indent: " + info.getFinishedIndent());
         }
     }
 
