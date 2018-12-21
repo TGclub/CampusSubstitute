@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 @Builder
 @Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 @DynamicInsert
 public class CountInfo {
@@ -45,4 +44,16 @@ public class CountInfo {
 
     //当日登录量，不去重,默认为0(先不做)
     private Integer loginUser;
+
+    public CountInfo(Integer schoolId, Integer countDate, Integer newIndent, Integer finishedIndent, BigDecimal income, Integer loginUser) {
+        this.schoolId = schoolId;
+        this.countDate = countDate;
+        this.newIndent = newIndent;
+        this.finishedIndent = finishedIndent;
+        this.income = income;
+        this.loginUser = loginUser;
+    }
+
+    public CountInfo() {
+    }
 }

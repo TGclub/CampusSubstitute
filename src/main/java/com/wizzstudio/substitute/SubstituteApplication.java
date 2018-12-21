@@ -24,5 +24,6 @@ public class SubstituteApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("scheduled service: start");
         scheduledService.startTask();
+
     }
 }

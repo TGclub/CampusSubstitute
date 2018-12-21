@@ -138,7 +138,7 @@ public class ScheduledServiceImpl implements ScheduledService {
             replaceOldMap();
         }
         if (!schoolIdCountInfoMap.keySet().contains(schoolId))
-            schoolIdCountInfoMap.put(schoolId, new CountInfo(0, schoolId, today, 0, 0, new BigDecimal(0), 0));
+            schoolIdCountInfoMap.put(schoolId, new CountInfo(schoolId, today, 0, 0, new BigDecimal(0), 0));
         CountInfo countInfo = schoolIdCountInfoMap.get(schoolId);
         switch (type) {
             case INCOME:
