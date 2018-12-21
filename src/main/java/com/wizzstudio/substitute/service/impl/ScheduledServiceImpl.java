@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Kikyou on 18-12-2
+ * Not a good solution
  */
 @Service
 @Slf4j
@@ -106,12 +107,13 @@ public class ScheduledServiceImpl implements ScheduledService {
         Date time = new Date();
         Integer today = Integer.valueOf(new SimpleDateFormat("yyyyMMdd").format(time));
         SimpleDateFormat format = new SimpleDateFormat("HH");
-        if (!today.equals(mToday.get())) {// means a new new day has come, so store the data of last day
+        if (Integer.valueOf(format.format(today)).equals(0)) {// means a new new day has come, so store the data of last day
             for (Integer i : schoolIdCountInfoMap.keySet()) {
                 countInfoDao.save(schoolIdCountInfoMap.get(i));
+                log.info("schoolId:" + i + " of " + today + "stored");
             }
             //execute this code to replace the old when a new day coming
-            schoolIdCountInfoMap = new ConcurrentHashMap<>();
+            schoolIdCountInfoMap.clear();
             mToday.set(today);
         }
     }
