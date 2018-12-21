@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -29,9 +30,11 @@ public class Feedback {
     private Integer feedbackId;
 
     //反馈信息
+    @NotNull
     private String content;
 
     //用户id
+    @NotNull
     private String userId;
 
     //是否已读，0：未读，1：已读，默认为0
