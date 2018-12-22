@@ -127,6 +127,11 @@ public class IndentServiceImpl implements IndentService {
     @Override
     public Integer create(Indent indent) {
         //1.验证参数是否有效
+        //1.0验证订单金额
+        if (indent.getIndentPrice() < 3){
+            log.error("[创建订单]创建失败，订单金额不能小于3元，indent={}", indent);
+            throw new SubstituteException("订单金额不能小于3元");
+        }
         //1.1验证下单用户id是否存在
         User user = userService.findUserById(indent.getPublisherId());
         if (user == null){

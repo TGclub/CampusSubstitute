@@ -98,6 +98,7 @@ public class PayController {
 
     /**
      * 用户发起提现请求
+     * 一天只能提现一次
      */
     @PostMapping("/withdraw/{userId}")
     public ResponseEntity withdraw(@PathVariable String userId){

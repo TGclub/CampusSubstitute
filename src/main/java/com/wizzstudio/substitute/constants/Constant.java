@@ -26,6 +26,9 @@ public interface Constant {
     String FEMALE = "FEMALE";
     String NO_LIMITED = "NO_LIMITED";
 
+    //提现
+    String WITHDRAW = "WITHDRAW";
+
     interface WxPay{
         //微信支付统一下单时间格式
         String TIME_FORMAT = "yyyyMMddHHmmss";

@@ -53,7 +53,7 @@ public class TimeUtil {
      */
     public static Date getLastTime(){
         String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd 23:59:59");
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             return format.parse(date);
         } catch (ParseException e) {
@@ -66,7 +66,7 @@ public class TimeUtil {
      */
     public static Date getFirstTime(){
         String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd 00:00:00");
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             return format.parse(date);
         } catch (ParseException e) {
@@ -75,7 +75,7 @@ public class TimeUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println();
+        System.out.println(getLastTime().getTime() - new Date().getTime());
     }
 
 }

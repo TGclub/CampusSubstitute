@@ -8,6 +8,7 @@ package com.wizzstudio.substitute.service;
 public interface PayService {
     /**
      * 创建某用户的提现请求
+     * 一天只能提现一次
      */
     void createWithdraw(String userId);
 }
