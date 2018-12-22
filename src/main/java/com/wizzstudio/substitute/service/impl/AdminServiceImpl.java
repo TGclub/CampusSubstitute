@@ -113,7 +113,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<UrgentIndentVO> getUrgentIndentsByHandledState(Boolean isHandled, Integer schoolId, String adminName) {
-        AdminInfo adminInfo = adminDao.getAdminInfoByAdminName(adminName);
+        AdminInfo adminInfo = adminDao.getAdminInfoByAdminId(Integer.valueOf(adminName));
+        if (adminInfo == null) return null;
         if (adminInfo.getAdminRole().equals(Role.ROLE_ADMIN_2)) {
             if (!adminInfo.getAdminSchoolId().equals(schoolId)) {
                 throw new AccessDeniedException("Access Denied");
@@ -157,7 +158,7 @@ public class AdminServiceImpl implements AdminService {
         coupon.setValidTime(new Date(newCoupon.getValidTime()));
         coupon.setInvalidTime(new Date(newCoupon.getInvalidTime()));
         coupon.setLeastPrice(newCoupon.getLeastPrice());
-        coupon.setPicture(newCoupon.getFile().getBytes());
+        coupon.setPicture(newCoupon.getPicture().getBytes());
         couponInfoDao.save(coupon);
     }
 
@@ -280,7 +281,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<CountInfo> getConcreteCountInfoBySchoolId(Integer schoolId, Integer from, Integer to, String adminName) {
         if (adminName == null) return null;
-        AdminInfo adminInfo = adminDao.getAdminInfoByAdminName(adminName);
+        AdminInfo adminInfo = adminDao.getAdminInfoByAdminId(Integer.valueOf(adminName));
         if (adminInfo == null) return null;
         Role role = adminInfo.getAdminRole();
         List<CountInfo> countInfos;
