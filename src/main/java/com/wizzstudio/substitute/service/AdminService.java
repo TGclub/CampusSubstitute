@@ -53,7 +53,7 @@ public interface AdminService {
      * 获取未处理的紧急订单
      * @return 订单列表
      */
-    List<UrgentIndentVO> getUrgentIndentsByHandledState(Boolean isHandled, Integer schoolId);
+    List<UrgentIndentVO> getUrgentIndentsByHandledState(Boolean isHandled, Integer schoolId, String adminName);
 
 
     /**
@@ -139,6 +139,8 @@ public interface AdminService {
      */
     List<CountInfo> getConcreteCountInfo(Integer from, Integer to);
 
+
+    List<CountInfo> getConcreteCountInfoBySchoolId(Integer from, Integer to, Integer schoolId, String adminName);
     /**
      * 查看指定状态的所有提现请求
      * @param status true 已处理， false 未处理
@@ -151,4 +153,5 @@ public interface AdminService {
     List<AdminInfo> getAllAdminInfo();
 
     List<AdminInfo> getAllAdminInfoBySchoolIdAndRole(Integer schoolId,Role role);
+
 }

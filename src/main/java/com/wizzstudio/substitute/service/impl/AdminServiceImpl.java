@@ -14,6 +14,7 @@ import com.wizzstudio.substitute.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,7 +112,13 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<UrgentIndentVO> getUrgentIndentsByHandledState(Boolean isHandled, Integer schoolId) {
+    public List<UrgentIndentVO> getUrgentIndentsByHandledState(Boolean isHandled, Integer schoolId, String adminName) {
+        AdminInfo adminInfo = adminDao.getAdminInfoByAdminName(adminName);
+        if (adminInfo.getAdminRole().equals(Role.ROLE_ADMIN_2)) {
+            if (!adminInfo.getAdminSchoolId().equals(schoolId)) {
+                throw new AccessDeniedException("Access Denied");
+            }
+        }
         List<Indent> indents = indentDao.findAllByIsSolvedAndUrgentTypeGreaterThanOrderByCreateTimeDesc(isHandled, 0);
         List<UrgentIndentVO> vos = new ArrayList<>();
         indents.forEach(x -> {
@@ -268,5 +275,27 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<AdminInfo> getAllAdminInfoBySchoolIdAndRole(Integer schoolId,Role role) {
         return adminDao.findByAdminSchoolIdAndAdminRoleIs(schoolId,role);
+    }
+
+    @Override
+    public List<CountInfo> getConcreteCountInfoBySchoolId(Integer schoolId, Integer from, Integer to, String adminName) {
+        if (adminName == null) return null;
+        AdminInfo adminInfo = adminDao.getAdminInfoByAdminName(adminName);
+        if (adminInfo == null) return null;
+        Role role = adminInfo.getAdminRole();
+        List<CountInfo> countInfos;
+        switch (role) {
+            case ROLE_ADMIN_1:
+                countInfos = countInfoDao.getAllByCountDateBetweenAndSchoolId(from, to, schoolId);
+                break;
+            case ROLE_ADMIN_2:
+                if (schoolId.equals(adminInfo.getAdminSchoolId()))
+                    countInfos = countInfoDao.getAllByCountDateBetweenAndSchoolId(from,to,schoolId);
+                else throw new AccessDeniedException("AccessDenied");
+                break;
+            default:
+                throw new AccessDeniedException("AccessDenied");
+        }
+        return  countInfos;
     }
 }

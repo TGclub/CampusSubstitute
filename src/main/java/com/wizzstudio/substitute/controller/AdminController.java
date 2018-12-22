@@ -143,6 +143,11 @@ public class AdminController {
         return ResultUtil.success(adminService.getConcreteCountInfo(from, to));
     }
 
+    @GetMapping("statistics/viewConcreteInfo/{schoolId}/{from}/{to}")
+    public ResponseEntity viewConcreteInfoBySchoolId(@PathVariable Integer schoolId, @PathVariable Integer from, @PathVariable Integer to, Principal principal) {
+        return ResultUtil.success(adminService.getConcreteCountInfoBySchoolId(schoolId, from, to, principal.getName()));
+    }
+
     /**
      * 查询所有的紧急订单
      *
@@ -150,91 +155,90 @@ public class AdminController {
      */
     @ApiOperation("查询所有未处理的紧急订单")
     @ApiResponses({
-    @ApiResponse(code = 200, message = "{\n" +
-            "    \"code\": 0,\n" +
-            "    \"msg\": \"请求成功\",\n" +
-            "    \"data\": [\n" +
-            "        {\n" +
-            "            \"indentId\": 29,\n" +
-            "            \"performerId\": \"XB4lFU\",\n" +
-            "            \"publisherId\": \"XZQ7ja\",\n" +
-            "            \"couponId\": null,\n" +
-            "            \"indentType\": \"HELP_SEND\",\n" +
-            "            \"requireGender\": \"MALE\",\n" +
-            "            \"indentContent\": \"qwe\",\n" +
-            "            \"indentPrice\": 23,\n" +
-            "            \"couponPrice\": 0,\n" +
-            "            \"totalPrice\": 23,\n" +
-            "            \"urgentType\": 1,\n" +
-            "            \"isSolved\": false,\n" +
-            "            \"indentState\": \"CANCELED\",\n" +
-            "            \"takeGoodAddress\": \"qwddde\",\n" +
-            "            \"shippingAddressId\": 18,\n" +
-            "            \"secretText\": \"快递号101010\",\n" +
-            "            \"goodPrice\": null,\n" +
-            "            \"createTime\": \"2018-12-14T11:45:41.000+0000\",\n" +
-            "            \"updateTime\": \"2018-12-18T01:25:43.000+0000\",\n" +
-            "            \"userName\": \"Kiris\",\n" +
-            "            \"trueName\": \"张俊\",\n" +
-            "            \"phone\": null,\n" +
-            "            \"school\": \"西安邮电大学\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"indentId\": 5,\n" +
-            "            \"performerId\": null,\n" +
-            "            \"publisherId\": \"EEETEE\",\n" +
-            "            \"couponId\": null,\n" +
-            "            \"indentType\": \"HELP_SEND\",\n" +
-            "            \"requireGender\": \"NO_LIMITED\",\n" +
-            "            \"indentContent\": \"我在呢\",\n" +
-            "            \"indentPrice\": 5,\n" +
-            "            \"couponPrice\": 0,\n" +
-            "            \"totalPrice\": 0,\n" +
-            "            \"urgentType\": 1,\n" +
-            "            \"isSolved\": false,\n" +
-            "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
-            "            \"takeGoodAddress\": \"1\",\n" +
-            "            \"shippingAddressId\": 2,\n" +
-            "            \"secretText\": null,\n" +
-            "            \"goodPrice\": null,\n" +
-            "            \"createTime\": \"2018-11-28T02:47:29.000+0000\",\n" +
-            "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
-            "            \"userName\": \"twet\",\n" +
-            "            \"trueName\": null,\n" +
-            "            \"phone\": 110112119,\n" +
-            "            \"school\": \"西安邮电大学\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"indentId\": 4,\n" +
-            "            \"performerId\": \"6gxVye\",\n" +
-            "            \"publisherId\": \"EEETEE\",\n" +
-            "            \"couponId\": null,\n" +
-            "            \"indentType\": \"HELP_OTHER\",\n" +
-            "            \"requireGender\": \"NO_LIMITED\",\n" +
-            "            \"indentContent\": \"我在呢\",\n" +
-            "            \"indentPrice\": 4,\n" +
-            "            \"couponPrice\": 0,\n" +
-            "            \"totalPrice\": 0,\n" +
-            "            \"urgentType\": 1,\n" +
-            "            \"isSolved\": false,\n" +
-            "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
-            "            \"takeGoodAddress\": null,\n" +
-            "            \"shippingAddressId\": 2,\n" +
-            "            \"secretText\": null,\n" +
-            "            \"goodPrice\": null,\n" +
-            "            \"createTime\": \"2018-11-10T13:45:15.000+0000\",\n" +
-            "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
-            "            \"userName\": \"twet\",\n" +
-            "            \"trueName\": null,\n" +
-            "            \"phone\": 110112119,\n" +
-            "            \"school\": \"西安邮电大学\"\n" +
-            "        }\n" +
-            "    ]\n" +
-            "}")})
-    @Secured("ROLE_ADMIN_1")
+            @ApiResponse(code = 200, message = "{\n" +
+                    "    \"code\": 0,\n" +
+                    "    \"msg\": \"请求成功\",\n" +
+                    "    \"data\": [\n" +
+                    "        {\n" +
+                    "            \"indentId\": 29,\n" +
+                    "            \"performerId\": \"XB4lFU\",\n" +
+                    "            \"publisherId\": \"XZQ7ja\",\n" +
+                    "            \"couponId\": null,\n" +
+                    "            \"indentType\": \"HELP_SEND\",\n" +
+                    "            \"requireGender\": \"MALE\",\n" +
+                    "            \"indentContent\": \"qwe\",\n" +
+                    "            \"indentPrice\": 23,\n" +
+                    "            \"couponPrice\": 0,\n" +
+                    "            \"totalPrice\": 23,\n" +
+                    "            \"urgentType\": 1,\n" +
+                    "            \"isSolved\": false,\n" +
+                    "            \"indentState\": \"CANCELED\",\n" +
+                    "            \"takeGoodAddress\": \"qwddde\",\n" +
+                    "            \"shippingAddressId\": 18,\n" +
+                    "            \"secretText\": \"快递号101010\",\n" +
+                    "            \"goodPrice\": null,\n" +
+                    "            \"createTime\": \"2018-12-14T11:45:41.000+0000\",\n" +
+                    "            \"updateTime\": \"2018-12-18T01:25:43.000+0000\",\n" +
+                    "            \"userName\": \"Kiris\",\n" +
+                    "            \"trueName\": \"张俊\",\n" +
+                    "            \"phone\": null,\n" +
+                    "            \"school\": \"西安邮电大学\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"indentId\": 5,\n" +
+                    "            \"performerId\": null,\n" +
+                    "            \"publisherId\": \"EEETEE\",\n" +
+                    "            \"couponId\": null,\n" +
+                    "            \"indentType\": \"HELP_SEND\",\n" +
+                    "            \"requireGender\": \"NO_LIMITED\",\n" +
+                    "            \"indentContent\": \"我在呢\",\n" +
+                    "            \"indentPrice\": 5,\n" +
+                    "            \"couponPrice\": 0,\n" +
+                    "            \"totalPrice\": 0,\n" +
+                    "            \"urgentType\": 1,\n" +
+                    "            \"isSolved\": false,\n" +
+                    "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
+                    "            \"takeGoodAddress\": \"1\",\n" +
+                    "            \"shippingAddressId\": 2,\n" +
+                    "            \"secretText\": null,\n" +
+                    "            \"goodPrice\": null,\n" +
+                    "            \"createTime\": \"2018-11-28T02:47:29.000+0000\",\n" +
+                    "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
+                    "            \"userName\": \"twet\",\n" +
+                    "            \"trueName\": null,\n" +
+                    "            \"phone\": 110112119,\n" +
+                    "            \"school\": \"西安邮电大学\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"indentId\": 4,\n" +
+                    "            \"performerId\": \"6gxVye\",\n" +
+                    "            \"publisherId\": \"EEETEE\",\n" +
+                    "            \"couponId\": null,\n" +
+                    "            \"indentType\": \"HELP_OTHER\",\n" +
+                    "            \"requireGender\": \"NO_LIMITED\",\n" +
+                    "            \"indentContent\": \"我在呢\",\n" +
+                    "            \"indentPrice\": 4,\n" +
+                    "            \"couponPrice\": 0,\n" +
+                    "            \"totalPrice\": 0,\n" +
+                    "            \"urgentType\": 1,\n" +
+                    "            \"isSolved\": false,\n" +
+                    "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
+                    "            \"takeGoodAddress\": null,\n" +
+                    "            \"shippingAddressId\": 2,\n" +
+                    "            \"secretText\": null,\n" +
+                    "            \"goodPrice\": null,\n" +
+                    "            \"createTime\": \"2018-11-10T13:45:15.000+0000\",\n" +
+                    "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
+                    "            \"userName\": \"twet\",\n" +
+                    "            \"trueName\": null,\n" +
+                    "            \"phone\": 110112119,\n" +
+                    "            \"school\": \"西安邮电大学\"\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}")})
     @GetMapping("/urgent/indent/unhandled")
-    public ResponseEntity viewUrgentIndent(Integer schoolId) {
-        return ResultUtil.success(adminService.getUrgentIndentsByHandledState(false, schoolId   ));
+    public ResponseEntity viewUrgentIndent(Integer schoolId,Principal principal) {
+        return ResultUtil.success(adminService.getUrgentIndentsByHandledState(false, schoolId, principal.getName()));
     }
 
     /**
@@ -245,7 +249,6 @@ public class AdminController {
      */
     @ApiOperation("处理紧急订单")
     @ApiParam(name = "id", value = "订单id")
-    @Secured("ROLE_ADMIN_1")
     @GetMapping("/urgent/indent/{id}")
     public ResponseEntity setHandled(@PathVariable int id) {
         adminService.handleUrgent(id);
@@ -258,92 +261,92 @@ public class AdminController {
      * @return 已处理紧急订单列表
      */
     @ApiOperation("查询已处理的紧急订单")
-    @Secured("ROLE_ADMIN_1")
     @ApiResponses({
-    @ApiResponse(code = 200, message = "{\n" +
-            "    \"code\": 0,\n" +
-            "    \"msg\": \"请求成功\",\n" +
-            "    \"data\": [\n" +
-            "        {\n" +
-            "            \"indentId\": 29,\n" +
-            "            \"performerId\": \"XB4lFU\",\n" +
-            "            \"publisherId\": \"XZQ7ja\",\n" +
-            "            \"couponId\": null,\n" +
-            "            \"indentType\": \"HELP_SEND\",\n" +
-            "            \"requireGender\": \"MALE\",\n" +
-            "            \"indentContent\": \"qwe\",\n" +
-            "            \"indentPrice\": 23,\n" +
-            "            \"couponPrice\": 0,\n" +
-            "            \"totalPrice\": 23,\n" +
-            "            \"urgentType\": 1,\n" +
-            "            \"isSolved\": false,\n" +
-            "            \"indentState\": \"CANCELED\",\n" +
-            "            \"takeGoodAddress\": \"qwddde\",\n" +
-            "            \"shippingAddressId\": 18,\n" +
-            "            \"secretText\": \"快递号101010\",\n" +
-            "            \"goodPrice\": null,\n" +
-            "            \"createTime\": \"2018-12-14T11:45:41.000+0000\",\n" +
-            "            \"updateTime\": \"2018-12-18T01:25:43.000+0000\",\n" +
-            "            \"userName\": \"Kiris\",\n" +
-            "            \"trueName\": \"张俊\",\n" +
-            "            \"phone\": null,\n" +
-            "            \"school\": \"西安邮电大学\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"indentId\": 5,\n" +
-            "            \"performerId\": null,\n" +
-            "            \"publisherId\": \"EEETEE\",\n" +
-            "            \"couponId\": null,\n" +
-            "            \"indentType\": \"HELP_SEND\",\n" +
-            "            \"requireGender\": \"NO_LIMITED\",\n" +
-            "            \"indentContent\": \"我在呢\",\n" +
-            "            \"indentPrice\": 5,\n" +
-            "            \"couponPrice\": 0,\n" +
-            "            \"totalPrice\": 0,\n" +
-            "            \"urgentType\": 1,\n" +
-            "            \"isSolved\": false,\n" +
-            "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
-            "            \"takeGoodAddress\": \"1\",\n" +
-            "            \"shippingAddressId\": 2,\n" +
-            "            \"secretText\": null,\n" +
-            "            \"goodPrice\": null,\n" +
-            "            \"createTime\": \"2018-11-28T02:47:29.000+0000\",\n" +
-            "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
-            "            \"userName\": \"twet\",\n" +
-            "            \"trueName\": null,\n" +
-            "            \"phone\": 110112119,\n" +
-            "            \"school\": \"西安邮电大学\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"indentId\": 4,\n" +
-            "            \"performerId\": \"6gxVye\",\n" +
-            "            \"publisherId\": \"EEETEE\",\n" +
-            "            \"couponId\": null,\n" +
-            "            \"indentType\": \"HELP_OTHER\",\n" +
-            "            \"requireGender\": \"NO_LIMITED\",\n" +
-            "            \"indentContent\": \"我在呢\",\n" +
-            "            \"indentPrice\": 4,\n" +
-            "            \"couponPrice\": 0,\n" +
-            "            \"totalPrice\": 0,\n" +
-            "            \"urgentType\": 1,\n" +
-            "            \"isSolved\": false,\n" +
-            "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
-            "            \"takeGoodAddress\": null,\n" +
-            "            \"shippingAddressId\": 2,\n" +
-            "            \"secretText\": null,\n" +
-            "            \"goodPrice\": null,\n" +
-            "            \"createTime\": \"2018-11-10T13:45:15.000+0000\",\n" +
-            "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
-            "            \"userName\": \"twet\",\n" +
-            "            \"trueName\": null,\n" +
-            "            \"phone\": 110112119,\n" +
-            "            \"school\": \"西安邮电大学\"\n" +
-            "        }\n" +
-            "    ]\n" +
-            "}")})
+            @ApiResponse(code = 200, message = "{\n" +
+                    "    \"code\": 0,\n" +
+                    "    \"msg\": \"请求成功\",\n" +
+                    "    \"data\": [\n" +
+                    "        {\n" +
+                    "            \"indentId\": 29,\n" +
+                    "            \"performerId\": \"XB4lFU\",\n" +
+                    "            \"publisherId\": \"XZQ7ja\",\n" +
+                    "            \"couponId\": null,\n" +
+                    "            \"indentType\": \"HELP_SEND\",\n" +
+                    "            \"requireGender\": \"MALE\",\n" +
+                    "            \"indentContent\": \"qwe\",\n" +
+                    "            \"indentPrice\": 23,\n" +
+                    "            \"couponPrice\": 0,\n" +
+                    "            \"totalPrice\": 23,\n" +
+                    "            \"urgentType\": 1,\n" +
+                    "            \"isSolved\": false,\n" +
+                    "            \"indentState\": \"CANCELED\",\n" +
+                    "            \"takeGoodAddress\": \"qwddde\",\n" +
+                    "            \"shippingAddressId\": 18,\n" +
+                    "            \"secretText\": \"快递号101010\",\n" +
+                    "            \"goodPrice\": null,\n" +
+                    "            \"createTime\": \"2018-12-14T11:45:41.000+0000\",\n" +
+                    "            \"updateTime\": \"2018-12-18T01:25:43.000+0000\",\n" +
+                    "            \"userName\": \"Kiris\",\n" +
+                    "            \"trueName\": \"张俊\",\n" +
+                    "            \"phone\": null,\n" +
+                    "            \"school\": \"西安邮电大学\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"indentId\": 5,\n" +
+                    "            \"performerId\": null,\n" +
+                    "            \"publisherId\": \"EEETEE\",\n" +
+                    "            \"couponId\": null,\n" +
+                    "            \"indentType\": \"HELP_SEND\",\n" +
+                    "            \"requireGender\": \"NO_LIMITED\",\n" +
+                    "            \"indentContent\": \"我在呢\",\n" +
+                    "            \"indentPrice\": 5,\n" +
+                    "            \"couponPrice\": 0,\n" +
+                    "            \"totalPrice\": 0,\n" +
+                    "            \"urgentType\": 1,\n" +
+                    "            \"isSolved\": false,\n" +
+                    "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
+                    "            \"takeGoodAddress\": \"1\",\n" +
+                    "            \"shippingAddressId\": 2,\n" +
+                    "            \"secretText\": null,\n" +
+                    "            \"goodPrice\": null,\n" +
+                    "            \"createTime\": \"2018-11-28T02:47:29.000+0000\",\n" +
+                    "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
+                    "            \"userName\": \"twet\",\n" +
+                    "            \"trueName\": null,\n" +
+                    "            \"phone\": 110112119,\n" +
+                    "            \"school\": \"西安邮电大学\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"indentId\": 4,\n" +
+                    "            \"performerId\": \"6gxVye\",\n" +
+                    "            \"publisherId\": \"EEETEE\",\n" +
+                    "            \"couponId\": null,\n" +
+                    "            \"indentType\": \"HELP_OTHER\",\n" +
+                    "            \"requireGender\": \"NO_LIMITED\",\n" +
+                    "            \"indentContent\": \"我在呢\",\n" +
+                    "            \"indentPrice\": 4,\n" +
+                    "            \"couponPrice\": 0,\n" +
+                    "            \"totalPrice\": 0,\n" +
+                    "            \"urgentType\": 1,\n" +
+                    "            \"isSolved\": false,\n" +
+                    "            \"indentState\": \"WAIT_FOR_PERFORMER\",\n" +
+                    "            \"takeGoodAddress\": null,\n" +
+                    "            \"shippingAddressId\": 2,\n" +
+                    "            \"secretText\": null,\n" +
+                    "            \"goodPrice\": null,\n" +
+                    "            \"createTime\": \"2018-11-10T13:45:15.000+0000\",\n" +
+                    "            \"updateTime\": \"2018-12-03T05:49:48.000+0000\",\n" +
+                    "            \"userName\": \"twet\",\n" +
+                    "            \"trueName\": null,\n" +
+                    "            \"phone\": 110112119,\n" +
+                    "            \"school\": \"西安邮电大学\"\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}")})
     @GetMapping("/urgent/indent/handled")
-    public ResponseEntity viewHandledUrgentIndent(Integer schoolId) {
-        return ResultUtil.success(adminService.getUrgentIndentsByHandledState(true, schoolId));
+    public ResponseEntity viewHandledUrgentIndent(Integer schoolId, Principal principal) {
+        String name = principal.getName();
+        return ResultUtil.success(adminService.getUrgentIndentsByHandledState(true, schoolId, name));
     }
 
     /**
@@ -353,21 +356,21 @@ public class AdminController {
      */
     @ApiOperation("查询所有的优惠券信息")
     @ApiResponses({
-    @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明 返回示例：{\n" +
-            "    \"code\": 0,\n" +
-            "    \"msg\": \"请求成功\",\n" +
-            "    \"data\": [\n" +
-            "        {\n" +
-            "            \"couponId\": 3,\n" +
-            "            \"leastPrice\": 1,\n" +
-            "            \"reducePrice\": 2,\n" +
-            "            \"isDeleted\": false,\n" +
-            "            \"validTime\": 1543806535000,\n" +
-            "            \"invalidTime\": 1543806535000\n" +
-            "        }\n" +
-            "    ]\n" +
-            "}" +
-            "图片需额外向/coupon/img/{id}发起请求")})
+            @ApiResponse(code = 200, message = "200请求成功，其他见返回码说明 返回示例：{\n" +
+                    "    \"code\": 0,\n" +
+                    "    \"msg\": \"请求成功\",\n" +
+                    "    \"data\": [\n" +
+                    "        {\n" +
+                    "            \"couponId\": 3,\n" +
+                    "            \"leastPrice\": 1,\n" +
+                    "            \"reducePrice\": 2,\n" +
+                    "            \"isDeleted\": false,\n" +
+                    "            \"validTime\": 1543806535000,\n" +
+                    "            \"invalidTime\": 1543806535000\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}" +
+                    "图片需额外向/coupon/img/{id}发起请求")})
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/coupon/viewAll")
     public ResponseEntity viewAllCoupon() {
@@ -441,32 +444,32 @@ public class AdminController {
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/withdrawDeposit/viewUnHandled")
     @ApiResponses({
-    @ApiResponse(code = 200, message = "{\n" +
-            "    \"code\": 0,\n" +
-            "    \"msg\": \"请求成功\",\n" +
-            "    \"data\": [\n" +
-            "        {\n" +
-            "            \"withdrawId\": 6,\n" +
-            "            \"userId\": \"EEETEE\",\n" +
-            "            \"isSolved\": false,\n" +
-            "            \"createTime\": 1544198730000,\n" +
-            "            \"phone\": 110112119,\n" +
-            "            \"balance\": 0,\n" +
-            "            \"schoolName\": \"西安邮电大学\",\n" +
-            "            \"userName\": \"twet\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"withdrawId\": 9,\n" +
-            "            \"userId\": \"EEETEE\",\n" +
-            "            \"isSolved\": false,\n" +
-            "            \"createTime\": 1544198730000,\n" +
-            "            \"phone\": 110112119,\n" +
-            "            \"balance\": 0,\n" +
-            "            \"schoolName\": \"西安邮电大学\",\n" +
-            "            \"userName\": \"twet\"\n" +
-            "        }\n" +
-            "    ]\n" +
-            "}")})
+            @ApiResponse(code = 200, message = "{\n" +
+                    "    \"code\": 0,\n" +
+                    "    \"msg\": \"请求成功\",\n" +
+                    "    \"data\": [\n" +
+                    "        {\n" +
+                    "            \"withdrawId\": 6,\n" +
+                    "            \"userId\": \"EEETEE\",\n" +
+                    "            \"isSolved\": false,\n" +
+                    "            \"createTime\": 1544198730000,\n" +
+                    "            \"phone\": 110112119,\n" +
+                    "            \"balance\": 0,\n" +
+                    "            \"schoolName\": \"西安邮电大学\",\n" +
+                    "            \"userName\": \"twet\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"withdrawId\": 9,\n" +
+                    "            \"userId\": \"EEETEE\",\n" +
+                    "            \"isSolved\": false,\n" +
+                    "            \"createTime\": 1544198730000,\n" +
+                    "            \"phone\": 110112119,\n" +
+                    "            \"balance\": 0,\n" +
+                    "            \"schoolName\": \"西安邮电大学\",\n" +
+                    "            \"userName\": \"twet\"\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}")})
 
     public ResponseEntity viewUnHandledWithDraw() {
 
@@ -475,7 +478,8 @@ public class AdminController {
         return ResultUtil.success(vos);
     }
 
-    /**`
+    /**
+     * `
      * 查询已处理的提现请求
      *
      * @return 已处理提现请求列表
@@ -484,32 +488,32 @@ public class AdminController {
     @Secured("ROLE_ADMIN_1")
     @GetMapping("/withdrawDeposit/viewHandled")
     @ApiResponses({
-    @ApiResponse(code = 200, message = "{\n" +
-            "    \"code\": 0,\n" +
-            "    \"msg\": \"请求成功\",\n" +
-            "    \"data\": [\n" +
-            "        {\n" +
-            "            \"withdrawId\": 6,\n" +
-            "            \"userId\": \"EEETEE\",\n" +
-            "            \"isSolved\": true,\n" +
-            "            \"createTime\": 1544198730000,\n" +
-            "            \"phone\": 110112119,\n" +
-            "            \"balance\": 0,\n" +
-            "            \"schoolName\": \"西安邮电大学\",\n" +
-            "            \"userName\": \"twet\"\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"withdrawId\": 9,\n" +
-            "            \"userId\": \"EEETEE\",\n" +
-            "            \"isSolved\": true,\n" +
-            "            \"createTime\": 1544198730000,\n" +
-            "            \"phone\": 110112119,\n" +
-            "            \"balance\": 0,\n" +
-            "            \"schoolName\": \"西安邮电大学\",\n" +
-            "            \"userName\": \"twet\"\n" +
-            "        }\n" +
-            "    ]\n" +
-            "}")})
+            @ApiResponse(code = 200, message = "{\n" +
+                    "    \"code\": 0,\n" +
+                    "    \"msg\": \"请求成功\",\n" +
+                    "    \"data\": [\n" +
+                    "        {\n" +
+                    "            \"withdrawId\": 6,\n" +
+                    "            \"userId\": \"EEETEE\",\n" +
+                    "            \"isSolved\": true,\n" +
+                    "            \"createTime\": 1544198730000,\n" +
+                    "            \"phone\": 110112119,\n" +
+                    "            \"balance\": 0,\n" +
+                    "            \"schoolName\": \"西安邮电大学\",\n" +
+                    "            \"userName\": \"twet\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"withdrawId\": 9,\n" +
+                    "            \"userId\": \"EEETEE\",\n" +
+                    "            \"isSolved\": true,\n" +
+                    "            \"createTime\": 1544198730000,\n" +
+                    "            \"phone\": 110112119,\n" +
+                    "            \"balance\": 0,\n" +
+                    "            \"schoolName\": \"西安邮电大学\",\n" +
+                    "            \"userName\": \"twet\"\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}")})
     public ResponseEntity viewHandledWithDraw() {
         return ResultUtil.success(adminService.viewAllWithDrawRequestByStatus(true));
     }
@@ -534,24 +538,25 @@ public class AdminController {
      *
      * @return 未处理反馈信息列表
      */
+    @Secured("ROLE_ADMIN_1")
     @ApiOperation("查询所有未处理的反馈信息")
     @GetMapping("/feedback/viewUnHandled")
     @ApiResponses({
-    @ApiResponse(code = 200, message = "返回示例：" +
-            "{\n" +
-            "    \"code\": 0,\n" +
-            "    \"msg\": \"请求成功\",\n" +
-            "    \"data\": [\n" +
-            "        {\n" +
-            "            \"feedbackId\": 2,\n" +
-            "            \"content\": \"fwe\",\n" +
-            "            \"userId\": \"1\",\n" +
-            "            \"isRead\": false,\n" +
-            "            \"createTime\": 1543298864000\n" +
-            "            \"phone\": 110112119\n"+
-            "        }\n" +
-            "    ]\n" +
-            "}")})
+            @ApiResponse(code = 200, message = "返回示例：" +
+                    "{\n" +
+                    "    \"code\": 0,\n" +
+                    "    \"msg\": \"请求成功\",\n" +
+                    "    \"data\": [\n" +
+                    "        {\n" +
+                    "            \"feedbackId\": 2,\n" +
+                    "            \"content\": \"fwe\",\n" +
+                    "            \"userId\": \"1\",\n" +
+                    "            \"isRead\": false,\n" +
+                    "            \"createTime\": 1543298864000\n" +
+                    "            \"phone\": 110112119\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}")})
     public ResponseEntity viewAllUnHandledFeedBack() {
         return ResultUtil.success(adminService.getFeedBackByState(false));
     }
@@ -561,24 +566,25 @@ public class AdminController {
      *
      * @return 已处理的反馈信息列表
      */
+    @Secured("ROLE_ADMIN_1")
     @ApiOperation("查询所有已处理的反馈信息")
     @GetMapping("/feedback/viewHandled")
     @ApiResponses({
-    @ApiResponse(code = 200, message = "返回示例：" +
-            "{\n" +
-            "    \"code\": 0,\n" +
-            "    \"msg\": \"请求成功\",\n" +
-            "    \"data\": [\n" +
-            "        {\n" +
-            "            \"feedbackId\": 1,\n" +
-            "            \"content\": \"fwe\",\n" +
-            "            \"userId\": \"1\",\n" +
-            "            \"isRead\": true,\n" +
-            "            \"createTime\": 1543298792000\n" +
-            "            \"phone\": 110112119\n"+
-            "        }\n" +
-            "    ]\n" +
-            "}")})
+            @ApiResponse(code = 200, message = "返回示例：" +
+                    "{\n" +
+                    "    \"code\": 0,\n" +
+                    "    \"msg\": \"请求成功\",\n" +
+                    "    \"data\": [\n" +
+                    "        {\n" +
+                    "            \"feedbackId\": 1,\n" +
+                    "            \"content\": \"fwe\",\n" +
+                    "            \"userId\": \"1\",\n" +
+                    "            \"isRead\": true,\n" +
+                    "            \"createTime\": 1543298792000\n" +
+                    "            \"phone\": 110112119\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}")})
     public ResponseEntity viewAllHandledFeedBack() {
         return ResultUtil.success(adminService.getFeedBackByState(true));
     }
@@ -589,6 +595,7 @@ public class AdminController {
      * @param id 反馈信息id
      * @return 处理结果，200 成功，400 失败 401 权限不足
      */
+    @Secured("ROLE_ADMIN_1")
     @ApiOperation("处理指定反馈信息")
     @ApiParam(name = "id", value = "反馈信息id")
     @GetMapping("/feedback/handle/{id}")
