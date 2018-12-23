@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -60,15 +62,21 @@ public class LoginController extends BaseController {
         }
     }
 
+    /**
+     * 前端要求返回一个布尔值表示是否为二级管理员--cx
+     */
     @CrossOrigin(origins = "http://bang.zhengsj.top")
     @PostMapping("/login/admin")
     public ResponseEntity login(@NotNull @RequestBody AdminLoginDTO loginDTO, HttpServletResponse response) {
         if (adminService.isValidAdmin(loginDTO)) {
+            Map<String,Object> res = new HashMap<>();
+            res.put("isAdmin2",adminService.isAdmin2(loginDTO.getAdminName()));
             String cookie = CookieUtil.tokenGenerate();
             redisUtil.storeNewCookie(cookie, loginDTO.getAdminName());
             CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
             response.setHeader("TOKEN", cookie);
-            return ResultUtil.success("token="+cookie);
+            res.put("token",cookie);
+            return ResultUtil.success(res);
         }
         return ResultUtil.error();
     }

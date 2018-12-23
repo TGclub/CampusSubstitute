@@ -37,6 +37,11 @@ public interface AdminService {
     boolean isValidAdmin(AdminLoginDTO loginDTO);
 
     /**
+     * 判断该用户是否为二级管理员
+     */
+    boolean isAdmin2(String adminName);
+
+    /**
      * 获取用户基本信息
      * @param admin 用于保存的信息
      * @return
