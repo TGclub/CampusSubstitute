@@ -37,7 +37,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @Secured("ROLE_ADMIN_2")
-@CrossOrigin(origins = "http://bang.zhengsj.top")
+//@CrossOrigin(origins = "http://bang.zhengsj.top")
 public class AdminController {
 
     @Autowired
