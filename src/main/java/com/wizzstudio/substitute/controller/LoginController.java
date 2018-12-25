@@ -65,12 +65,12 @@ public class LoginController extends BaseController {
     /**
      * 前端要求返回一个布尔值表示是否为二级管理员--cx
      */
-    @CrossOrigin(origins = "http://bang.zhengsj.top")
+//    @CrossOrigin(origins = "*")
     @PostMapping("/login/admin")
     public ResponseEntity login(@NotNull @RequestBody AdminLoginDTO loginDTO, HttpServletResponse response) {
         if (adminService.isValidAdmin(loginDTO)) {
             Map<String,Object> res = new HashMap<>();
-            res.put("isAdmin2",adminService.isAdmin2(loginDTO.getAdminName()));
+            res.put("admin",adminService.getAdminByName(loginDTO.getAdminName()));
             String cookie = CookieUtil.tokenGenerate();
             redisUtil.storeNewCookie(cookie, loginDTO.getAdminName());
             CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);

@@ -8,6 +8,7 @@ import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
 import com.wizzstudio.substitute.dto.AdminCouponDTO;
 import com.wizzstudio.substitute.enums.Role;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,7 +40,7 @@ public interface AdminService {
     /**
      * 判断该用户是否为二级管理员
      */
-    boolean isAdmin2(String adminName);
+    AdminInfo getAdminByName(String adminName);
 
     /**
      * 获取用户基本信息

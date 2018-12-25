@@ -81,9 +81,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public boolean isAdmin2(String adminName){
+    public AdminInfo getAdminByName(String adminName){
         AdminInfo admin = adminDao.getAdminInfoByAdminName(adminName);
-        return admin.getAdminRole().equals(Role.ROLE_ADMIN_2);
+        return admin;
     }
 
     @Override
