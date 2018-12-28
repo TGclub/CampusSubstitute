@@ -50,7 +50,6 @@ public class IndentServiceImplTest {
     @Test
     public void Indent2VO() {
 //        System.out.println(indentService.getIndentDetail(9,"8"));
-        indentServiceImpl.test();
         System.out.println("what???");
         System.out.println("xxxxxxx");
     }

@@ -23,7 +23,7 @@ public interface CouponRecordService {
     /**
      * 添加优惠券领取信息
      */
-    void create(String userId,Integer couponId);
+    void create(String userId, Integer couponId);
 
     /**
      * 获取所有该用户领取的未过期的优惠券

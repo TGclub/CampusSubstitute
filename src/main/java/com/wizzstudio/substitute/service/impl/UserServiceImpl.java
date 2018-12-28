@@ -20,7 +20,7 @@ import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.RandomUtil;
 import com.wizzstudio.substitute.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.common.exception.WxErrorException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -58,6 +58,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     public User userLogin(WxInfo loginData) throws WxErrorException {
         //通过code获取openid
         WxMaJscode2SessionResult sessionResult = wxService.getUserService().getSessionInfo(loginData.getCode());
+        log.info("[用户登录]loginData={},sessionResult={}", loginData, sessionResult);
         //通过openid在数据库中寻找是否存在该用户
         User user = findUserByOpenId(sessionResult.getOpenid());
         //若不存在，则注册用户
@@ -110,7 +111,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     @CacheEvict(cacheNames = "user", key = "#id")
     public void modifyUserInfo(String id, ModifyUserInfoDTO newInfo) {
         User user = findUserById(id);
-        BeanUtils.copyProperties(newInfo,user);
+        BeanUtils.copyProperties(newInfo, user);
         userDao.save(user);
 
     }
@@ -194,7 +195,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public String getMasterTodayIncome(String userId) {
         String ans = redisUtil.get(Constant.MASTER_TODAY_INCOME.concat(userId));
-        return ans == null ?  "0" : ans;
+        return ans == null ? "0" : ans;
     }
 
 

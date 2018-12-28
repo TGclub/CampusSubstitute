@@ -22,7 +22,6 @@ public interface IndentDao extends JpaRepository<Indent, Integer> {
      * 根据业务逻辑，推荐页应只显示尚未被接的订单, 暂时没有收到分页请求故未做更多处理
      *
      * @param state 订单状态
-     * @return
      */
     List<Indent> findAllByIndentStateAndRequireGenderNot(IndentStateEnum state, GenderEnum excludeGender);
 

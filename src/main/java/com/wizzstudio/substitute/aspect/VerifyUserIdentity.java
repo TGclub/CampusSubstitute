@@ -3,7 +3,6 @@ package com.wizzstudio.substitute.aspect;
 import com.wizzstudio.substitute.security.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -33,9 +32,9 @@ public class VerifyUserIdentity {
             throw new AccessDeniedException("Access Denied");
         }
         if (point.getArgs()[0] instanceof String)
-        if (!((String)point.getArgs()[0]).equals(userId)) {
-            throw new AccessDeniedException("Access Denied");
-        }
-        log.info("passed check: "+userId);
+            if (!((String) point.getArgs()[0]).equals(userId)) {
+                throw new AccessDeniedException("Access Denied");
+            }
+        log.info("passed check: " + userId);
     }
 }

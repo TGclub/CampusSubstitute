@@ -17,6 +17,7 @@ public interface SchoolService {
 
     /**
      * 通过关键字获取学校
+     *
      * @param school 学校名称
      * @return
      */

@@ -44,7 +44,7 @@ public class CouponInfoServiceImpl implements CouponInfoService {
         List<CouponRecord> couponRecords = couponRecordService.findGetByUserId(userId);
         List<Integer> couponIds = new ArrayList<>();
         couponRecords.forEach(x -> {
-            if (!x.getIsUsed()){
+            if (!x.getIsUsed()) {
                 //如果未被使用，添加到liveCoupon列表中
                 couponIds.add(x.getCouponId());
             }
@@ -56,10 +56,9 @@ public class CouponInfoServiceImpl implements CouponInfoService {
         List<Integer> couponGetIds = couponRecords.stream().map(CouponRecord::getCouponId).collect(Collectors.toList());
         //获取该用户所有可领取优惠券
         List<CouponInfo> couponInfos;
-        if (couponGetIds.size() == 0){
+        if (couponGetIds.size() == 0) {
             couponInfos = couponInfoDao.findAllGet();
-        }
-        else {
+        } else {
             couponInfos = couponInfoDao.findAllGetExcept(couponGetIds);
         }
         couponListVO.setGetCoupons(couponInfos);
@@ -76,11 +75,11 @@ public class CouponInfoServiceImpl implements CouponInfoService {
         List<CouponInfo> couponInfos = couponInfoDao.findTop5ByInvalidTimeAfterAndIsDeletedIsFalseOrderByCouponIdDesc(new Date());
         log.info("coupon size: " + couponInfos.size());
         List<UserCouponDTO> userCouponDTOS = new ArrayList<>();
-        couponInfos.forEach( x->{
+        couponInfos.forEach(x -> {
             UserCouponDTO userCouponDTO = new UserCouponDTO();
             BeanUtils.copyProperties(x, userCouponDTO);
             if (x.getPicture() != null) {
-                userCouponDTO.setPictureLink("https://bang.zhengsj.top/coupon/img/"+x.getCouponId());
+                userCouponDTO.setPictureLink("https://bang.zhengsj.top/coupon/img/" + x.getCouponId());
             }
             userCouponDTOS.add(userCouponDTO);
         });

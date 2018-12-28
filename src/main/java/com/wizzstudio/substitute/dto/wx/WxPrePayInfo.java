@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Data
 @Builder
 @AllArgsConstructor
-public class WxPrePayInfo{
+public class WxPrePayInfo {
 
     //必填，微信分配的小程序ID
     private String appid;

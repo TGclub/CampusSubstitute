@@ -27,11 +27,11 @@ public class FeedbackController {
     FeedbackService feedbackService;
 
     @PostMapping
-    public ResponseEntity create(@RequestBody Feedback feedback, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
+    public ResponseEntity create(@RequestBody Feedback feedback, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             String msg = bindingResult.getFieldError() == null ? ResultEnum.PARAM_ERROR.getMsg()
                     : bindingResult.getFieldError().getDefaultMessage();
-            log.error("[创建反馈]创建失败，feedback={}",feedback);
+            log.error("[创建反馈]创建失败，feedback={}", feedback);
             throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
         }
         feedback.setIsRead(false);

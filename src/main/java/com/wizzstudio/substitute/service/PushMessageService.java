@@ -16,7 +16,8 @@ public interface PushMessageService {
 
     /**
      * 发送短信给下单用户
-     * @param indent     订单信息
+     *
+     * @param indent 订单信息
      */
     void sendPhoneMsg2User(Indent indent);
 

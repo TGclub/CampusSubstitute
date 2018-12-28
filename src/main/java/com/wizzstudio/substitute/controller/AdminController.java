@@ -2,7 +2,6 @@ package com.wizzstudio.substitute.controller;
 
 import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.domain.AdminInfo;
-import com.wizzstudio.substitute.domain.WithdrawRequest;
 import com.wizzstudio.substitute.dto.AdminCouponDTO;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.enums.Role;
@@ -237,7 +236,7 @@ public class AdminController {
                     "    ]\n" +
                     "}")})
     @GetMapping("/urgent/indent/unhandled")
-    public ResponseEntity viewUrgentIndent(Integer schoolId,Principal principal) {
+    public ResponseEntity viewUrgentIndent(Integer schoolId, Principal principal) {
         return ResultUtil.success(adminService.getUrgentIndentsByHandledState(false, schoolId, principal.getName()));
     }
 

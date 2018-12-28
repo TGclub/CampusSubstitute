@@ -4,31 +4,19 @@ import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AddressDTO;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
-import com.wizzstudio.substitute.exception.SubstituteException;
 import com.wizzstudio.substitute.util.ResultUtil;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.wizzstudio.substitute.enums.GenderEnum.NO_LIMITED;
-import static com.wizzstudio.substitute.enums.indent.IndentTypeEnum.HELP_OTHER;
 
 @RestController
 @RequestMapping("/user")
@@ -38,11 +26,9 @@ public class UserController extends BaseController {
 
     /**
      * 用户基本信息获取
-     * @param userId
-     * @return
      */
     @GetMapping(value = "/{userId}")
-    public ResponseEntity getUseInfo(@PathVariable String userId, Principal principal) {
+    public ResponseEntity getUseInfo(@PathVariable String userId) {
         User user = userService.findUserById(userId);
         if (user != null) {
             return ResultUtil.success(user);
@@ -56,8 +42,8 @@ public class UserController extends BaseController {
      */
     @GetMapping("/income/master/{userId}")
     public ResponseEntity getMasterTodayIncome(@PathVariable String userId) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("masterIncome",userService.getMasterTodayIncome(userId));
+        Map<String, Object> map = new HashMap<>();
+        map.put("masterIncome", userService.getMasterTodayIncome(userId));
         return ResultUtil.success(map);
     }
 
@@ -66,7 +52,7 @@ public class UserController extends BaseController {
      */
     @PostMapping(value = "/info/{userId}")
     public ResponseEntity modifyUserInfo(@PathVariable String userId, @RequestBody ModifyUserInfoDTO modifyUserInfoDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return ResultUtil.error("参数不全");
         }
         userService.modifyUserInfo(userId, modifyUserInfoDTO);
@@ -79,7 +65,7 @@ public class UserController extends BaseController {
     @GetMapping(value = "/apprentices/{userId}")
     public ResponseEntity getAllApprenticesInfo(@PathVariable String userId) {
         List<UserBasicInfo> usersInfo = userService
-                .getBasicInfo(new ArrayList<UserBasicInfo>(), userId);
+                .getBasicInfo(new ArrayList<>(), userId);
         return ResultUtil.success(usersInfo);
     }
 
@@ -131,7 +117,7 @@ public class UserController extends BaseController {
     public ResponseEntity getAllAddress(@PathVariable String userId, String key) {
         List<Address> addresses;
         if (key != null) {
-            addresses = addressService.getAllByAddress(userId,key);
+            addresses = addressService.getAllByAddress(userId, key);
         } else {
             addresses = addressService.getUsualAddress(userId);
         }

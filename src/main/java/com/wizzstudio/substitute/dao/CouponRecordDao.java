@@ -16,7 +16,7 @@ public interface CouponRecordDao extends JpaRepository<CouponRecord, Integer> {
     /**
      * 通过用户id和优惠券id，查询某用户是否有领取该优惠券的记录
      */
-    CouponRecord findByCouponIdAndOwnerId(Integer couponId,String ownerId);
+    CouponRecord findByCouponIdAndOwnerId(Integer couponId, String ownerId);
 
     /**
      * 获取指定用户已领取的所有优惠券

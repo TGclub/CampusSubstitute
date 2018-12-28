@@ -18,6 +18,7 @@ public interface ScheduledService {
 
     /**
      * 统计量+1
+     *
      * @param schoolId
      * @param type
      */

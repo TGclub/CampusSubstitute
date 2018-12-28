@@ -1,7 +1,5 @@
 package com.wizzstudio.substitute.controller;
 
-import com.wizzstudio.substitute.domain.School;
-import com.wizzstudio.substitute.service.AddressService;
 import com.wizzstudio.substitute.service.SchoolService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;

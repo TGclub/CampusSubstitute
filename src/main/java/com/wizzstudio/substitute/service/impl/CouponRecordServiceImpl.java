@@ -28,7 +28,7 @@ public class CouponRecordServiceImpl implements CouponRecordService {
 
     @Override
     public CouponRecord findByOwnerAndCouponId(String ownerId, Integer couponId) {
-        return couponRecordDao.findByCouponIdAndOwnerId(couponId,ownerId);
+        return couponRecordDao.findByCouponIdAndOwnerId(couponId, ownerId);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class CouponRecordServiceImpl implements CouponRecordService {
     @Override
     public void create(String userId, Integer couponId) {
         //获取领取记录信息，若用户已领取则不可重复领取
-        CouponRecord couponRecord = couponRecordDao.findByCouponIdAndOwnerId(couponId,userId);
-        if (couponRecord != null){
+        CouponRecord couponRecord = couponRecordDao.findByCouponIdAndOwnerId(couponId, userId);
+        if (couponRecord != null) {
             log.error("已领取过该优惠券，userId={}，couponId={}", userId, couponId);
             throw new SubstituteException("已领取过该优惠券");
         }

@@ -72,8 +72,8 @@ public class PayController {
             throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
         }
         //支付统一下单
-        Map<String,String> params = wxPayService.prePay(createWxPrePayDto(payForm, request));
-        log.info("[微信统一下单]用户:{}下单充值{}元",payForm.getUserId(), payForm.getTotalFee());
+        Map<String, String> params = wxPayService.prePay(createWxPrePayDto(payForm, request));
+        log.info("[微信统一下单]用户:{}下单充值{}元", payForm.getUserId(), payForm.getTotalFee());
         return ResultUtil.success(params);
     }
 
@@ -101,7 +101,7 @@ public class PayController {
      * 一天只能提现一次
      */
     @PostMapping("/withdraw/{userId}")
-    public ResponseEntity withdraw(@PathVariable String userId){
+    public ResponseEntity withdraw(@PathVariable String userId) {
         payService.createWithdraw(userId);
         return ResultUtil.success();
     }

@@ -29,9 +29,9 @@ public class CommonCheckService {
     /**
      * 通过userId检验用户是否存在，若存在返回User
      */
-    public User checkUserByUserId(String userId){
+    public User checkUserByUserId(String userId) {
         User user = userService.findUserById(userId);
-        if (user == null){
+        if (user == null) {
             log.error("用户不存在，userId={}", userId);
             throw new SubstituteException(ResultEnum.USER_NOT_EXISTS);
         }
@@ -41,18 +41,18 @@ public class CommonCheckService {
     /**
      * 通过userOpenid检验用户是否存在，若存在返回User
      */
-    public User checkUserByOpenid(String openid){
+    public User checkUserByOpenid(String openid) {
         User user = userService.findUserByOpenId(openid);
-        if (user == null){
+        if (user == null) {
             log.error("用户不存在，openid={}", openid);
             throw new SubstituteException(ResultEnum.USER_NOT_EXISTS);
         }
         return user;
     }
 
-    public CouponInfo checkCouponInfoById(Integer couponId){
+    public CouponInfo checkCouponInfoById(Integer couponId) {
         CouponInfo couponInfo = couponInfoService.findById(couponId);
-        if (couponInfo == null){
+        if (couponInfo == null) {
             log.error("优惠券不存在，couponId={}", couponId);
             throw new SubstituteException(ResultEnum.COUPON_NOT_EXISTS);
         }

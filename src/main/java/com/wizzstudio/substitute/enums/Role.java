@@ -3,7 +3,7 @@ package com.wizzstudio.substitute.enums;
 /**
  * 管理员类型
  */
-public enum  Role {
+public enum Role {
     //普通用户
     ROLE_USER,
     //一级管理员

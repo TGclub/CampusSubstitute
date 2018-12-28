@@ -29,7 +29,7 @@ public interface Constant {
     //提现
     String WITHDRAW = "WITHDRAW";
 
-    interface WxPay{
+    interface WxPay {
         //微信支付统一下单时间格式
         String TIME_FORMAT = "yyyyMMddHHmmss";
         //微信小程序交易类型
@@ -41,7 +41,7 @@ public interface Constant {
     }
 
     //收益占比
-    interface IncomeRatio{
+    interface IncomeRatio {
         //公司10%，区域负责人5%，但区域负责人的收益是由公司直接发放
         Double COMPANY = 0.15;
         //推荐人收益10%

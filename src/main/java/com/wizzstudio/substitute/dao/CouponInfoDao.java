@@ -1,7 +1,6 @@
 package com.wizzstudio.substitute.dao;
 
 import com.wizzstudio.substitute.domain.CouponInfo;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,6 +22,7 @@ public interface CouponInfoDao extends JpaRepository<CouponInfo, Integer> {
 
     /**
      * 获取除指定的可领取的优惠券
+     *
      * @param couponId 该集合为已领取的优惠券id集合
      */
     @Query("select c from CouponInfo c where c.invalidTime > current_date and c.isDeleted = false and c.couponId not in ?1")

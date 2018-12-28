@@ -16,6 +16,7 @@ public class SubstituteApplication implements CommandLineRunner {
 
     @Autowired
     ScheduledServiceImpl scheduledService;
+
     public static void main(String[] args) {
         SpringApplication.run(SubstituteApplication.class, args);
     }

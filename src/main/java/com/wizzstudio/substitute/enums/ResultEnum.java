@@ -22,7 +22,7 @@ public enum ResultEnum {
 
     //-103xx为订单错误
     INDENT_NOT_EXISTS(-10301, "订单不存在"),
-    INDENT_STATE_ERROR(-10302,"订单状态有误"),
+    INDENT_STATE_ERROR(-10302, "订单状态有误"),
 
     //-104xx为金额错误
     WX_NOTIFY_MONEY_VERIFY_ERROR(-10401, "微信异步通知金额校验不通过"),

@@ -33,7 +33,7 @@ public class RedisUtil {
     }
 
     public void increment(String key, Double value) {
-        redisTemplate.opsForValue().increment(key,value);
+        redisTemplate.opsForValue().increment(key, value);
     }
 
     public String get(String key) {

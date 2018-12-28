@@ -33,11 +33,11 @@ public class PayServiceImpl implements PayService {
 
     @Override
     public void createWithdraw(String userId) {
-        if (redisUtil.get(Constant.WITHDRAW.concat(userId)) != null){
-            log.error("[提现]提现失败，一天只能提现一次，userId={}",userId);
+        if (redisUtil.get(Constant.WITHDRAW.concat(userId)) != null) {
+            log.error("[提现]提现失败，一天只能提现一次，userId={}", userId);
             throw new SubstituteException("一天只能提现一次");
-        }else {
-            redisUtil.store(Constant.WITHDRAW.concat(userId),"true",
+        } else {
+            redisUtil.store(Constant.WITHDRAW.concat(userId), "true",
                     Math.toIntExact(TimeUtil.getLastTime().getTime() - new Date().getTime()), TimeUnit.MILLISECONDS);
         }
         commonCheckService.checkUserByUserId(userId);

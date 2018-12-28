@@ -14,5 +14,6 @@ public interface WithdrawRequestDao extends JpaRepository<WithdrawRequest, Integ
     WithdrawRequest findByWithdrawId(int id);
 
     List<WithdrawRequest> findAllByUserId(String userId);
+
     List<WithdrawRequest> findAllByIsSolved(boolean isSolved);
 }

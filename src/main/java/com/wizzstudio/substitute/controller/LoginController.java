@@ -4,19 +4,17 @@ import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
 import com.wizzstudio.substitute.dto.wx.WxInfo;
 import com.wizzstudio.substitute.domain.User;
-import com.wizzstudio.substitute.security.CustomUserDetails;
 import com.wizzstudio.substitute.security.service.CustomUserDetailsService;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.CookieUtil;
 import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.common.exception.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,7 +54,7 @@ public class LoginController extends BaseController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return ResultUtil.success(user);
         } catch (WxErrorException | NullPointerException e) {
-            log.error("【微信登录】登录失败，e={}",e);
+            log.error("【微信登录】登录失败，e={}", e);
             e.printStackTrace();
             return ResultUtil.error();
         }
@@ -69,13 +67,13 @@ public class LoginController extends BaseController {
     @PostMapping("/login/admin")
     public ResponseEntity login(@NotNull @RequestBody AdminLoginDTO loginDTO, HttpServletResponse response) {
         if (adminService.isValidAdmin(loginDTO)) {
-            Map<String,Object> res = new HashMap<>();
-            res.put("admin",adminService.getAdminByName(loginDTO.getAdminName()));
+            Map<String, Object> res = new HashMap<>();
+            res.put("admin", adminService.getAdminByName(loginDTO.getAdminName()));
             String cookie = CookieUtil.tokenGenerate();
             redisUtil.storeNewCookie(cookie, loginDTO.getAdminName());
             CookieUtil.setCookie(response, Constant.TOKEN, cookie, Constant.TOKEN_EXPIRED);
             response.setHeader("TOKEN", cookie);
-            res.put("token",cookie);
+            res.put("token", cookie);
             return ResultUtil.success(res);
         }
         return ResultUtil.error();

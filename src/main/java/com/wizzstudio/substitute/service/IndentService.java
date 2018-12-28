@@ -11,6 +11,7 @@ public interface IndentService {
     /**
      * 创建新的订单
      * 若用户余额不足，则抛异常
+     *
      * @param indent 订单信息
      */
     Integer create(Indent indent);
@@ -33,7 +34,7 @@ public interface IndentService {
 
     /**
      * 完结订单
-     *
+     * <p>
      * 鉴于添加一个返回值并没有影响任何逻辑代码，且可以大大的方便用aop获得企业收入，
      * 故添加companyIncome局部变量为返回值——Kikyou
      */
@@ -65,8 +66,9 @@ public interface IndentService {
     /**
      * 查询同性别的订单列表，排序方式为sortType
      * 默认：0，时间：10，价格:20
-     * @param sortType        排序类型
-     * @param sexType         用户性别
+     *
+     * @param sortType 排序类型
+     * @param sexType  用户性别
      * @return 订单列表
      */
     List<IndentVO> getWait(Integer sortType, GenderEnum sexType);

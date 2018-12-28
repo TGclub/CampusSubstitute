@@ -51,7 +51,7 @@ public class TimeUtil {
     /**
      * 获取当日23：59：59的时间
      */
-    public static Date getLastTime(){
+    public static Date getLastTime() {
         String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd 23:59:59");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
@@ -64,7 +64,7 @@ public class TimeUtil {
     /**
      * 获取当日00：00：00的时间
      */
-    public static Date getFirstTime(){
+    public static Date getFirstTime() {
         String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd 00:00:00");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {

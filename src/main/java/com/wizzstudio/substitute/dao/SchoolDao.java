@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface SchoolDao extends JpaRepository<School, Integer> {
     List<School> findBySchoolNameLike(String schoolName);
+
     School findSchoolById(Integer id);
 }

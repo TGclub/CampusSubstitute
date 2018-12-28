@@ -91,8 +91,8 @@ public class IndentController {
         newIndent.setIndentType(CommonUtil.getEnum(indentCreateForm.getIndentType(), IndentTypeEnum.class));
         newIndent.setRequireGender(CommonUtil.getEnum(indentCreateForm.getRequireGender(), GenderEnum.class));
         //下单
-        Map<String,Integer> ans = new HashMap<>();
-        ans.put("indentId",indentService.create(newIndent));
+        Map<String, Integer> ans = new HashMap<>();
+        ans.put("indentId", indentService.create(newIndent));
         return ResultUtil.success(ans);
     }
 
@@ -116,7 +116,7 @@ public class IndentController {
      * 用户接单接口
      */
     @PostMapping("/take")
-    public ResponseEntity takeIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
+    public ResponseEntity takeIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             //表单校验有误
             log.error("[接单]参数不正确，indentCreateForm={}", indentUserForm);
@@ -132,7 +132,7 @@ public class IndentController {
      * 接单人送达接口
      */
     @PostMapping("/arrived")
-    public ResponseEntity arrivedIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
+    public ResponseEntity arrivedIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             //表单校验有误
             log.error("[送达订单]参数不正确，indentCreateForm={}", indentUserForm);
@@ -148,7 +148,7 @@ public class IndentController {
      * 下单人完结订单 ： 开始进行分钱
      */
     @PostMapping("/finished")
-    public ResponseEntity finishedIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
+    public ResponseEntity finishedIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             //表单校验有误
             log.error("[完结订单]参数不正确，indentCreateForm={}", indentUserForm);
@@ -164,7 +164,7 @@ public class IndentController {
      * 下单人取消订单 ： 退钱
      */
     @DeleteMapping("/canceled")
-    public ResponseEntity canceledIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult){
+    public ResponseEntity canceledIndent(@RequestBody @Valid IndentUserForm indentUserForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             //表单校验有误
             log.error("[取消订单]参数不正确，indentCreateForm={}", indentUserForm);
@@ -179,13 +179,13 @@ public class IndentController {
     /**
      * 广场订单列表接口，获取待接单的订单列表，只能看到同性别的订单
      *
-     * @param sort 排序方式，默认值为0，默认：0，时间：10，价格:20
+     * @param sort    排序方式，默认值为0，默认：0，时间：10，价格:20
      * @param sexType 性别类型，MALE 、 FEMALE ，未知或其他字段会报错
      * @return 订单列表
      */
     @GetMapping("/list")
     public ResponseEntity getIndentList(@RequestParam(defaultValue = "0") Integer sort, GenderEnum sexType) {
-        return ResultUtil.success(indentService.getWait(sort,sexType));
+        return ResultUtil.success(indentService.getWait(sort, sexType));
     }
 
     /**
@@ -210,7 +210,7 @@ public class IndentController {
      */
     @GetMapping(value = "/detail")
     public ResponseEntity getIndentInfo(Integer indentId, String userId) {
-        return ResultUtil.success(indentService.getIndentDetail(indentId,userId));
+        return ResultUtil.success(indentService.getIndentDetail(indentId, userId));
     }
 
     @GetMapping("/test")

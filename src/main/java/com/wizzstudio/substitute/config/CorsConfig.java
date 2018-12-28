@@ -14,12 +14,14 @@ public class CorsConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/admin/**")
-                .allowedOrigins("http://localhost:8080")
+                .allowedOrigins("http://bang.zhengsj.top")
+//                .allowedOrigins("http://localhost:8080")
                 .allowCredentials(true)
                 .allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS")
                 .maxAge(3600);
         registry.addMapping("/login/admin")
-                .allowedOrigins("http://localhost:8080")
+                .allowedOrigins("http://bang.zhengsj.top")
+//                .allowedOrigins("http://localhost:8080")
                 .allowCredentials(true)
                 .allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS")
                 .maxAge(3600);

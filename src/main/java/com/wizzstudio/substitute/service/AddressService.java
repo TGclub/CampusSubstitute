@@ -10,6 +10,7 @@ import java.util.List;
 public interface AddressService {
     /**
      * 添加用户常用地址
+     *
      * @param userId
      * @param addressDTO
      */
@@ -23,15 +24,17 @@ public interface AddressService {
 
     /**
      * 获取所有常用地址信息接口
+     *
      * @param userId
      * @return
      */
     List<Address> getUsualAddress(String userId);
 
-    List<Address> getAllByAddress(String userId,String address);
+    List<Address> getAllByAddress(String userId, String address);
 
     /**
      * 修改地址
+     *
      * @param addressId
      * @param userId
      * @param modifyAddressDTO
@@ -40,6 +43,7 @@ public interface AddressService {
 
     /**
      * 删除地址
+     *
      * @param addressId
      */
     void deleteAddress(Integer addressId, String userId);

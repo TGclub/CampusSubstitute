@@ -81,7 +81,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AdminInfo getAdminByName(String adminName){
+    public AdminInfo getAdminByName(String adminName) {
         AdminInfo admin = adminDao.getAdminInfoByAdminName(adminName);
         return admin;
     }
@@ -123,6 +123,7 @@ public class AdminServiceImpl implements AdminService {
         if (adminInfo == null) return null;
         if (adminInfo.getAdminRole().equals(Role.ROLE_ADMIN_2)) {
             if (!adminInfo.getAdminSchoolId().equals(schoolId)) {
+                log.error("[查询应急订单]schoolId有误,isHandled={},schoolId={},adminName={}", isHandled, schoolId, adminName);
                 throw new AccessDeniedException("Access Denied");
             }
         }
@@ -280,8 +281,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<AdminInfo> getAllAdminInfoBySchoolIdAndRole(Integer schoolId,Role role) {
-        return adminDao.findByAdminSchoolIdAndAdminRoleIs(schoolId,role);
+    public List<AdminInfo> getAllAdminInfoBySchoolIdAndRole(Integer schoolId, Role role) {
+        return adminDao.findByAdminSchoolIdAndAdminRoleIs(schoolId, role);
     }
 
     @Override
@@ -297,12 +298,12 @@ public class AdminServiceImpl implements AdminService {
                 break;
             case ROLE_ADMIN_2:
                 if (schoolId.equals(adminInfo.getAdminSchoolId()))
-                    countInfos = countInfoDao.getAllByCountDateBetweenAndSchoolId(from,to,schoolId);
+                    countInfos = countInfoDao.getAllByCountDateBetweenAndSchoolId(from, to, schoolId);
                 else throw new AccessDeniedException("AccessDenied");
                 break;
             default:
                 throw new AccessDeniedException("AccessDenied");
         }
-        return  countInfos;
+        return countInfos;
     }
 }
