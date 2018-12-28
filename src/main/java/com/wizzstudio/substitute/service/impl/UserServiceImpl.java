@@ -20,7 +20,7 @@ import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.RandomUtil;
 import com.wizzstudio.substitute.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;

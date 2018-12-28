@@ -9,7 +9,7 @@ import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.CookieUtil;
 import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
