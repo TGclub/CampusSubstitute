@@ -41,8 +41,8 @@ public class StatisticAspect {
 
     }
 
-    @Pointcut("execution(public * com.wizzstudio.substitute.controller.IndentController.arrivedIndent(..))")
-    public void indentAlmostBehavior() {
+    @Pointcut("execution(public * com.wizzstudio.substitute.service.impl.IndentServiceImpl.finishedIndent(..))")
+    public void indentFinished() {
 
     }
 
@@ -61,8 +61,8 @@ public class StatisticAspect {
         scheduledService.update(schoolId, CountInfoTypeEnum.NEW_INDENT, 1);
     }
 
-    @AfterReturning("indentAlmostBehavior()")
-    public void addNewPrice(JoinPoint joinPoint) {
+    @AfterReturning("indentFinished()")
+    public void addFinishedCount(JoinPoint joinPoint) {
         Integer schoolId = getSchoolId();
         IndentUserForm indentUserForm = (IndentUserForm) (joinPoint.getArgs()[0]);
         Integer indentId = indentUserForm.getIndentId();

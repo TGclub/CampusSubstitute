@@ -432,7 +432,7 @@ public class IndentServiceImpl implements IndentService {
         indentDao.save(indent);
         //发模板消息
 //        pushMessageService.sendTemplateMsg(indent,formId);
-        return companyIncome;
+        return BigDecimal.valueOf(indent.getIndentPrice());
     }
 
 
