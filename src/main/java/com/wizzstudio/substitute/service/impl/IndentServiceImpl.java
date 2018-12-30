@@ -466,7 +466,7 @@ public class IndentServiceImpl implements IndentService {
             log.error("【取消订单】取消订单失败，操作用户非下单人，userId={}，indent={}", userId, indent);
             throw new SubstituteException("取消订单失败，操作用户无权限，非下单人");
         }
-        //2、退钱
+        //2、如果取消订单用户是下单人，退钱
         User user = userService.findUserById(indent.getPublisherId());
         //注意是退实付金额，而不是订单悬赏金，因为可能有优惠券
         user.setBalance(user.getBalance().add(BigDecimal.valueOf(indent.getTotalPrice())));
@@ -476,6 +476,8 @@ public class IndentServiceImpl implements IndentService {
         indentDao.save(indent);
         //4.从订单监控列表中删除
         scheduledService.removeIndentFromMap(indentId);
+        //5.发短信通知接单人
+        pushMessageService.sendPhoneMsg2User(indent);
         //发模板消息、短信
 //        pushMessageService.sendTemplateMsg(indent,formId);
     }
