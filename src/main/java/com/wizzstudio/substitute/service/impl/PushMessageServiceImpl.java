@@ -124,7 +124,7 @@ public class PushMessageServiceImpl implements PushMessageService {
                 case CANCELED:
                     userId1 = indent.getPerformerId();
                     userId2 = indent.getPublisherId();
-                    date = userService.findUserById(userId2).getUserName();
+                    date = userService.findUserById(userId2).getTrueName();
                     templateCode = "SMS_153995735";
                     break;
                 //订单被接，告诉下单人
@@ -139,13 +139,14 @@ public class PushMessageServiceImpl implements PushMessageService {
             }
             User user = userService.findUserById(userId1);
             phone = String.valueOf(user.getPhone());
-            params.add(user.getUserName());
+            params.add(user.getTrueName());
             params.add(date);
-            params.add(userService.findUserById(userId2).getUserName());
+            params.add(userService.findUserById(userId2).getTrueName());
             sendMsg(templateCode, phone, params);
         } catch (ClientException e) {
-            log.error("[发送短信]出错了，e={}", e);
-        } catch (Exception ignored) {
+            log.error("[发送短信]出错了，e={}", e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -159,10 +160,14 @@ public class PushMessageServiceImpl implements PushMessageService {
             for (AdminInfo adminInfo : adminInfos) {
                 phone += adminInfo.getAdminPhone() + ",";
             }
+            if (phone.length() == 0) {
+                //如果没有管理员电话，不发短信
+                return;
+            }
             phone = phone.substring(0, phone.length() - 1);
             String date = TimeUtil.getFormatTime(indent.getCreateTime(), "MM月dd日 HH:mm");
             List<String> params = new ArrayList<>();
-            params.add(user.getUserName());
+            params.add(user.getTrueName());
             params.add(date);
             UrgentTypeEnum urgentType = CommonUtil.getEnum(indent.getUrgentType(), UrgentTypeEnum.class);
             if (urgentType == null) {
@@ -185,8 +190,9 @@ public class PushMessageServiceImpl implements PushMessageService {
             }
             sendMsg(templateCode, phone, params);
         } catch (ClientException e) {
-            log.error("[发送短信]出错了，e={}", e);
-        } catch (Exception ignored) {
+            log.error("[发送短信]出错了，e={}", e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -219,7 +225,7 @@ public class PushMessageServiceImpl implements PushMessageService {
      * @param phone        发送用户电话，若有多个用户，用逗号隔开，如："1234,2234"
      * @param paramList    短信模板参数列表(注意，模板消息设置时，变量要用{param1}、{param2}……{paramN})
      */
-    private void sendMsg(String templateCode, String phone, List<String> paramList) throws ClientException {
+    public void sendMsg(String templateCode, String phone, List<String> paramList) throws ClientException {
         //组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
         //必填:短信签名名称-可在短信控制台中找到
@@ -232,6 +238,7 @@ public class PushMessageServiceImpl implements PushMessageService {
             params.put("param" + (i + 1), paramList.get(i));
         }
         request.setTemplateParam(JSON.toJSON(params).toString());
+        log.info(JSON.toJSON(params).toString());
         //必填:,短信接收号码,支持以逗号分隔的形式进行批量调用，批量上限为1000个手机号码
         request.setPhoneNumbers(phone);
         SmsUtil.sendSms(request, aliSmsConfig);
