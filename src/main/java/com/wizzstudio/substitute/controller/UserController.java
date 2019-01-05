@@ -58,7 +58,7 @@ public class UserController extends BaseController {
     /**
      * 用户获取短信验证码（用户修改信息前必须先校验短信验证码）
      */
-    @PostMapping("/login/code")
+    @PostMapping("/code")
     public ResponseEntity getCheckCode(@RequestBody CheckCodeForm checkCodeForm, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             //表单校验有误
