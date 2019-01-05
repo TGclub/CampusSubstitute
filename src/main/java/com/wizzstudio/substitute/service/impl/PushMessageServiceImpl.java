@@ -7,24 +7,27 @@ import com.alibaba.fastjson.JSON;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.exceptions.ClientException;
 import com.wizzstudio.substitute.config.AliSmsConfig;
+import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.domain.AdminInfo;
 import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.domain.User;
+import com.wizzstudio.substitute.dto.CheckCodeDto;
 import com.wizzstudio.substitute.enums.Role;
 import com.wizzstudio.substitute.enums.indent.IndentStateEnum;
 import com.wizzstudio.substitute.enums.indent.UrgentTypeEnum;
+import com.wizzstudio.substitute.exception.SubstituteException;
+import com.wizzstudio.substitute.form.CheckCodeForm;
 import com.wizzstudio.substitute.service.AdminService;
 import com.wizzstudio.substitute.service.PushMessageService;
 import com.wizzstudio.substitute.service.UserService;
-import com.wizzstudio.substitute.util.CommonUtil;
-import com.wizzstudio.substitute.util.SmsUtil;
-import com.wizzstudio.substitute.util.TimeUtil;
+import com.wizzstudio.substitute.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -43,67 +46,8 @@ public class PushMessageServiceImpl implements PushMessageService {
     AliSmsConfig aliSmsConfig;
     @Autowired
     UserService userService;
-
-    @Override
-    public void sendTemplateMsg(Indent indent, String formId) {
-        IndentStateEnum indentState = indent.getIndentState();
-        List<String> params = new ArrayList<>();
-        String userId, templateId, date = TimeUtil.getFormatTime(new Date(), "yyyy-MM-dd HH:mm:ss");
-        switch (indentState) {
-            //待接单，说明下单人被取消订单
-            case WAIT_FOR_PERFORMER:
-                params.add("您的订单被退单惹(>﹏<)");
-                params.add("待接单");
-                params.add(date);
-                params.add("很多人都是你生命中的过客，总有一个人在等你");
-                userId = indent.getPublisherId();
-                templateId = "-_wlctvQjdRVNM-oBjQuSSPuEVJXQ9YeSJ86MksxUdo";
-                break;
-            //已送达，给下单人发消息
-            case ARRIVED:
-                params.add("您的订单已经送达");
-                params.add("订单已送达");
-                params.add(date);
-                params.add("帮我看看来的是帅气的小哥哥还是漂亮的小姐姐～(￣▽￣～)~");
-                userId = indent.getPublisherId();
-                templateId = "t0bQ-DRbY1JcGiz0IwiulOP6hP_GGPuuVQ64D56hDqg";
-                break;
-            //订单取消，说明接单人被取消订单
-            case CANCELED:
-                params.add("您的订单被退单惹(>﹏<)");
-                params.add("订单已取消");
-                params.add(date);
-                params.add("很多人都是你生命中的过客，总有一个人在等你");
-                userId = indent.getPerformerId();
-                templateId = "-_wlctvQjdRVNM-oBjQuSSPuEVJXQ9YeSJ86MksxUdo";
-                break;
-            //完成订单，给接单人发消息
-            case COMPLETED:
-                params.add("您的任务已经确认完成");
-                params.add("订单已完成");
-                params.add(date);
-                params.add("您刚刚不只是完成了一个订单，更是开始了一段缘份(｡･ω･｡)ﾉ♡");
-                userId = indent.getPerformerId();
-                templateId = "2dOr4-NZv7nJ8ps2hcUhAmJx-vpVipuaTQrQ8CFk3eU";
-                break;
-            case PERFORMING:
-                params.add("您的任务已经被接取喽～(≧∇≦)/");
-                params.add("订单已被接");
-                params.add(date);
-                params.add("您的订单正在奔向您～");
-                userId = indent.getPublisherId();
-                templateId = "eAJcNvlLEMQ2YNlWOTCC3KACAoFGYpGF0Jh5kSosqwE";
-                break;
-            default:
-                log.error("[微信消息推送]发送失败，订单状态有误，indent={}", indent);
-                return;
-        }
-        try {
-            String openid = userService.findUserById(userId).getOpenid();
-            sendTemplateMsg(openid, formId, templateId, params);
-        } catch (Exception ignored) {
-        }
-    }
+    @Autowired
+    RedisUtil redisUtil;
 
     @Override
     public void sendPhoneMsg2User(Indent indent) {
@@ -196,27 +140,26 @@ public class PushMessageServiceImpl implements PushMessageService {
         }
     }
 
-
     /**
-     * 发送指定微信模板消息给指定用户
-     *
-     * @param openid     用户openid
-     * @param formId     表单提交id
-     * @param templateId 模板消息id
-     * @param paramList  参数列表（"需符合第N个参数的key叫keywordN"）
+     * 发送短信验证码，存入redis
+     * 格式为：key：CHECK_CODE${userId}  value:checkCodeDto的Json字符串
      */
-    private void sendTemplateMsg(String openid, String formId, String templateId, List<String> paramList) {
-        WxMaMsgService msgService = wxMaService.getMsgService();
-        WxMaTemplateMessage templateMessage = new WxMaTemplateMessage();
-        templateMessage.setToUser(openid);
-        templateMessage.setFormId(formId);
-        templateMessage.setTemplateId(templateId);
-//        for (int i = 0; i < paramList.size(); i++){
-//            String key = "keyword"+(i+1);
-//            templateMessage.addData(new WxMaTemplateMessage.Data(key,paramList.get(i)));
-//        }
-//        msgService.sendTemplateMsg(templateMessage);
+    @Override
+    public void sendCheckCode(CheckCodeForm checkCodeForm) {
+        String phone = checkCodeForm.getPhone();
+        CheckCodeDto checkCodeDto = new CheckCodeDto(Long.valueOf(phone),RandomUtil.getCheckCode());
+        List<String> params = new ArrayList<>();
+        params.add(checkCodeDto.getCode());
+        try {
+            sendMsg("SMS_154592960",phone,params);
+        } catch (ClientException e) {
+            e.printStackTrace();
+            throw new SubstituteException("验证码发送失败");
+        }
+        //存入redis
+        redisUtil.store(Constant.CHECK_CODE.concat(checkCodeForm.getUserId()),checkCodeDto,30);
     }
+
 
     /**
      * 给指定电话用户发送指定模板消息
@@ -242,5 +185,88 @@ public class PushMessageServiceImpl implements PushMessageService {
         //必填:,短信接收号码,支持以逗号分隔的形式进行批量调用，批量上限为1000个手机号码
         request.setPhoneNumbers(phone);
         SmsUtil.sendSms(request, aliSmsConfig);
+    }
+
+
+    @Override
+    public void sendTemplateMsg(Indent indent, String formId) {
+        IndentStateEnum indentState = indent.getIndentState();
+        List<String> params = new ArrayList<>();
+        String userId, templateId, date = TimeUtil.getFormatTime(new Date(), "yyyy-MM-dd HH:mm:ss");
+        switch (indentState) {
+            //待接单，说明下单人被取消订单
+            case WAIT_FOR_PERFORMER:
+                params.add("您的订单被退单惹(>﹏<)");
+                params.add("待接单");
+                params.add(date);
+                params.add("很多人都是你生命中的过客，总有一个人在等你");
+                userId = indent.getPublisherId();
+                templateId = "-_wlctvQjdRVNM-oBjQuSSPuEVJXQ9YeSJ86MksxUdo";
+                break;
+            //已送达，给下单人发消息
+            case ARRIVED:
+                params.add("您的订单已经送达");
+                params.add("订单已送达");
+                params.add(date);
+                params.add("帮我看看来的是帅气的小哥哥还是漂亮的小姐姐～(￣▽￣～)~");
+                userId = indent.getPublisherId();
+                templateId = "t0bQ-DRbY1JcGiz0IwiulOP6hP_GGPuuVQ64D56hDqg";
+                break;
+            //订单取消，说明接单人被取消订单
+            case CANCELED:
+                params.add("您的订单被退单惹(>﹏<)");
+                params.add("订单已取消");
+                params.add(date);
+                params.add("很多人都是你生命中的过客，总有一个人在等你");
+                userId = indent.getPerformerId();
+                templateId = "-_wlctvQjdRVNM-oBjQuSSPuEVJXQ9YeSJ86MksxUdo";
+                break;
+            //完成订单，给接单人发消息
+            case COMPLETED:
+                params.add("您的任务已经确认完成");
+                params.add("订单已完成");
+                params.add(date);
+                params.add("您刚刚不只是完成了一个订单，更是开始了一段缘份(｡･ω･｡)ﾉ♡");
+                userId = indent.getPerformerId();
+                templateId = "2dOr4-NZv7nJ8ps2hcUhAmJx-vpVipuaTQrQ8CFk3eU";
+                break;
+            case PERFORMING:
+                params.add("您的任务已经被接取喽～(≧∇≦)/");
+                params.add("订单已被接");
+                params.add(date);
+                params.add("您的订单正在奔向您～");
+                userId = indent.getPublisherId();
+                templateId = "eAJcNvlLEMQ2YNlWOTCC3KACAoFGYpGF0Jh5kSosqwE";
+                break;
+            default:
+                log.error("[微信消息推送]发送失败，订单状态有误，indent={}", indent);
+                return;
+        }
+        try {
+            String openid = userService.findUserById(userId).getOpenid();
+            sendTemplateMsg(openid, formId, templateId, params);
+        } catch (Exception ignored) {
+        }
+    }
+
+    /**
+     * 发送指定微信模板消息给指定用户
+     *
+     * @param openid     用户openid
+     * @param formId     表单提交id
+     * @param templateId 模板消息id
+     * @param paramList  参数列表（"需符合第N个参数的key叫keywordN"）
+     */
+    private void sendTemplateMsg(String openid, String formId, String templateId, List<String> paramList) {
+        WxMaMsgService msgService = wxMaService.getMsgService();
+        WxMaTemplateMessage templateMessage = new WxMaTemplateMessage();
+        templateMessage.setToUser(openid);
+        templateMessage.setFormId(formId);
+        templateMessage.setTemplateId(templateId);
+//        for (int i = 0; i < paramList.size(); i++){
+//            String key = "keyword"+(i+1);
+//            templateMessage.addData(new WxMaTemplateMessage.Data(key,paramList.get(i)));
+//        }
+//        msgService.sendTemplateMsg(templateMessage);
     }
 }

@@ -2,6 +2,7 @@ package com.wizzstudio.substitute.service;
 
 import com.wizzstudio.substitute.domain.Indent;
 import com.wizzstudio.substitute.enums.indent.UrgentTypeEnum;
+import com.wizzstudio.substitute.form.CheckCodeForm;
 
 /**
  * 发送模板消息
@@ -25,4 +26,10 @@ public interface PushMessageService {
      * 发送短信给该订单的二级管理员
      */
     void sendPhoneMsg2Admin(Indent indent);
+
+    /**
+     * 发送短信验证码，存入redis
+     * 格式为：key：CHECK_CODE${usrId}  value:checkCodeDto的Json字符串
+     */
+    void sendCheckCode(CheckCodeForm checkCodeForm);
 }

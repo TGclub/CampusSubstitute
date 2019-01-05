@@ -1,10 +1,12 @@
 package com.wizzstudio.substitute.util;
 
+import com.wizzstudio.substitute.dto.CheckCodeDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +36,11 @@ public class RedisUtilTest {
 
     @Test
     public void store2(){
-
+//        CheckCodeDto checkCodeDto = new CheckCodeDto(1234L,"222");
+//        redisUtil.store("123",checkCodeDto,2);
+//        checkCodeDto = (CheckCodeDto)redisUtil.getObj("123",CheckCodeDto.class);
+//        System.out.println(checkCodeDto.getCode());
+        System.out.println(redisUtil.get("32"));
     }
 
 }

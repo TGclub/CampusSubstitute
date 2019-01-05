@@ -8,6 +8,7 @@ import com.wizzstudio.substitute.dao.CouponInfoDao;
 import com.wizzstudio.substitute.dao.SchoolDao;
 import com.wizzstudio.substitute.dao.UserDao;
 import com.wizzstudio.substitute.domain.CouponInfo;
+import com.wizzstudio.substitute.dto.CheckCodeDto;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
 import com.wizzstudio.substitute.dto.wx.WxInfo;
@@ -108,12 +109,19 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "user", key = "#id")
     public void modifyUserInfo(String id, ModifyUserInfoDTO newInfo) {
+        //校验短信验证码是否有效 --cx
+        CheckCodeDto checkCodeDto = (CheckCodeDto) redisUtil.getObj(Constant.CHECK_CODE.concat(id), CheckCodeDto.class);
+        if (checkCodeDto == null || !checkCodeDto.getCode().equals(newInfo.getCheckCode())){
+            log.error("验证码校验失败,id{},newInfo={}", id,newInfo);
+            throw new SubstituteException("验证码校验失败");
+        }
+        //更改电话号码为验证码对应的电话号码，防止用户通过旧验证码修改新号码
+        newInfo.setPhone(checkCodeDto.getPhone());
+
         User user = findUserById(id);
         BeanUtils.copyProperties(newInfo, user);
         userDao.save(user);
-
     }
 
     @Override

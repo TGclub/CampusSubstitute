@@ -4,7 +4,9 @@ import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
 import com.wizzstudio.substitute.dto.wx.WxInfo;
 import com.wizzstudio.substitute.domain.User;
+import com.wizzstudio.substitute.form.CheckCodeForm;
 import com.wizzstudio.substitute.security.service.CustomUserDetailsService;
+import com.wizzstudio.substitute.service.PushMessageService;
 import com.wizzstudio.substitute.service.UserService;
 import com.wizzstudio.substitute.util.CookieUtil;
 import com.wizzstudio.substitute.util.ResultUtil;
@@ -32,9 +34,9 @@ public class LoginController extends BaseController {
 
     @Autowired
     private UserService userService;
-
     @Autowired
     private CustomUserDetailsService userDetailsService;
+
 
     /**
      * 用户注册

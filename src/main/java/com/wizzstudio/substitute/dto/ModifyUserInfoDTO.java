@@ -21,6 +21,9 @@ public class ModifyUserInfoDTO {
     private Integer schoolId;
     @NotNull
     private GenderEnum gender;
+    //短信验证码
+    @NotBlank
+    private String checkCode;
 
 
     public ModifyUserInfoDTO() {

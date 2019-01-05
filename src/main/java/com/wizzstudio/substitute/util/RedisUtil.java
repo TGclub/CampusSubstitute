@@ -1,11 +1,15 @@
 package com.wizzstudio.substitute.util;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.wizzstudio.substitute.constants.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -42,6 +46,14 @@ public class RedisUtil {
 
     public void delete(String key) {
         redisTemplate.delete(key);
+    }
+
+    public void store(String key,Object value, Integer expire){
+        redisTemplate.opsForValue().set(key, JSON.toJSONString(value),expire,TimeUnit.MINUTES);
+    }
+
+    public Object getObj(String key,Class c){
+       return JSON.parseObject(redisTemplate.opsForValue().get(key),c);
     }
 
 }

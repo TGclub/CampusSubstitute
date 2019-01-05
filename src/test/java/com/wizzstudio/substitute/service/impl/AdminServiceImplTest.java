@@ -46,19 +46,27 @@ public class AdminServiceImplTest {
     @Test
     @Rollback(false)
     public void addNewAdmin() {
-        for (int i = 0; i < 20; i++) {
-            AdminInfo.Builder builder = AdminInfo.newBuilder()
-                    .setAdminName("test")
-                    .setAdminPass("absddafkja")
-                    .setAdminPhone(1232434454L)
-                    .setAdminRole(Role.ROLE_ADMIN_2)
-                    .setAdminSchoolId(2)
-                    .setAdminId(new Random().nextInt());
-            if (i % 3 ==0)
-                builder.setIsBoss(true);
-            AdminInfo info = builder.build();
-            adminService.addNewAdmin(info);
-        }
+//        for (int i = 0; i < 20; i++) {
+//            AdminInfo.Builder builder = AdminInfo.newBuilder()
+//                    .setAdminName("test")
+//                    .setAdminPass("absddafkja")
+//                    .setAdminPhone(1232434454L)
+//                    .setAdminRole(Role.ROLE_ADMIN_2)
+//                    .setAdminSchoolId(2)
+//                    .setAdminId(new Random().nextInt());
+//            if (i % 3 ==0)
+//                builder.setIsBoss(true);
+//            AdminInfo info = builder.build();
+//            adminService.addNewAdmin(info);
+//        }
+        AdminInfo.Builder builder = AdminInfo.newBuilder()
+                .setAdminName("bangbang")
+                .setAdminPass("20181231")
+                .setAdminPhone(1232434454L)
+                .setAdminRole(Role.ROLE_ADMIN_1)
+                .setAdminSchoolId(2);
+        AdminInfo info = builder.build();
+        adminService.addNewAdmin(info);
     }
 
     @Test

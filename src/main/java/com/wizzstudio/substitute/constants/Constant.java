@@ -29,6 +29,9 @@ public interface Constant {
     //提现
     String WITHDRAW = "WITHDRAW";
 
+    //短信验证码
+    String CHECK_CODE = "CHECK_CODE";
+
     interface WxPay {
         //微信支付统一下单时间格式
         String TIME_FORMAT = "yyyyMMddHHmmss";

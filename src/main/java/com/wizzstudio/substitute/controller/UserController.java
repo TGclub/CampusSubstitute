@@ -4,8 +4,13 @@ import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AddressDTO;
 import com.wizzstudio.substitute.dto.UserBasicInfo;
 import com.wizzstudio.substitute.dto.ModifyUserInfoDTO;
+import com.wizzstudio.substitute.enums.ResultEnum;
+import com.wizzstudio.substitute.exception.SubstituteException;
+import com.wizzstudio.substitute.form.CheckCodeForm;
+import com.wizzstudio.substitute.service.PushMessageService;
 import com.wizzstudio.substitute.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
@@ -23,6 +28,9 @@ import java.util.Map;
 @Slf4j
 @Secured("ROLE_USER")
 public class UserController extends BaseController {
+
+    @Autowired
+    private PushMessageService pushMessageService;
 
     /**
      * 用户基本信息获取
@@ -45,6 +53,22 @@ public class UserController extends BaseController {
         Map<String, Object> map = new HashMap<>();
         map.put("masterIncome", userService.getMasterTodayIncome(userId));
         return ResultUtil.success(map);
+    }
+
+    /**
+     * 用户获取短信验证码（用户修改信息前必须先校验短信验证码）
+     */
+    @PostMapping("/login/code")
+    public ResponseEntity getCheckCode(@RequestBody CheckCodeForm checkCodeForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            //表单校验有误
+            log.error("[获取短信验证码]参数不正确，checkCodeForm={}", checkCodeForm);
+            String msg = bindingResult.getFieldError() == null ? ResultEnum.PARAM_ERROR.getMsg()
+                    : bindingResult.getFieldError().getDefaultMessage();
+            throw new SubstituteException(msg, ResultEnum.PARAM_ERROR.getCode());
+        }
+        pushMessageService.sendCheckCode(checkCodeForm);
+        return ResultUtil.success();
     }
 
     /**
