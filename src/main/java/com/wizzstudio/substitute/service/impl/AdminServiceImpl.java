@@ -323,10 +323,16 @@ public class AdminServiceImpl implements AdminService {
         BigDecimal company = config.getCompanyRatio();
         BigDecimal masterRation = config.getMasterRatio();
         BigDecimal performerRation = config.getPerformerRatio();
-        if (!company.add(masterRation).add(performerRation).equals(new BigDecimal(1))) throw new ArithmeticException();
+        if (company!= null && masterRation != null && performerRation!=null){
+            if (company.add(masterRation).add(performerRation).compareTo(new BigDecimal(1)) != 0){
+                log.error("config={}",config);
+                throw new ArithmeticException();
+            }
+        }
         Config oldConfig = configDao.findConfigById(1);
-        BeanUtils.copyProperties(config, oldConfig);
+        if (config.getLeastPrice() != null) oldConfig.setLeastPrice(config.getLeastPrice());
+        if (config.getOverTime() != null) oldConfig.setOverTime(config.getOverTime());
         configDao.save(oldConfig);
-        AdminConfigurableConfig.setConfig(config);
+        AdminConfigurableConfig.setConfig(oldConfig);
     }
 }

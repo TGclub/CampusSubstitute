@@ -694,7 +694,8 @@ public class AdminController {
     }
 
     @PostMapping("/school")
-    public ResponseEntity addSchool(School school) {
+    @Secured("ROLE_ADMIN_1")
+    public ResponseEntity addSchool(@RequestBody School school) {
         schoolService.save(school);
         return ResultUtil.success();
     }
