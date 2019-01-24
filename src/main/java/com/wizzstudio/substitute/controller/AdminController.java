@@ -3,6 +3,7 @@ package com.wizzstudio.substitute.controller;
 import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.domain.AdminInfo;
 import com.wizzstudio.substitute.domain.Config;
+import com.wizzstudio.substitute.domain.School;
 import com.wizzstudio.substitute.dto.AdminCouponDTO;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.enums.Role;
@@ -690,6 +691,12 @@ public class AdminController {
     public ResponseEntity getSchool(String key) {
         if (key == null) return ResultUtil.success(schoolService.getSchoolInFuzzyMatching("%"));
         return ResultUtil.success(schoolService.getSchoolInFuzzyMatching(key));
+    }
+
+    @PostMapping("/school")
+    public ResponseEntity addSchool(School school) {
+        schoolService.save(school);
+        return ResultUtil.success();
     }
 
 

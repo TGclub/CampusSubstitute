@@ -37,4 +37,9 @@ public class SchoolServiceImpl implements SchoolService {
         return schoolDao.findBySchoolNameLike("%" + school + "%");
     }
 
+    @Override
+    public void save(School school) {
+        schoolDao.save(school);
+    }
+
 }

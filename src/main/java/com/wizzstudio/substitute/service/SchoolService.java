@@ -23,4 +23,9 @@ public interface SchoolService {
      */
     List<School> getSchoolInFuzzyMatching(String school);
 
+    /**
+     * 插入学校信息
+     */
+    void save(School school);
+
 }
