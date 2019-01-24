@@ -22,13 +22,13 @@ public class Config {
     private Integer id;
 
     //公司分成占比
-    private BigDecimal companyRadio;
+    private BigDecimal companyRatio;
 
     //推荐人分成占比
-    private BigDecimal masterRadio;
+    private BigDecimal masterRatio;
 
     //接单人分成占比
-    private BigDecimal performerRadio;
+    private BigDecimal performerRatio;
 
     //最低单价
     private Integer leastPrice;

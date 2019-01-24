@@ -1,6 +1,7 @@
 package com.wizzstudio.substitute.service.impl;
 
 import com.wizzstudio.substitute.VO.IndentVO;
+import com.wizzstudio.substitute.config.AdminConfigurableConfig;
 import com.wizzstudio.substitute.constants.Constant;
 import com.wizzstudio.substitute.dao.IndentDao;
 import com.wizzstudio.substitute.domain.*;
@@ -51,8 +52,6 @@ public class IndentServiceImpl implements IndentService {
     private RedisUtil redisUtil;
     @Autowired
     PushMessageService pushMessageService;
-    @Autowired
-    private ConfigService configService;
 
     /**
      * 将indent 封装为 indentVO
@@ -135,10 +134,9 @@ public class IndentServiceImpl implements IndentService {
      */
     @Override
     public Integer create(Indent indent) {
-        Config config = configService.findById(1);
         //1.验证参数是否有效
         //1.0验证订单金额
-        if (indent.getIndentPrice() < config.getLeastPrice()) {
+        if (indent.getIndentPrice() < AdminConfigurableConfig.leastPrice) {
             log.error("[创建订单]创建失败，订单金额不能小于3元，indent={}", indent);
             throw new SubstituteException("订单金额不能小于3元");
         }
@@ -390,9 +388,8 @@ public class IndentServiceImpl implements IndentService {
         }
         //2、开始分钱
         //注意：这里不能使用new BigDecimal(double)的方法构造，会有精度缺失
-        Config config = configService.findById(1);
-        BigDecimal masterIncome = config.getMasterRadio();
-        BigDecimal performerIncome = config.getPerformerRadio();
+        BigDecimal masterIncome = AdminConfigurableConfig.masterRatio.multiply(BigDecimal.valueOf(indent.getIndentPrice()));
+        BigDecimal performerIncome = AdminConfigurableConfig.performerRatio.multiply(BigDecimal.valueOf(indent.getIndentPrice()));
 
         if (performer.getMasterId() != null) {
             //2.1如果用户有推荐人，给推荐人分钱,并增加推荐人当日收益

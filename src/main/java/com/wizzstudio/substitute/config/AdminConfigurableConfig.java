@@ -9,13 +9,13 @@ import java.math.BigDecimal;
  */
 public class AdminConfigurableConfig {
 
-    public static BigDecimal companyRadio;
+    public static BigDecimal companyRatio;
 
     //推荐人分成占比
-    public static BigDecimal masterRadio;
+    public static BigDecimal masterRatio;
 
     //接单人分成占比
-    public static BigDecimal performerRadio;
+    public static BigDecimal performerRatio;
 
     //最低单价
     public static Integer leastPrice;
@@ -24,9 +24,9 @@ public class AdminConfigurableConfig {
     public static Integer overTime;
 
     public static void setConfig(Config config) {
-        AdminConfigurableConfig.companyRadio = config.getCompanyRadio();
-        AdminConfigurableConfig.masterRadio = config.getMasterRadio();
-        AdminConfigurableConfig.performerRadio = config.getPerformerRadio();
+        AdminConfigurableConfig.companyRatio = config.getCompanyRatio();
+        AdminConfigurableConfig.masterRatio = config.getMasterRatio();
+        AdminConfigurableConfig.performerRatio = config.getPerformerRatio();
         AdminConfigurableConfig.leastPrice = config.getLeastPrice();
         AdminConfigurableConfig.overTime = config.getOverTime();
     }

@@ -320,9 +320,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void updateConfig(Config config) {
-        BigDecimal company = config.getCompanyRadio();
-        BigDecimal masterRation = config.getMasterRadio();
-        BigDecimal performerRation = config.getPerformerRadio();
+        BigDecimal company = config.getCompanyRatio();
+        BigDecimal masterRation = config.getMasterRatio();
+        BigDecimal performerRation = config.getPerformerRatio();
         if (!company.add(masterRation).add(performerRation).equals(new BigDecimal(1))) throw new ArithmeticException();
         configDao.save(config);
         AdminConfigurableConfig.setConfig(config);
