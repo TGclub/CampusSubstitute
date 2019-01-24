@@ -324,7 +324,9 @@ public class AdminServiceImpl implements AdminService {
         BigDecimal masterRation = config.getMasterRadio();
         BigDecimal performerRation = config.getPerformerRadio();
         if (!company.add(masterRation).add(performerRation).equals(new BigDecimal(1))) throw new ArithmeticException();
-        configDao.save(config);
+        Config oldConfig = configDao.findConfigById(1);
+        BeanUtils.copyProperties(config, oldConfig);
+        configDao.save(oldConfig);
         AdminConfigurableConfig.setConfig(config);
     }
 }
