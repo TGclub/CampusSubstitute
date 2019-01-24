@@ -1,5 +1,6 @@
 package com.wizzstudio.substitute.service.impl;
 
+import com.wizzstudio.substitute.config.AdminConfigurableConfig;
 import com.wizzstudio.substitute.dao.CountInfoDao;
 import com.wizzstudio.substitute.dao.IndentDao;
 import com.wizzstudio.substitute.domain.CountInfo;
@@ -93,7 +94,7 @@ public class ScheduledServiceImpl implements ScheduledService {
                 indentMap.remove(indentId);
                 continue;
             }
-            if (System.currentTimeMillis() - indentMap.get(indentId) > 3600000) {
+            if (System.currentTimeMillis() - indentMap.get(indentId) > AdminConfigurableConfig.overTime * 1000) {
                 indent.setUrgentType(UrgentTypeEnum.OVERTIME.getCode());
                 indentDao.save(indent);
                 //发送短信给下单者--cx

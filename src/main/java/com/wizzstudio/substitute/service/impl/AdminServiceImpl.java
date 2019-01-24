@@ -4,6 +4,7 @@ import com.wizzstudio.substitute.VO.FeedbackVO;
 import com.wizzstudio.substitute.VO.UnPickedIndentVO;
 import com.wizzstudio.substitute.VO.UrgentIndentVO;
 import com.wizzstudio.substitute.VO.WithdrawRequestVO;
+import com.wizzstudio.substitute.config.AdminConfigurableConfig;
 import com.wizzstudio.substitute.dao.*;
 import com.wizzstudio.substitute.domain.*;
 import com.wizzstudio.substitute.dto.AdminLoginDTO;
@@ -35,6 +36,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private AdminDao adminDao;
+
+    @Autowired
+    private ConfigDao configDao;
 
     @Autowired
     private CouponInfoDao couponInfoDao;
@@ -305,5 +309,22 @@ public class AdminServiceImpl implements AdminService {
                 throw new AccessDeniedException("AccessDenied");
         }
         return countInfos;
+    }
+
+
+
+    @Override
+    public Config getCurrentConfig() {
+        return configDao.findConfigById(1);
+    }
+
+    @Override
+    public void updateConfig(Config config) {
+        BigDecimal company = config.getCompanyRadio();
+        BigDecimal masterRation = config.getMasterRadio();
+        BigDecimal performerRation = config.getPerformerRadio();
+        if (!company.add(masterRation).add(performerRation).equals(new BigDecimal(1))) throw new ArithmeticException();
+        configDao.save(config);
+        AdminConfigurableConfig.setConfig(config);
     }
 }

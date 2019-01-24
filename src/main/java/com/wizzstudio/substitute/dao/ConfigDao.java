@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ConfigDao extends JpaRepository<Config,Integer> {
+
+    Config findConfigById(Integer id);
+
 }

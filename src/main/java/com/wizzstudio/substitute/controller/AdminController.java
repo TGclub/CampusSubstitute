@@ -2,6 +2,7 @@ package com.wizzstudio.substitute.controller;
 
 import com.wizzstudio.substitute.VO.WithdrawRequestVO;
 import com.wizzstudio.substitute.domain.AdminInfo;
+import com.wizzstudio.substitute.domain.Config;
 import com.wizzstudio.substitute.dto.AdminCouponDTO;
 import com.wizzstudio.substitute.dto.ResultDTO;
 import com.wizzstudio.substitute.enums.Role;
@@ -691,4 +692,21 @@ public class AdminController {
         return ResultUtil.success(schoolService.getSchoolInFuzzyMatching(key));
     }
 
+
+    @GetMapping("/config")
+    @Secured("ROLE_ADMIN_1")
+    public ResponseEntity getCurrentConfig() {
+        return ResultUtil.success(adminService.getCurrentConfig());
+    }
+
+    @PostMapping("/config/update")
+    @Secured("ROLE_ADMIN_1")
+    public ResponseEntity updateConfig(@RequestBody Config config) {
+        try {
+        adminService.updateConfig(config);}
+        catch (ArithmeticException e) {
+            return ResultUtil.error("Invalid Proportion Ratio");
+        }
+        return ResultUtil.success();
+    }
 }

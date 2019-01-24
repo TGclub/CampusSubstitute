@@ -11,6 +11,7 @@ import com.wizzstudio.substitute.enums.Role;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -175,5 +176,10 @@ public interface AdminService {
     List<AdminInfo> getAllAdminInfo();
 
     List<AdminInfo> getAllAdminInfoBySchoolIdAndRole(Integer schoolId, Role role);
+
+
+    Config getCurrentConfig();
+
+    void updateConfig(Config config);
 
 }
